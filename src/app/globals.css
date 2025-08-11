@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* Synthwave Theme Variables - Easy to swap */
+:root {
+  /* Dark Backgrounds */
+  --theme-bg-primary: #000221;  /* Dark Blue */
+  --theme-bg-secondary: #261447;  /* Dark Purple */
+  --theme-bg-accent: #023788;  /* Deep Blue */
+  --theme-bg-card: rgba(38, 20, 71, 0.7);
+  --theme-bg-overlay: rgba(0, 2, 33, 0.95);
+
+  /* Text Colors */
+  --theme-text-primary: #FF8664;  /* Peach */
+  --theme-text-secondary: #20E516;  /* Neon Green */
+  --theme-text-accent: #00A0D0;  /* Cyan Blue */
+
+  /* Neon Colors */
+  --theme-neon-orange: #FF6C11;  /* Neon Orange */
+  --theme-neon-green: #20E516;  /* Neon Green */
+  --theme-neon-cyan: #00A0D0;  /* Cyan */
+  --theme-neon-blue: #006DD0;  /* Bright Blue */
+  --theme-neon-purple: #261447;  /* Purple */
+
+  /* Additional accent colors */
+  --theme-peach: #FF8664;
+  --theme-teal: #025F88;
+  --theme-blue: #02578B;
+
+  /* Interactive Elements */
+  --theme-link: #00A0D0;
+  --theme-link-hover: #FF6C11;
+  --theme-button-primary: #FF6C11;
+  --theme-button-secondary: #006DD0;
+
+  /* Borders and Accents */
+  --theme-border: rgba(255, 108, 17, 0.3);
+  --theme-border-accent: #00A0D0;
+
+  /* Gradients */
+  --theme-gradient-main: linear-gradient(180deg, #261447 0%, #000221 50%, #023788 100%);
+  --theme-gradient-neon: linear-gradient(90deg, #FF6C11 0%, #00A0D0 50%, #20E516 100%);
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--theme-gradient-main);
+  color: var(--theme-text-primary);
+  font-family: var(--font-inter), sans-serif;
+  position: relative;
+}
+
+/* Synthwave Grid Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255, 108, 17, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 108, 17, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Neon Glow Effects */
+.neon-text {
+  text-shadow:
+    0 0 4px rgba(255, 108, 17, 0.3);
+}
+
+.neon-text-cyan {
+  text-shadow:
+    0 0 4px rgba(0, 160, 208, 0.3);
+}
+
+/* Links */
+a {
+  color: var(--theme-link);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--theme-link-hover);
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--theme-button-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  border-color: var(--theme-button-primary);
+  color: var(--theme-button-primary);
+  box-shadow: 0 0 20px var(--theme-button-primary);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--theme-neon-cyan);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  border: 2px solid var(--theme-neon-cyan);
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-secondary:hover {
+  background: var(--theme-neon-cyan);
+  color: var(--theme-bg-primary);
+  box-shadow: 0 0 20px var(--theme-neon-cyan);
+}
+
+/* Cards */
+.card {
+  background: var(--theme-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--theme-border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--theme-border-accent);
+  box-shadow: 0 0 30px rgba(255, 108, 17, 0.2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-neon-cyan);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-neon-orange);
+}
+
+/* Selection */
+::selection {
+  background: var(--theme-neon-orange);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--theme-neon-orange);
+  color: white;
+}

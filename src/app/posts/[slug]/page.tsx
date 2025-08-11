@@ -1,0 +1,99 @@
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getAllPosts, getPostBySlug } from "@/lib/api";
+import markdownToHtml from "@/lib/markdownToHtml";
+import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
+import { Footer } from "@/app/_components/footer";
+import Link from "next/link";
+
+export default async function Post({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug, [
+    "title",
+    "date",
+    "slug",
+    "author",
+    "content",
+    "ogImage",
+    "coverImage",
+  ]);
+
+  if (!post.slug) {
+    return notFound();
+  }
+
+  const content = await markdownToHtml(post.content || "");
+
+  return (
+    <div className="min-h-screen flex flex-col relative">
+      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
+        <header className="py-10 w-full max-w-6xl">
+          <Link href="/" className="inline-flex items-center text-synthwave-neon-cyan hover:text-synthwave-neon-orange text-lg transition-all duration-300">
+            <span className="mr-2">←</span> Back to home
+          </Link>
+        </header>
+
+        <main className="flex-1 w-full flex flex-col items-center">
+          <article className="mb-32 max-w-7xl w-full">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-12 text-center neon-text" style={{fontFamily: 'var(--font-inter)'}}>
+              {post.title}
+            </h1>
+
+            <div className="mb-8 text-lg text-synthwave-peach text-center">
+              <time dateTime={post.date}>
+                {new Date(post.date).toLocaleDateString()}
+              </time>
+            </div>
+
+            <div className="prose-synthwave">
+              <EnhancedPostBody content={content} />
+            </div>
+          </article>
+        </main>
+      </div>
+
+      <Footer />
+
+      {/* Animated background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-synthwave-neon-orange/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-synthwave-neon-cyan/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+    </div>
+  );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug, ["title", "excerpt", "ogImage", "slug"]);
+
+  if (!post.slug) {
+    return notFound();
+  }
+
+  const title = post.title;
+
+  return {
+    title,
+    openGraph: {
+      title,
+      images: post.ogImage ? [post.ogImage] : [],
+    },
+  };
+}
+
+export async function generateStaticParams() {
+  const posts = getAllPosts(["slug"]);
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
