@@ -16,19 +16,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center justify-center">
-        <header className="py-10 text-center w-full">
+      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
+        <header className="py-10 text-center w-full mb-16">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight neon-text" style={{fontFamily: 'var(--font-inter)'}}>
             deadmanoz.xyz
           </h1>
+          <p className="text-lg md:text-xl text-synthwave-peach/80 mt-6">
+            Mostly Bitcoin, occassionally other stuff
+          </p>
         </header>
 
         <main className="flex-1 w-full flex flex-col items-center">
           <section className="mb-16 w-full max-w-6xl text-center">
-            <h2 className="mb-8 text-3xl md:text-4xl font-bold tracking-tighter leading-tight text-synthwave-neon-orange text-center">
-              Recent Posts
-            </h2>
-            <div className="flex flex-col gap-8 mb-32 w-full">
+            <div className="flex flex-col gap-8 mb-32 w-full pt-32">
               {allPosts.map((post) => (
                 <article key={post.slug} className="card group w-full">
                   {post.coverImage && (
