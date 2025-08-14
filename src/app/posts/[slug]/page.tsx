@@ -4,6 +4,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
+import { TableOfContents } from "@/app/_components/table-of-contents";
 import Link from "next/link";
 
 export default async function Post({
@@ -48,12 +49,26 @@ export default async function Post({
                 {new Date(post.date).toLocaleDateString()}
               </time>
             </div>
+          </article>
 
-            <div className="prose-synthwave">
+          {/* Content with TOC Layout - Move outside article to have full height */}
+          <div className="max-w-7xl w-full flex gap-12 items-start mb-32">
+            {/* TOC - Desktop only, inline */}
+            <div className="hidden xl:block">
+              <TableOfContents inline={true} />
+            </div>
+            
+            {/* Main Content */}
+            <div className="flex-1 prose-synthwave min-w-0">
               <EnhancedPostBody content={content} />
             </div>
-          </article>
+          </div>
         </main>
+      </div>
+
+      {/* Table of Contents - Mobile only, floating */}
+      <div className="xl:hidden">
+        <TableOfContents />
       </div>
 
       <Footer />

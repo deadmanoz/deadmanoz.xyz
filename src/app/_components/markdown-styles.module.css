@@ -15,8 +15,8 @@
 
 .markdown h1 {
   @apply text-4xl mt-16 mb-6 leading-tight font-bold;
-  color: var(--theme-neon-orange);
-  text-shadow: 0 0 8px rgba(255, 108, 17, 0.3);
+  color: var(--theme-neon-green);
+  text-shadow: 0 0 8px rgba(32, 229, 22, 0.3);
   font-family: var(--font-inter), sans-serif;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .markdown ul {
-  @apply list-disc list-inside;
+  @apply list-disc ml-6;
 }
 
 .markdown ul li::marker {
@@ -81,11 +81,29 @@
 }
 
 .markdown ol {
-  @apply list-decimal list-inside;
+  @apply list-decimal ml-6;
 }
 
 .markdown ol li::marker {
   color: var(--theme-neon-cyan);
+}
+
+/* Nested list styles */
+.markdown li > ul,
+.markdown li > ol {
+  @apply ml-6 my-2;
+}
+
+.markdown li > ul {
+  list-style-type: circle;
+}
+
+.markdown li > ul > li > ul {
+  list-style-type: square;
+}
+
+.markdown li {
+  @apply my-1;
 }
 
 .markdown blockquote {

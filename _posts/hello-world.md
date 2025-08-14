@@ -12,7 +12,7 @@ hidden: false
 
 # Welcome to deadmanoz.xyz
 
-Testing the features of this website, including annotations (hover footnotes), automatic image captioning, coloured text, and math rendering.
+Testing the features of this website, including table-of-contents, annotations (hover footnotes), automatic image captioning, coloured text, and math rendering.
 
 ## Math Rendering
 
@@ -35,3 +35,9 @@ Images can have captions, automatically numbered, and can be referenced in the t
 ## Annotations
 
 The [[Bitcoin||A Peer-to-Peer Electronic Cash System]] revolution is upon us...
+
+# This is
+
+## A nested
+
+### Table-of-contents
