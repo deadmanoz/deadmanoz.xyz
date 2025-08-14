@@ -8,13 +8,21 @@ default:
 install:
     npm install
 
-# Run development server
+# Run development server (with git metadata by default)
 dev:
     npm run dev
 
-# Build for production
+# Run development server without git metadata (faster builds)
+dev-fast:
+    DISABLE_GIT_METADATA=true npm run dev
+
+# Build for production (with git metadata by default)
 build:
     npm run build
+
+# Build without git metadata (faster builds)
+build-fast:
+    DISABLE_GIT_METADATA=true npm run build
 
 # Start production server
 start:
@@ -47,6 +55,12 @@ open:
 # Start dev server and open browser
 dev-open: 
     just dev &
+    sleep 3
+    just open
+
+# Start fast dev server and open browser
+dev-fast-open:
+    just dev-fast &
     sleep 3
     just open
 

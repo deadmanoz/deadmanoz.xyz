@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug } from "@/lib/api";
+import { getAllPosts, getPostBySlug, getPostBySlugWithGitData } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
@@ -13,7 +13,7 @@ export default async function Post({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug, [
+  const post = await getPostBySlugWithGitData(slug, [
     "title",
     "date",
     "slug",
@@ -44,10 +44,37 @@ export default async function Post({
               {post.title}
             </h1>
 
-            <div className="mb-8 text-lg text-synthwave-peach text-center">
-              <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString()}
-              </time>
+            <div className="mb-8 text-center space-y-2">
+              {/* Git metadata if available, otherwise fallback to frontmatter date */}
+              {post.gitMetadata ? (
+                <div className="space-y-1">
+                  <div className="text-lg text-synthwave-peach">
+                    <time dateTime={post.gitMetadata.publishedAt}>
+                      Published: {new Date(post.gitMetadata.publishedAt).toLocaleDateString()}
+                    </time>
+                  </div>
+                  {post.gitMetadata.updateCount > 0 && (
+                    <div className="text-sm text-synthwave-neon-cyan space-y-1">
+                      <div>
+                        <time dateTime={post.gitMetadata.updatedAt}>
+                          Last updated: {new Date(post.gitMetadata.updatedAt).toLocaleDateString()}
+                        </time>
+                      </div>
+                      <div className="text-xs text-synthwave-peach/70">
+                        {post.gitMetadata.updateCount} revision{post.gitMetadata.updateCount !== 1 ? 's' : ''}
+                        {' • '}
+                        <span className="font-mono">{post.gitMetadata.lastCommitSha}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-lg text-synthwave-peach">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString()}
+                  </time>
+                </div>
+              )}
             </div>
           </article>
 
