@@ -1,5 +1,5 @@
 import { FaXTwitter, FaGithub, FaBolt } from "react-icons/fa6";
-import { GiOstrich } from "react-icons/gi";
+import { PrimalIcon } from "./primal-icon";
 
 export function Footer() {
   return (
@@ -22,7 +22,7 @@ export function Footer() {
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
             aria-label="Primal (Nostr)"
           >
-            <GiOstrich size={24} />
+            <PrimalIcon size={24} />
           </a>
           <a
             href="https://github.com/deadmanoz"
