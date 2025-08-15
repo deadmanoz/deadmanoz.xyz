@@ -39,46 +39,55 @@ export default async function Post({
         </header>
 
         <main className="flex-1 w-full flex flex-col items-center">
-          <article className="mb-32 max-w-7xl w-full">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-12 text-center neon-text" style={{fontFamily: 'var(--font-inter)'}}>
-              {post.title}
-            </h1>
+          {/* Title area with same layout as content */}
+          <div className="max-w-7xl w-full flex gap-12 items-start mb-12">
+            {/* TOC space - Desktop only, to match content layout */}
+            <div className="hidden xl:block">
+              <TableOfContents inline={true} />
+            </div>
+            
+            {/* Title content - aligned with body text */}
+            <div className="flex-1 min-w-0 text-center">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-8 neon-text" style={{fontFamily: 'var(--font-inter)'}}>
+                {post.title}
+              </h1>
 
-            <div className="mb-8 text-center space-y-2">
-              {/* Git metadata if available, otherwise fallback to frontmatter date */}
-              {post.gitMetadata ? (
-                <div className="space-y-1">
+              <div className="text-center space-y-2">
+                {/* Git metadata if available, otherwise fallback to frontmatter date */}
+                {post.gitMetadata ? (
+                  <div className="space-y-1">
+                    <div className="text-lg text-synthwave-peach">
+                      <time dateTime={post.gitMetadata.publishedAt}>
+                        Published: {new Date(post.gitMetadata.publishedAt).toLocaleDateString()}
+                      </time>
+                    </div>
+                    {post.gitMetadata.updateCount > 0 && (
+                      <div className="text-sm text-synthwave-neon-cyan space-y-1">
+                        <div>
+                          <time dateTime={post.gitMetadata.updatedAt}>
+                            Last updated: {new Date(post.gitMetadata.updatedAt).toLocaleDateString()}
+                          </time>
+                        </div>
+                        <div className="text-xs text-synthwave-peach/70">
+                          {post.gitMetadata.updateCount} revision{post.gitMetadata.updateCount !== 1 ? 's' : ''}
+                          {' • '}
+                          <span className="font-mono">{post.gitMetadata.lastCommitSha}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
                   <div className="text-lg text-synthwave-peach">
-                    <time dateTime={post.gitMetadata.publishedAt}>
-                      Published: {new Date(post.gitMetadata.publishedAt).toLocaleDateString()}
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString()}
                     </time>
                   </div>
-                  {post.gitMetadata.updateCount > 0 && (
-                    <div className="text-sm text-synthwave-neon-cyan space-y-1">
-                      <div>
-                        <time dateTime={post.gitMetadata.updatedAt}>
-                          Last updated: {new Date(post.gitMetadata.updatedAt).toLocaleDateString()}
-                        </time>
-                      </div>
-                      <div className="text-xs text-synthwave-peach/70">
-                        {post.gitMetadata.updateCount} revision{post.gitMetadata.updateCount !== 1 ? 's' : ''}
-                        {' • '}
-                        <span className="font-mono">{post.gitMetadata.lastCommitSha}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-lg text-synthwave-peach">
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString()}
-                  </time>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </article>
+          </div>
 
-          {/* Content with TOC Layout - Move outside article to have full height */}
+          {/* Content with TOC Layout */}
           <div className="max-w-7xl w-full flex gap-12 items-start mb-32">
             {/* TOC - Desktop only, inline */}
             <div className="hidden xl:block">

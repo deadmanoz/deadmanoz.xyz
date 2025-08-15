@@ -1,12 +1,12 @@
 ---
 title: 'Hello World'
 excerpt: 'Welcome to deadmanoz.xyz. Testing site features.'
-coverImage: '/assets/melb-graffiti-1.jpeg'
+coverImage: '/assets/melb-graffiti.png'
 date: '2025-08-11T00:00:00.000Z'
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/melb-graffiti-1.jpeg'
+  url: '/assets/melb-graffiti.png'
 hidden: false
 ---
 

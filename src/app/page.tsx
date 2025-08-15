@@ -38,8 +38,8 @@ export default function Home() {
                           src={post.coverImage}
                           alt={post.title}
                           width={1200}
-                          height={300}
-                          className="w-full h-48 object-cover rounded-lg border border-synthwave-neon-cyan/30 group-hover:border-synthwave-neon-orange/50 transition-all duration-300"
+                          height={630}
+                          className="w-full aspect-[1.91/1] object-contain rounded-lg border border-synthwave-neon-cyan/30 group-hover:border-synthwave-neon-orange/50 transition-all duration-300"
                         />
                       </Link>
                     </div>
