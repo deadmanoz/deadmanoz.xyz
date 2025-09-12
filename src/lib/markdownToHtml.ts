@@ -15,6 +15,20 @@ function processSuperscript(htmlString: string): string {
   }).join('');
 }
 
+// Custom function to handle strikethrough syntax ~~text~~ - avoid math content
+function processStrikethrough(htmlString: string): string {
+  // Split the string by math spans to avoid processing inside them
+  const parts = htmlString.split(/(<(?:div class="math-display"|span class="math-inline")>.*?<\/(?:div|span)>)/);
+
+  return parts.map((part, index) => {
+    // Only process non-math parts (even indices in the split array)
+    if (index % 2 === 0 && !part.includes('class="math-')) {
+      return part.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+    }
+    return part;
+  }).join('');
+}
+
 // Color mapping for chart consistency
 const colorMap: Record<string, string> = {
   'magenta': '#FF00FF',
@@ -97,6 +111,30 @@ function postProcessAnnotations(htmlString: string): string {
   return processed;
 }
 
+// Process collapsible sections with syntax :::collapse{Title} content :::
+function processCollapsibleSections(htmlString: string): string {
+  let collapsibleCounter = 0;
+  
+  // Pattern matches how remark processes the markdown: <p>:::collapse{Title} followed by content until :::
+  const pattern = /<p>:::collapse\{([^}]+)\}([^]*?):::<\/p>/g;
+  
+  return htmlString.replace(pattern, (_match, title, content) => {
+    collapsibleCounter++;
+    const id = `collapse-${collapsibleCounter}`;
+    
+    // Process the content to convert paragraph breaks properly
+    const processedContent = content.trim()
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>');
+    
+    return `<details class="collapsible-section" id="${id}">
+      <summary class="collapsible-title">${title}</summary>
+      <div class="collapsible-content">${processedContent}</div>
+    </details>`;
+  });
+}
+
 // Process figures with captions and automatic numbering
 function processFigures(markdown: string, htmlString: string): string {
   let figureCounter = 0;
@@ -153,8 +191,10 @@ export default async function markdownToHtml(markdown: string) {
 
   // Post-process transformations
   htmlString = processSuperscript(htmlString);
+  htmlString = processStrikethrough(htmlString);
   htmlString = processColoredText(htmlString);
   htmlString = processFigures(markdown, htmlString);
+  htmlString = processCollapsibleSections(htmlString);
   htmlString = postProcessAnnotations(htmlString);
 
   return htmlString;
