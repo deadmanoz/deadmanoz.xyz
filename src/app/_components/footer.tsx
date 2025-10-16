@@ -5,7 +5,22 @@ export function Footer() {
   return (
     <footer className="border-t border-synthwave-neon-orange/30 py-10 mt-auto relative z-10">
       <div className="w-full px-5 text-center flex flex-col items-center">
-        <div className="flex justify-center items-center gap-6 mb-4">
+        <div className="mb-10">
+          <h3 className="text-sm font-bold text-synthwave-neon-cyan mb-3 uppercase tracking-wider">
+            Projects & Links
+          </h3>
+          <div className="flex flex-col gap-2">
+            <a
+              href="https://pq-bitcoin.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-synthwave-neon-green hover:text-synthwave-neon-orange transition-all duration-300"
+            >
+              pq-bitcoin.org
+            </a>
+          </div>
+        </div>
+        <div className="flex justify-center items-center gap-6 mb-10">
           <a
             href="https://x.com/ozdeadman"
             target="_blank"
@@ -34,7 +49,7 @@ export function Footer() {
             <FaGithub size={24} />
           </a>
         </div>
-        <div className="my-4">
+        <div className="mb-6">
           <a
             href="lightning:fewvest88@phoenixwallet.me"
             className="inline-flex items-center gap-2 text-sm text-synthwave-neon-green hover:text-synthwave-neon-orange transition-all duration-300"
