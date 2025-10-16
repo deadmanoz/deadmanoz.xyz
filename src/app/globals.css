@@ -48,6 +48,10 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   max-width: 100vw;
@@ -182,4 +186,25 @@ a:hover {
 ::-moz-selection {
   background: var(--theme-neon-orange);
   color: white;
+}
+
+/* Header anchor navigation */
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+  scroll-margin-top: 2rem;
+}
+
+/* Improve focus styles for accessibility */
+h1[id]:target, h2[id]:target, h3[id]:target, h4[id]:target, h5[id]:target, h6[id]:target {
+  animation: highlight-flash 2s ease-out;
+}
+
+@keyframes highlight-flash {
+  0% {
+    box-shadow: 0 0 0 4px var(--theme-neon-cyan);
+    background: rgba(0, 160, 208, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background: transparent;
+  }
 }
