@@ -84,6 +84,36 @@ function PostBodyContent({ content }: Props) {
     };
   }, [content, modalOpen]);
 
+  // Handle annotation tooltips with HTML content
+  useEffect(() => {
+    const markdownContainer = document.querySelector(`.${markdownStyles.markdown}`);
+    if (!markdownContainer) return;
+
+    const annotations = markdownContainer.querySelectorAll<HTMLElement>('.annotation');
+
+    annotations.forEach(annotation => {
+      const tooltipContent = annotation.getAttribute('data-tooltip');
+      if (!tooltipContent) return;
+
+      // Create tooltip element
+      let tooltipElement = annotation.querySelector('.annotation-tooltip') as HTMLElement;
+      if (!tooltipElement) {
+        tooltipElement = document.createElement('div');
+        tooltipElement.className = 'annotation-tooltip';
+        tooltipElement.innerHTML = tooltipContent;
+        annotation.appendChild(tooltipElement);
+      }
+
+      // Create arrow element
+      let arrowElement = annotation.querySelector('.annotation-arrow') as HTMLElement;
+      if (!arrowElement) {
+        arrowElement = document.createElement('div');
+        arrowElement.className = 'annotation-arrow';
+        annotation.appendChild(arrowElement);
+      }
+    });
+  }, [content]);
+
   return (
     <>
       <style jsx global>{`
@@ -114,8 +144,36 @@ function PostBodyContent({ content }: Props) {
           text-shadow: 0 0 10px currentColor;
         }
 
+        .table-container {
+          margin: 2rem 0;
+          display: block;
+        }
+        .table-container table {
+          margin: 0 !important;
+        }
+        .table-caption {
+          margin: 0.5rem 0 0 0;
+          text-align: center;
+          font-size: 0.875rem;
+          color: var(--theme-neon-cyan);
+          display: block;
+        }
+        .table-caption strong {
+          font-weight: bold;
+          color: var(--theme-neon-pink);
+        }
+        .table-ref {
+          font-weight: 500;
+          color: var(--theme-neon-cyan);
+        }
+        .table-ref:hover {
+          color: var(--theme-neon-pink);
+          text-shadow: 0 0 10px currentColor;
+        }
+
         .annotation {
           position: relative;
+          display: inline-block;
           cursor: help;
           color: var(--theme-neon-cyan);
           font-weight: 500;
@@ -134,8 +192,7 @@ function PostBodyContent({ content }: Props) {
           transform: translateY(-1px);
         }
 
-        .annotation::after {
-          content: attr(data-tooltip);
+        .annotation-tooltip {
           position: absolute;
           bottom: 100%;
           left: 50%;
@@ -162,8 +219,7 @@ function PostBodyContent({ content }: Props) {
           margin-bottom: 12px;
         }
 
-        .annotation::before {
-          content: '';
+        .annotation-arrow {
           position: absolute;
           bottom: 100%;
           left: 50%;
@@ -177,21 +233,21 @@ function PostBodyContent({ content }: Props) {
           z-index: 999999;
         }
 
-        .annotation:hover::after,
-        .annotation:focus::after {
+        .annotation:hover .annotation-tooltip,
+        .annotation:focus .annotation-tooltip {
           opacity: 1;
           visibility: visible;
           transform: translateX(-50%) translateY(0);
         }
 
-        .annotation:hover::before,
-        .annotation:focus::before {
+        .annotation:hover .annotation-arrow,
+        .annotation:focus .annotation-arrow {
           opacity: 1;
           visibility: visible;
         }
 
         @media (max-width: 768px) {
-          .annotation::after {
+          .annotation-tooltip {
             position: fixed;
             bottom: auto;
             top: 50%;
@@ -202,7 +258,7 @@ function PostBodyContent({ content }: Props) {
             font-size: 0.8125rem;
           }
 
-          .annotation::before {
+          .annotation-arrow {
             display: none;
           }
         }
