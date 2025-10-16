@@ -138,7 +138,7 @@ async function postProcessAnnotations(htmlString: string): Promise<string> {
 
     if (processed.includes(placeholder)) {
       // Pre-process tooltip markdown with math delimiters
-      let tooltipMarkdown = preserveMathDelimiters(data.tooltip);
+      const tooltipMarkdown = preserveMathDelimiters(data.tooltip);
 
       // Process tooltip content as markdown to HTML
       const tooltipResult = await remark()

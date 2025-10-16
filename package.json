@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "classnames": "^2.5.1",
@@ -36,8 +37,16 @@
     "@types/react-dom": "^19",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.4.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.29.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "next lint --fix --file",
+      "bash -c 'tsc --noEmit'"
+    ]
   }
 }
