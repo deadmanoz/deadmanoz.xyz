@@ -1,5 +1,8 @@
 import { remark } from "remark";
-import html from "remark-html";
+import remarkRehype from "remark-rehype";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeStringify from "rehype-stringify";
 
 // Custom function to handle superscript syntax ^text^ - avoid math content
 function processSuperscript(htmlString: string): string {
@@ -67,7 +70,8 @@ function preserveMathDelimiters(markdownString: string): string {
 
   // Process inline math \(...\) - working on raw markdown before remark
   // Use a special placeholder that won't be processed by remark
-  processed = processed.replace(/\\\(([^)]+?)\\\)/g, (_match, math) => {
+  // Match everything until we find \) (the closing delimiter), not just any )
+  processed = processed.replace(/\\\((.*?)\\\)/g, (_match, math) => {
     return `MATH_INLINE_START${math}MATH_INLINE_END`;
   });
 
@@ -76,37 +80,94 @@ function preserveMathDelimiters(markdownString: string): string {
 
 // Restore math placeholders back to proper HTML after remark processing
 function restoreMathDelimiters(htmlString: string): string {
-  // Restore display math placeholders
-  let processed = htmlString.replace(/MATH_DISPLAY_START([^M]+?)MATH_DISPLAY_END/g, (_match, math) => {
-    return `<div class="math-display">\\[${math}\\]</div>`;
+  // Helper to decode HTML entities in math expressions
+  const decodeHtmlEntities = (text: string): string => {
+    return text
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&percnt;/g, '%')
+      .replace(/&#37;/g, '%');
+  };
+
+  // Restore display math placeholders - use non-greedy match until END marker
+  let processed = htmlString.replace(/MATH_DISPLAY_START(.*?)MATH_DISPLAY_END/g, (_match, math) => {
+    const decodedMath = decodeHtmlEntities(math);
+    return `<div class="math-display">\\[${decodedMath}\\]</div>`;
   });
 
-  // Restore inline math placeholders
-  processed = processed.replace(/MATH_INLINE_START([^M]+?)MATH_INLINE_END/g, (_match, math) => {
-    return `<span class="math-inline">\\(${math}\\)</span>`;
+  // Restore inline math placeholders - use non-greedy match until END marker
+  processed = processed.replace(/MATH_INLINE_START(.*?)MATH_INLINE_END/g, (_match, math) => {
+    const decodedMath = decodeHtmlEntities(math);
+    return `<span class="math-inline">\\(${decodedMath}\\)</span>`;
   });
 
   return processed;
 }
 
-// Don't process annotations before remark - let them pass through
+// Store annotation data globally for processing
+const annotationStore = new Map<string, { text: string; tooltip: string }>();
+
+// Process annotations before remark to handle markdown in tooltips
 function processAnnotations(markdownString: string): string {
-  // Do nothing - we'll process after HTML conversion
-  return markdownString;
+  let counter = 0;
+  annotationStore.clear(); // Clear previous annotations
+
+  // Process [[text||tooltip]] pattern in markdown
+  return markdownString.replace(/\[\[([^\|\]]+)\|\|([^\]]+)\]\]/g, (match, text, tooltip) => {
+    counter++;
+    const id = `annotation-${counter}`;
+
+    // Store the annotation data
+    annotationStore.set(id, { text, tooltip });
+
+    // Use a simple placeholder that won't be processed by remark
+    return `ANNOTATION_PLACEHOLDER_${id}`;
+  });
 }
 
 // Post-process annotations after remark HTML conversion
-function postProcessAnnotations(htmlString: string): string {
-  let counter = 0;
+async function postProcessAnnotations(htmlString: string): Promise<string> {
+  let processed = htmlString;
 
-  // Look for [[text||tooltip]] pattern in the HTML
-  // Remark will have escaped the brackets
-  const processed = htmlString.replace(/\[\[([^\|\]]+)\|\|([^\]]+)\]\]/g, (match, text, tooltip) => {
-    counter++;
-    const escapedTooltip = tooltip.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    const id = `annotation-${counter}`;
-    return `<span class="annotation" data-tooltip="${escapedTooltip}" id="${id}" tabindex="0" role="button" aria-describedby="tooltip-${id}">${text}</span>`;
-  });
+  // Process each stored annotation
+  for (const [id, data] of annotationStore.entries()) {
+    const placeholder = `ANNOTATION_PLACEHOLDER_${id}`;
+
+    if (processed.includes(placeholder)) {
+      // Pre-process tooltip markdown with math delimiters
+      let tooltipMarkdown = preserveMathDelimiters(data.tooltip);
+
+      // Process tooltip content as markdown to HTML
+      const tooltipResult = await remark()
+        .use(remarkGfm)
+        .use(remarkRehype)
+        .use(rehypeStringify)
+        .process(tooltipMarkdown);
+
+      let tooltipHtml = tooltipResult.toString();
+
+      // Apply all post-processing transformations to tooltip content
+      tooltipHtml = restoreMathDelimiters(tooltipHtml);
+      tooltipHtml = processSuperscript(tooltipHtml);
+      tooltipHtml = processStrikethrough(tooltipHtml);
+      tooltipHtml = processColoredText(tooltipHtml);
+
+      // Remove wrapping <p> tags if present and trim
+      tooltipHtml = tooltipHtml.replace(/^<p>|<\/p>$/g, '').trim();
+
+      // Only escape quotes (not HTML entities) for HTML attribute
+      // We need to preserve HTML tags like <span> for styled content
+      const escapedTooltip = tooltipHtml.replace(/"/g, '&quot;');
+
+      // Replace placeholder with annotation span
+      const annotationSpan = `<span class="annotation" data-tooltip="${escapedTooltip}" id="${id}" tabindex="0" role="button" aria-describedby="tooltip-${id}">${data.text}</span>`;
+
+      processed = processed.replace(placeholder, annotationSpan);
+    }
+  }
 
   return processed;
 }
@@ -114,20 +175,20 @@ function postProcessAnnotations(htmlString: string): string {
 // Process collapsible sections with syntax :::collapse{Title} content :::
 function processCollapsibleSections(htmlString: string): string {
   let collapsibleCounter = 0;
-  
+
   // Pattern matches how remark processes the markdown: <p>:::collapse{Title} followed by content until :::
   const pattern = /<p>:::collapse\{([^}]+)\}([^]*?):::<\/p>/g;
-  
+
   return htmlString.replace(pattern, (_match, title, content) => {
     collapsibleCounter++;
     const id = `collapse-${collapsibleCounter}`;
-    
+
     // Process the content to convert paragraph breaks properly
     const processedContent = content.trim()
       .replace(/\n\n/g, '</p><p>')
       .replace(/^/, '<p>')
       .replace(/$/, '</p>');
-    
+
     return `<details class="collapsible-section" id="${id}">
       <summary class="collapsible-title">${title}</summary>
       <div class="collapsible-content">${processedContent}</div>
@@ -176,6 +237,62 @@ function processFigures(markdown: string, htmlString: string): string {
   return htmlString;
 }
 
+// Process tables with captions and automatic numbering
+function processTables(markdown: string, htmlString: string): string {
+  let tableCounter = 0;
+  const tableRefs = new Map<string, number>();
+
+  // First pass: Find all table definitions in markdown and create mapping
+  const tablePattern = /\{#tab:([^}]+)\}/g;
+  let match;
+  while ((match = tablePattern.exec(markdown)) !== null) {
+    const id = match[1];
+    if (!tableRefs.has(id)) {
+      tableRefs.set(id, ++tableCounter);
+    }
+  }
+
+  // Handle tables with captions (table followed by caption text and ID) - do this first
+  htmlString = htmlString.replace(
+    /(<table>[\s\S]*?<\/table>)\s*<p>([^{]*?)\s*\{#tab:([^}]+)\}<\/p>/g,
+    (_match, tableHtml, caption, id) => {
+      const tableNum = tableRefs.get(id) || ++tableCounter;
+      const cleanCaption = caption.trim();
+      return `<div class="table-container" id="tab-${id}">
+        ${tableHtml}
+        <div class="table-caption">
+          <strong>Table ${tableNum}:</strong> ${cleanCaption}
+        </div>
+      </div>`;
+    }
+  );
+
+  // Process tables with just ID syntax - wrap in container like figures
+  htmlString = htmlString.replace(
+    /(<table>[\s\S]*?<\/table>)\s*<p>\{#tab:([^}]+)\}<\/p>/g,
+    (_match, tableHtml, id) => {
+      const tableNum = tableRefs.get(id) || ++tableCounter;
+      return `<div class="table-container" id="tab-${id}">
+        ${tableHtml}
+        <div class="table-caption">
+          <strong>Table ${tableNum}</strong>
+        </div>
+      </div>`;
+    }
+  );
+
+  // Replace table references
+  htmlString = htmlString.replace(/\{@tab:([^}]+)\}/g, (match, id) => {
+    const tableNum = tableRefs.get(id);
+    if (tableNum) {
+      return `<a href="#tab-${id}" class="table-ref">Table ${tableNum}</a>`;
+    }
+    return match;
+  });
+
+  return htmlString;
+}
+
 export default async function markdownToHtml(markdown: string) {
   // Pre-process to preserve math delimiters using placeholders
   let processedMarkdown = preserveMathDelimiters(markdown);
@@ -183,7 +300,12 @@ export default async function markdownToHtml(markdown: string) {
   // Process annotations BEFORE remark to avoid conflicts
   processedMarkdown = processAnnotations(processedMarkdown);
 
-  const result = await remark().use(html).process(processedMarkdown);
+  const result = await remark()
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeSlug)
+    .use(rehypeStringify)
+    .process(processedMarkdown);
   let htmlString = result.toString();
 
   // Restore math delimiters FIRST, before any other processing
@@ -194,8 +316,9 @@ export default async function markdownToHtml(markdown: string) {
   htmlString = processStrikethrough(htmlString);
   htmlString = processColoredText(htmlString);
   htmlString = processFigures(markdown, htmlString);
+  htmlString = processTables(markdown, htmlString);
   htmlString = processCollapsibleSections(htmlString);
-  htmlString = postProcessAnnotations(htmlString);
+  htmlString = await postProcessAnnotations(htmlString);
 
   return htmlString;
 }
