@@ -1,6 +1,6 @@
 ---
 title: 'P2MS Data Carry Part 1: Fundamentals and Examples'
-excerpt: 'P2MS Data Carry Part 1: Fundamentals and Examples'
+excerpt: 'Examining the techniques of P2MS data carriage'
 coverImage: '/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-1.png'
 date: '2025-10-16T00:00:00.000Z'
 author:
