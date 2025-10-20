@@ -3,10 +3,16 @@
 import { useState, useEffect, Suspense } from "react";
 import markdownStyles from "./markdown-styles.module.css";
 import { ImageModal } from "./image-modal";
+import { InteractivePlot } from "./interactive-plot";
+import { parsePlotData } from "@/lib/plot-utils";
+import type { Root } from "react-dom/client";
 
 type Props = {
   content: string;
 };
+
+// Store React roots for plot containers to prevent duplicate creation
+const plotRoots = new WeakMap<HTMLElement, Root>();
 
 function PostBodyContent({ content }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -112,6 +118,91 @@ function PostBodyContent({ content }: Props) {
         annotation.appendChild(arrowElement);
       }
     });
+  }, [content]);
+
+  // Hydrate plot containers with InteractivePlot components
+  useEffect(() => {
+    const markdownContainer = document.querySelector(`.${markdownStyles.markdown}`);
+    if (!markdownContainer) return;
+
+    const plotContainers = markdownContainer.querySelectorAll<HTMLElement>('.interactive-plot-container');
+
+    plotContainers.forEach(async (container) => {
+      const plotId = container.getAttribute('data-plot-id');
+      const plotDataStr = container.getAttribute('data-plot-data');
+
+      if (!plotId || !plotDataStr) return;
+
+      // Decode HTML entities
+      const decodedData = plotDataStr
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+
+      let plotData;
+
+      // Check if this is a src reference or inline data
+      try {
+        const parsed = JSON.parse(decodedData);
+        if (parsed.src) {
+          // Fetch external JSON file
+          const response = await fetch(parsed.src);
+          if (!response.ok) {
+            console.error(`Failed to fetch plot data from ${parsed.src}`);
+            return;
+          }
+          const externalData = await response.json();
+          plotData = {
+            data: externalData.data,
+            layout: externalData.layout || {},
+          };
+        } else {
+          // Inline data
+          plotData = parsePlotData(decodedData);
+        }
+      } catch (error) {
+        console.error(`Failed to parse plot data for ${plotId}:`, error);
+        return;
+      }
+
+      if (!plotData) {
+        console.error(`Failed to parse plot data for ${plotId}`);
+        return;
+      }
+
+      // Create or reuse React root for this container
+      import('react-dom/client').then(({ createRoot }) => {
+        let root = plotRoots.get(container);
+
+        if (!root) {
+          // First time: create new root
+          root = createRoot(container);
+          plotRoots.set(container, root);
+        }
+
+        // Render (or re-render) the plot
+        root.render(
+          <InteractivePlot
+            data={plotData.data}
+            layout={plotData.layout}
+            id={plotId}
+          />
+        );
+      });
+    });
+
+    // Cleanup function to unmount plots when content changes
+    return () => {
+      plotContainers.forEach((container) => {
+        const root = plotRoots.get(container);
+        if (root) {
+          root.unmount();
+          plotRoots.delete(container);
+        }
+      });
+    };
   }, [content]);
 
   return (

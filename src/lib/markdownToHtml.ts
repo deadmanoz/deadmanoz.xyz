@@ -110,6 +110,9 @@ function restoreMathDelimiters(htmlString: string): string {
 // Store annotation data globally for processing
 const annotationStore = new Map<string, { text: string; tooltip: string }>();
 
+// Store plot data globally for processing
+const plotStore = new Map<string, string>();
+
 // Process annotations before remark to handle markdown in tooltips
 function processAnnotations(markdownString: string): string {
   let counter = 0;
@@ -194,6 +197,65 @@ function processCollapsibleSections(htmlString: string): string {
       <div class="collapsible-content">${processedContent}</div>
     </details>`;
   });
+}
+
+// Process plot blocks before remark to preserve JSON data
+function processPlotBlocks(markdownString: string): string {
+  plotStore.clear(); // Clear previous plots
+
+  // Process :::plot{id} blocks
+  // Match the opening line, then capture content until the FIRST ::: on its own line
+  // This handles both inline JSON and src attribute for external files
+  return markdownString.replace(/:::plot\{([^}]+)\}\s*\n((?:(?!^:::$)[\s\S])*?)^:::$/gm, (_match, idAndAttrs, jsonContent) => {
+    // Parse id and optional src attribute
+    const srcMatch = idAndAttrs.match(/^([^\s]+)\s+src="([^"]+)"/);
+    let plotId: string;
+    let dataToStore: string;
+
+    if (srcMatch) {
+      // External file: :::plot{id src="/path/to/data.json"}
+      plotId = `plot-${srcMatch[1]}`;
+      dataToStore = `{"src":"${srcMatch[2]}"}`;
+    } else {
+      // Inline JSON: :::plot{id}
+      plotId = `plot-${idAndAttrs}`;
+      dataToStore = jsonContent.trim();
+    }
+
+    // Store the plot data or src reference
+    plotStore.set(plotId, dataToStore);
+
+    // Use a simple placeholder that won't be processed by remark
+    return `PLOT_PLACEHOLDER_${plotId}`;
+  });
+}
+
+// Post-process plot placeholders after remark HTML conversion
+function postProcessPlots(htmlString: string): string {
+  let processed = htmlString;
+
+  // Process each stored plot
+  for (const [id, jsonData] of plotStore.entries()) {
+    const placeholder = `PLOT_PLACEHOLDER_${id}`;
+
+    if (processed.includes(placeholder)) {
+      // Escape the JSON data for HTML attribute
+      const escapedJson = jsonData
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Create a div that will be hydrated client-side
+      const plotDiv = `<div class="interactive-plot-container" data-plot-id="${id}" data-plot-data="${escapedJson}"></div>`;
+
+      processed = processed.replace(new RegExp(`<p>${placeholder}</p>`, 'g'), plotDiv);
+      processed = processed.replace(new RegExp(placeholder, 'g'), plotDiv);
+    }
+  }
+
+  return processed;
 }
 
 // Process figures with captions and automatic numbering
@@ -297,6 +359,9 @@ export default async function markdownToHtml(markdown: string) {
   // Pre-process to preserve math delimiters using placeholders
   let processedMarkdown = preserveMathDelimiters(markdown);
 
+  // Process plot blocks BEFORE remark to preserve JSON data
+  processedMarkdown = processPlotBlocks(processedMarkdown);
+
   // Process annotations BEFORE remark to avoid conflicts
   processedMarkdown = processAnnotations(processedMarkdown);
 
@@ -318,6 +383,7 @@ export default async function markdownToHtml(markdown: string) {
   htmlString = processFigures(markdown, htmlString);
   htmlString = processTables(markdown, htmlString);
   htmlString = processCollapsibleSections(htmlString);
+  htmlString = postProcessPlots(htmlString);
   htmlString = await postProcessAnnotations(htmlString);
 
   return htmlString;
