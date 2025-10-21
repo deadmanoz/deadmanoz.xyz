@@ -2,6 +2,7 @@ import { remark } from "remark";
 import remarkRehype from "remark-rehype";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
 
 // Custom function to handle superscript syntax ^text^ - avoid math content
@@ -111,7 +112,7 @@ function restoreMathDelimiters(htmlString: string): string {
 const annotationStore = new Map<string, { text: string; tooltip: string }>();
 
 // Store plot data globally for processing
-const plotStore = new Map<string, string>();
+const plotStore = new Map<string, { data: string; caption?: string; figId?: string }>();
 
 // Process annotations before remark to handle markdown in tooltips
 function processAnnotations(markdownString: string): string {
@@ -199,31 +200,105 @@ function processCollapsibleSections(htmlString: string): string {
   });
 }
 
+// Process alert boxes with syntax :::alert{type} content :::
+function processAlertBoxes(htmlString: string): string {
+  let alertCounter = 0;
+
+  // Pattern matches how remark processes the markdown: <p>:::alert{type} followed by content until :::
+  const pattern = /<p>:::alert\{([^}]+)\}([^]*?):::<\/p>/g;
+
+  return htmlString.replace(pattern, (_match, type, content) => {
+    alertCounter++;
+    const id = `alert-${alertCounter}`;
+
+    // Validate alert type
+    const validTypes = ['info', 'warning', 'success', 'danger'];
+    const alertType = validTypes.includes(type.toLowerCase()) ? type.toLowerCase() : 'info';
+
+    // Map types to icons
+    const iconMap: Record<string, string> = {
+      'info': 'ℹ️',
+      'warning': '⚠️',
+      'success': '✓',
+      'danger': '⨯'
+    };
+
+    const icon = iconMap[alertType];
+
+    // Process the content to convert paragraph breaks properly
+    const processedContent = content.trim()
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>');
+
+    return `<div class="alert-box alert-${alertType}" id="${id}">
+      <div class="alert-icon">${icon}</div>
+      <div class="alert-content">${processedContent}</div>
+    </div>`;
+  });
+}
+
 // Process plot blocks before remark to preserve JSON data
 function processPlotBlocks(markdownString: string): string {
   plotStore.clear(); // Clear previous plots
 
-  // Process :::plot{id} blocks
-  // Match the opening line, then capture content until the FIRST ::: on its own line
-  // This handles both inline JSON and src attribute for external files
-  return markdownString.replace(/:::plot\{([^}]+)\}\s*\n((?:(?!^:::$)[\s\S])*?)^:::$/gm, (_match, idAndAttrs, jsonContent) => {
-    // Parse id and optional src attribute
-    const srcMatch = idAndAttrs.match(/^([^\s]+)\s+src="([^"]+)"/);
-    let plotId: string;
+  // Process :::plot{id} blocks with optional caption on next line
+  // Match: :::plot{...}\n...json...\n:::\noptional caption line
+  return markdownString.replace(/:::plot\{([^}]+)\}\s*\n((?:(?!^:::$)[\s\S])*?)^:::$(?:\s*\n([^\n]+(?:\{#fig:[^}]+\}))?)?/gm, (_match, idAndAttrs, jsonContent, captionLine) => {
+    // Parse id and optional attributes (src, annotations, annotationIds)
+    const idMatch = idAndAttrs.match(/^([^\s]+)/);
+    const plotId = idMatch ? `plot-${idMatch[1]}` : 'plot-unnamed';
+
+    const srcMatch = idAndAttrs.match(/src="([^"]+)"/);
+    const annotationsMatch = idAndAttrs.match(/annotations="([^"]+)"/);
+    const annotationIdsMatch = idAndAttrs.match(/annotationIds="([^"]+)"/);
+
     let dataToStore: string;
 
     if (srcMatch) {
       // External file: :::plot{id src="/path/to/data.json"}
-      plotId = `plot-${srcMatch[1]}`;
-      dataToStore = `{"src":"${srcMatch[2]}"}`;
+      dataToStore = `{"src":"${srcMatch[1]}"}`;
     } else {
       // Inline JSON: :::plot{id}
-      plotId = `plot-${idAndAttrs}`;
       dataToStore = jsonContent.trim();
     }
 
-    // Store the plot data or src reference
-    plotStore.set(plotId, dataToStore);
+    // Add annotation metadata to the stored data
+    if (annotationsMatch || annotationIdsMatch) {
+      try {
+        const parsed = JSON.parse(dataToStore);
+        if (annotationsMatch) {
+          parsed.annotationsSrc = annotationsMatch[1];
+        }
+        if (annotationIdsMatch) {
+          parsed.annotationIds = annotationIdsMatch[1];
+        }
+        dataToStore = JSON.stringify(parsed);
+      } catch (e) {
+        console.error('Failed to parse plot data for annotation metadata:', e);
+      }
+    }
+
+    // Extract caption and optional figure ID from caption line
+    let caption: string | undefined;
+    let figId: string | undefined;
+
+    if (captionLine && captionLine.trim()) {
+      const figIdMatch = captionLine.match(/^(.+?)\s*\{#fig:([^}]+)\}$/);
+      if (figIdMatch) {
+        caption = figIdMatch[1].trim();
+        figId = figIdMatch[2];
+      } else {
+        caption = captionLine.trim();
+      }
+    }
+
+    // Store the plot data, caption, and optional figure ID
+    plotStore.set(plotId, {
+      data: dataToStore,
+      caption,
+      ...(figId && { figId })
+    } as { data: string; caption?: string; figId?: string });
 
     // Use a simple placeholder that won't be processed by remark
     return `PLOT_PLACEHOLDER_${plotId}`;
@@ -231,27 +306,43 @@ function processPlotBlocks(markdownString: string): string {
 }
 
 // Post-process plot placeholders after remark HTML conversion
-function postProcessPlots(htmlString: string): string {
+// This needs to be called AFTER processFigures to get the figure number
+function postProcessPlots(htmlString: string, figureRefs: Map<string, number>): string {
   let processed = htmlString;
 
   // Process each stored plot
-  for (const [id, jsonData] of plotStore.entries()) {
+  for (const [id, plotInfo] of plotStore.entries()) {
     const placeholder = `PLOT_PLACEHOLDER_${id}`;
 
     if (processed.includes(placeholder)) {
       // Escape the JSON data for HTML attribute
-      const escapedJson = jsonData
+      const escapedJson = plotInfo.data
         .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-      // Create a div that will be hydrated client-side
+      // Create the plot div
       const plotDiv = `<div class="interactive-plot-container" data-plot-id="${id}" data-plot-data="${escapedJson}"></div>`;
 
-      processed = processed.replace(new RegExp(`<p>${placeholder}</p>`, 'g'), plotDiv);
-      processed = processed.replace(new RegExp(placeholder, 'g'), plotDiv);
+      // If there's a caption or figId, wrap in figure container
+      if (plotInfo.caption || plotInfo.figId) {
+        const figId = plotInfo.figId || id.replace('plot-', '');
+        const figNum = figureRefs.get(figId);
+
+        const figureWrapper = `<figure class="figure-container" id="fig-${figId}">
+          ${plotDiv}
+          <figcaption><strong>Figure ${figNum}:</strong> ${plotInfo.caption || ''}</figcaption>
+        </figure>`;
+
+        processed = processed.replace(new RegExp(`<p>${placeholder}</p>`, 'g'), figureWrapper);
+        processed = processed.replace(new RegExp(placeholder, 'g'), figureWrapper);
+      } else {
+        // No caption, just the plot
+        processed = processed.replace(new RegExp(`<p>${placeholder}</p>`, 'g'), plotDiv);
+        processed = processed.replace(new RegExp(placeholder, 'g'), plotDiv);
+      }
     }
   }
 
@@ -259,17 +350,26 @@ function postProcessPlots(htmlString: string): string {
 }
 
 // Process figures with captions and automatic numbering
-function processFigures(markdown: string, htmlString: string): string {
+// Returns both the processed HTML and the figure reference map for use by plots
+function processFigures(markdown: string, htmlString: string): { html: string; figureRefs: Map<string, number> } {
   let figureCounter = 0;
   const figureRefs = new Map<string, number>();
 
-  // First pass: Find all figure definitions in markdown and create mapping
+  // First pass: Find all figure definitions (images AND plots) in markdown and create mapping
+  // Image figures: ![alt](src){#fig:id}
   const figurePattern = /!\[([^\]]*)\]\([^)]+\)\s*\{#fig:([^}]+)\}/g;
   let match;
   while ((match = figurePattern.exec(markdown)) !== null) {
     const id = match[2];
     if (!figureRefs.has(id)) {
       figureRefs.set(id, ++figureCounter);
+    }
+  }
+
+  // Plot figures: look in plotStore for figId entries
+  for (const plotInfo of plotStore.values()) {
+    if (plotInfo.figId && !figureRefs.has(plotInfo.figId)) {
+      figureRefs.set(plotInfo.figId, ++figureCounter);
     }
   }
 
@@ -287,7 +387,7 @@ function processFigures(markdown: string, htmlString: string): string {
     }
   );
 
-  // Replace figure references
+  // Replace figure references (works for both image and plot figures)
   htmlString = htmlString.replace(/\{@fig:([^}]+)\}/g, (match, id) => {
     const figNum = figureRefs.get(id);
     if (figNum) {
@@ -296,7 +396,7 @@ function processFigures(markdown: string, htmlString: string): string {
     return match;
   });
 
-  return htmlString;
+  return { html: htmlString, figureRefs };
 }
 
 // Process tables with captions and automatic numbering
@@ -369,6 +469,7 @@ export default async function markdownToHtml(markdown: string) {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
+    .use(rehypeHighlight)
     .use(rehypeStringify)
     .process(processedMarkdown);
   let htmlString = result.toString();
@@ -380,10 +481,18 @@ export default async function markdownToHtml(markdown: string) {
   htmlString = processSuperscript(htmlString);
   htmlString = processStrikethrough(htmlString);
   htmlString = processColoredText(htmlString);
-  htmlString = processFigures(markdown, htmlString);
+
+  // Process figures first to get the figure reference map
+  const { html: figuresHtml, figureRefs } = processFigures(markdown, htmlString);
+  htmlString = figuresHtml;
+
   htmlString = processTables(markdown, htmlString);
   htmlString = processCollapsibleSections(htmlString);
-  htmlString = postProcessPlots(htmlString);
+  htmlString = processAlertBoxes(htmlString);
+
+  // Process plots with the figure reference map
+  htmlString = postProcessPlots(htmlString, figureRefs);
+
   htmlString = await postProcessAnnotations(htmlString);
 
   return htmlString;

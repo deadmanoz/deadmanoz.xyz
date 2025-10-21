@@ -1,42 +1,10 @@
 import type { Data, Layout } from "plotly.js-basic-dist";
+import type { PlotAnnotation } from "./annotation-utils";
+import { applyAnnotationsToLayout } from "./annotation-utils";
+import { synthwaveColors, colorSchemes } from "./colors";
 
-/**
- * Synthwave color palette for plots
- */
-export const synthwaveColors = {
-  neonOrange: "#FF6C11",
-  neonCyan: "#00A0D0",
-  neonGreen: "#20E516",
-  neonBlue: "#006DD0",
-  peach: "#FF8664",
-  purple: "#261447",
-  teal: "#025F88",
-  neonPink: "#FF006E",
-  magenta: "#FF00FF",
-};
-
-/**
- * Common color schemes for multi-series plots
- */
-export const colorSchemes = {
-  neon: [
-    synthwaveColors.neonCyan,
-    synthwaveColors.neonOrange,
-    synthwaveColors.neonGreen,
-    synthwaveColors.neonPink,
-    synthwaveColors.neonBlue,
-  ],
-  warm: [
-    synthwaveColors.neonOrange,
-    synthwaveColors.peach,
-    synthwaveColors.neonPink,
-  ],
-  cool: [
-    synthwaveColors.neonCyan,
-    synthwaveColors.neonBlue,
-    synthwaveColors.teal,
-  ],
-};
+// Re-export for backwards compatibility
+export { synthwaveColors, colorSchemes };
 
 /**
  * Create a time-series scatter plot
@@ -50,6 +18,7 @@ export function createTimeSeriesPlot(
     showRangeSlider?: boolean;
     yAxisTitle?: string;
     xAxisTitle?: string;
+    annotations?: PlotAnnotation[];
   } = {}
 ): { data: Data[]; layout: Partial<Layout> } {
   const {
@@ -58,6 +27,7 @@ export function createTimeSeriesPlot(
     showRangeSlider = true,
     yAxisTitle = "",
     xAxisTitle = "Time",
+    annotations = [],
   } = options;
 
   const data: Data[] = [
@@ -87,6 +57,17 @@ export function createTimeSeriesPlot(
     },
   };
 
+  // Apply annotations if provided
+  if (annotations.length > 0) {
+    const { shapes, annotations: layoutAnnotations } = applyAnnotationsToLayout(
+      annotations,
+      layout.shapes as Partial<import("plotly.js-basic-dist").Shape>[] | undefined,
+      layout.annotations as Partial<import("plotly.js-basic-dist").Annotations>[] | undefined
+    );
+    layout.shapes = shapes as Layout["shapes"];
+    layout.annotations = layoutAnnotations as Layout["annotations"];
+  }
+
   return { data, layout };
 }
 
@@ -105,6 +86,7 @@ export function createMultiSeriesPlot(
     yAxisTitle?: string;
     xAxisTitle?: string;
     colorScheme?: keyof typeof colorSchemes;
+    annotations?: PlotAnnotation[];
   } = {}
 ): { data: Data[]; layout: Partial<Layout> } {
   const {
@@ -112,6 +94,7 @@ export function createMultiSeriesPlot(
     yAxisTitle = "",
     xAxisTitle = "Time",
     colorScheme = "neon",
+    annotations = [],
   } = options;
 
   const colors = colorSchemes[colorScheme];
@@ -148,6 +131,17 @@ export function createMultiSeriesPlot(
       borderwidth: 1,
     },
   };
+
+  // Apply annotations if provided
+  if (annotations.length > 0) {
+    const { shapes, annotations: layoutAnnotations } = applyAnnotationsToLayout(
+      annotations,
+      layout.shapes as Partial<import("plotly.js-basic-dist").Shape>[] | undefined,
+      layout.annotations as Partial<import("plotly.js-basic-dist").Annotations>[] | undefined
+    );
+    layout.shapes = shapes as Layout["shapes"];
+    layout.annotations = layoutAnnotations as Layout["annotations"];
+  }
 
   return { data, layout };
 }
