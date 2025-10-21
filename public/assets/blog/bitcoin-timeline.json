@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "name": "Bitcoin Timeline Annotations",
+    "description": "Key events in Bitcoin and related protocol history",
+    "version": "1.0.0"
+  },
+  "annotations": [
+    {
+      "id": "bitcoin-genesis",
+      "date": "2009-01-03",
+      "label": "Bitcoin Genesis",
+      "color": "#FF6C11",
+      "description": "Bitcoin genesis block mined by Satoshi Nakamoto"
+    },
+    {
+      "id": "p2ms-made-standard",
+      "date": "2012-03-30",
+      "label": "P2MS Made Standard",
+      "color": "#95A5A6",
+      "description": "P2MS multisig transactions became standard with Bitcoin Core v0.6.0 (BIP11), allowing nodes to relay and include them in blocks"
+    },
+    {
+      "id": "omni-launch",
+      "date": "2013-07-31",
+      "label": "Omni Launch",
+      "color": "#9B59B6",
+      "description": "Omni protocol (originally Mastercoin) launched, pioneering the first layer protocol on Bitcoin for complex financial instruments"
+    },
+    {
+      "id": "counterparty-launch",
+      "date": "2014-01-02",
+      "label": "Counterparty Launch",
+      "color": "#3498DB",
+      "description": "Counterparty protocol went live on Bitcoin mainnet, enabling peer-to-peer financial applications and user-created tokens"
+    },
+    {
+      "id": "chancecoin-launch",
+      "date": "2014-05-01",
+      "label": "Chancecoin Launch",
+      "color": "#FF006E",
+      "description": "Chancecoin launched as a decentralized gambling protocol on Bitcoin, using proof-of-burn and P2MS data carriage"
+    },
+    {
+      "id": "ordinals-launch",
+      "date": "2023-01-21",
+      "label": "Ordinals Launch",
+      "color": "#FF00FF",
+      "description": "Ordinals protocol launched, enabling NFT-like inscriptions directly on Bitcoin"
+    },
+    {
+      "id": "bitcoin-stamps-launch",
+      "date": "2023-03-08",
+      "label": "Bitcoin Stamps Launch",
+      "color": "#E74C3C",
+      "description": "Bitcoin Stamps protocol launched in block 779,652, enabling immutable NFT storage via P2MS outputs with Key Burn addresses"
+    }
+  ]
+}
