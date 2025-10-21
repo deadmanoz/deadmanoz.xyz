@@ -5,6 +5,7 @@ import markdownStyles from "./markdown-styles.module.css";
 import { ImageModal } from "./image-modal";
 import { InteractivePlot } from "./interactive-plot";
 import { parsePlotData } from "@/lib/plot-utils";
+import { loadAnnotationsFromFile, filterAnnotations } from "@/lib/annotation-utils";
 import type { Root } from "react-dom/client";
 
 type Props = {
@@ -24,6 +25,36 @@ function PostBodyContent({ content }: Props) {
       const urlParams = new URLSearchParams(window.location.search);
       setIsWideContent(urlParams.get('wide-content') !== 'false');
     }
+  }, []);
+
+  // Handle hash scrolling on mount and hash changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        // Remove the # symbol
+        const id = hash.substring(1);
+        // Use a small delay to ensure content is rendered
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    };
+
+    // Scroll on mount if hash exists
+    scrollToHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', scrollToHash);
+
+    return () => {
+      window.removeEventListener('hashchange', scrollToHash);
+    };
   }, []);
 
   useEffect(() => {
@@ -146,6 +177,9 @@ function PostBodyContent({ content }: Props) {
       // Check if this is a src reference or inline data
       try {
         const parsed = JSON.parse(decodedData);
+        let annotationsSrc: string | undefined;
+        let annotationIds: string | undefined;
+
         if (parsed.src) {
           // Fetch external JSON file
           const response = await fetch(parsed.src);
@@ -158,9 +192,44 @@ function PostBodyContent({ content }: Props) {
             data: externalData.data,
             layout: externalData.layout || {},
           };
+          // Check for annotation metadata in external file
+          annotationsSrc = parsed.annotationsSrc || externalData.annotationsSrc;
+          annotationIds = parsed.annotationIds || externalData.annotationIds;
         } else {
           // Inline data
           plotData = parsePlotData(decodedData);
+          // Check for annotation metadata in inline data
+          annotationsSrc = parsed.annotationsSrc;
+          annotationIds = parsed.annotationIds;
+        }
+
+        // Early return if plotData is null
+        if (!plotData) {
+          console.error(`Failed to parse plot data for ${plotId}`);
+          return;
+        }
+
+        // Load and apply annotations if specified
+        if (annotationsSrc) {
+          const annotations = await loadAnnotationsFromFile(annotationsSrc);
+          const filteredAnnotations = annotationIds
+            ? filterAnnotations(annotations, annotationIds)
+            : annotations;
+
+          if (filteredAnnotations.length > 0) {
+            // Import annotation utilities to apply annotations
+            const { applyAnnotationsToLayout } = await import("@/lib/annotation-utils");
+            const { shapes, annotations: layoutAnnotations } = applyAnnotationsToLayout(
+              filteredAnnotations,
+              plotData.layout?.shapes as Partial<import("plotly.js-basic-dist").Shape>[] | undefined,
+              plotData.layout?.annotations as Partial<import("plotly.js-basic-dist").Annotations>[] | undefined
+            );
+            plotData.layout = {
+              ...plotData.layout,
+              shapes: shapes as typeof plotData.layout.shapes,
+              annotations: layoutAnnotations as typeof plotData.layout.annotations,
+            };
+          }
         }
       } catch (error) {
         console.error(`Failed to parse plot data for ${plotId}:`, error);
@@ -351,6 +420,123 @@ function PostBodyContent({ content }: Props) {
 
           .annotation-arrow {
             display: none;
+          }
+        }
+
+        /* Alert boxes styling */
+        .alert-box {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1.25rem;
+          margin: 1.5rem 0;
+          border-radius: 0.5rem;
+          backdrop-filter: blur(10px);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .alert-box:hover {
+          transform: translateY(-2px);
+        }
+
+        .alert-icon {
+          font-size: 1.5rem;
+          line-height: 1;
+          font-weight: bold;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem;
+          height: 2rem;
+          text-shadow: 0 0 10px currentColor;
+        }
+
+        .alert-content {
+          flex: 1;
+          color: var(--theme-text-primary);
+        }
+
+        .alert-content p {
+          margin: 0;
+        }
+
+        .alert-content p + p {
+          margin-top: 0.75rem;
+        }
+
+        /* Info alert - Cyan */
+        .alert-info {
+          border: 2px solid var(--theme-neon-cyan);
+          box-shadow: 0 0 20px rgba(0, 160, 208, 0.2);
+          background: linear-gradient(135deg, rgba(0, 160, 208, 0.15) 0%, var(--theme-bg-secondary) 100%);
+        }
+
+        .alert-info:hover {
+          box-shadow: 0 0 30px rgba(0, 160, 208, 0.4);
+        }
+
+        .alert-info .alert-icon {
+          color: var(--theme-neon-cyan);
+        }
+
+        /* Warning alert - Orange */
+        .alert-warning {
+          border: 2px solid var(--theme-neon-orange);
+          box-shadow: 0 0 20px rgba(255, 108, 17, 0.2);
+          background: linear-gradient(135deg, rgba(255, 108, 17, 0.15) 0%, var(--theme-bg-secondary) 100%);
+        }
+
+        .alert-warning:hover {
+          box-shadow: 0 0 30px rgba(255, 108, 17, 0.4);
+        }
+
+        .alert-warning .alert-icon {
+          color: var(--theme-neon-orange);
+        }
+
+        /* Success alert - Green */
+        .alert-success {
+          border: 2px solid var(--theme-neon-green);
+          box-shadow: 0 0 20px rgba(32, 229, 22, 0.2);
+          background: linear-gradient(135deg, rgba(32, 229, 22, 0.15) 0%, var(--theme-bg-secondary) 100%);
+        }
+
+        .alert-success:hover {
+          box-shadow: 0 0 30px rgba(32, 229, 22, 0.4);
+        }
+
+        .alert-success .alert-icon {
+          color: var(--theme-neon-green);
+        }
+
+        /* Danger alert - Red/Pink */
+        .alert-danger {
+          border: 2px solid var(--theme-danger-red);
+          box-shadow: 0 0 20px rgba(230, 25, 75, 0.2);
+          background: linear-gradient(135deg, rgba(230, 25, 75, 0.15) 0%, var(--theme-bg-secondary) 100%);
+        }
+
+        .alert-danger:hover {
+          box-shadow: 0 0 30px rgba(230, 25, 75, 0.4);
+        }
+
+        .alert-danger .alert-icon {
+          color: var(--theme-danger-red);
+        }
+
+        /* Responsive adjustments for alert boxes */
+        @media (max-width: 768px) {
+          .alert-box {
+            padding: 1rem;
+            gap: 0.75rem;
+          }
+
+          .alert-icon {
+            font-size: 1.25rem;
+            width: 1.5rem;
+            height: 1.5rem;
           }
         }
       `}</style>

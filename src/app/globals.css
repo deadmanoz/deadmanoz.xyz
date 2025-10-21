@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "highlight.js/styles/atom-one-dark.css";
 
 /* Synthwave Theme Variables - Easy to swap */
 :root {
@@ -25,6 +26,9 @@
   --theme-peach: #FF8664;
   --theme-teal: #025F88;
   --theme-blue: #02578B;
+
+  /* Alert colors */
+  --theme-danger-red: #E6194B;  /* Used for danger alerts */
 
   /* Interactive Elements */
   --theme-link: #00A0D0;
@@ -186,6 +190,12 @@ a:hover {
 ::-moz-selection {
   background: var(--theme-neon-orange);
   color: white;
+}
+
+/* Force Tailwind to include danger-red variable (referenced in styled-jsx) */
+.force-danger-red-inclusion {
+  border-color: var(--theme-danger-red);
+  display: none;
 }
 
 /* Header anchor navigation */
