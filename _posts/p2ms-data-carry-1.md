@@ -216,7 +216,7 @@ Decoding the meaningful 63 bytes with UTF-8 gives:
 ```
 Note that in the above there are no spaces - [_"in order to minimize the transaction size spaces are not used in the serialized JSON string which is constructed by the SRC-20 reference wallet"_](https://github.com/stampchain-io/stamps_sdk/blob/main/docs/src20specs.md).
 Prettier formats to the following.
-```JSON
+```json
 stamp: {
 	"p":"src-20",
 	"op":"transfer",
