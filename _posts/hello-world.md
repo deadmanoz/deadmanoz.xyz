@@ -58,6 +58,26 @@ Proposed by Nick Szabo, Bit Gold was never implemented but contained many elemen
 These early experiments laid the groundwork for Bitcoin's revolutionary approach to solving the double-spending problem without requiring a trusted central authority.
 :::
 
+## Alert Boxes
+
+Alert boxes showcase different visual treatments for important information.
+
+:::alert{info}
+**Satoshi on Bitcoin's Foundation** (October 31, 2008): "I've been working on a {{cyan:new electronic cash system}} that's fully peer-to-peer, with no trusted third party."
+:::
+
+:::alert{warning}
+**Satoshi on Trust** (February 2009): "The root problem with conventional currency is all the trust that's required to make it work. The central bank must be trusted not to debase the currency, but the history of fiat currencies is full of breaches of that trust."
+:::
+
+:::alert{success}
+**Satoshi on Lost Coins** (2010): "Lost coins only make everyone else's coins worth slightly more. Think of it as a donation to everyone." With a fixed supply of \(21 \times 10^6\) bitcoins, this [[deflationary observation||Each lost bitcoin increases scarcity for remaining holders]] highlights an elegant economic property.
+:::
+
+:::alert{danger}
+**Satoshi's Caution** (December 2010): "WikiLeaks has kicked the hornet's nest, and the swarm is headed towards us."
+:::
+
 ## Interactive Plots
 
 Interactive plots with zoom, pan, and range slider controls:
