@@ -28,6 +28,7 @@ Omni distinguishes itself through obfuscation based on SHA-256+XOR, keyed to the
 Omni also maintains valid pubkeys in its {{green:1-of-2}} or {{green:1-of-3}} structures, so all Omni P2MS outputs can also be spent (again, in theory).
 
 A number of minor protocols, using identifiers such as `CHANCECO` (Chancecoin), `TB0001`, `TEST01` and `METROXMN`, also leverage P2MS for data carrying purposes.
+Additionally, several protocols employ a hybrid approach, using `OP_RETURN` outputs for protocol identification while using P2MS outputs for the actual data payload, a pattern that combines explicit signalling with larger storage capacity (including "Protocol 47930", `RT`, `CLIPPERZ`).
 Beyond protocol-based approaches, P2MS has also been used for generic data storage, with notable examples including the Bitcoin whitepaper PDF and Wikileaks Cablegate files.
 
 ## Introduction
@@ -36,8 +37,8 @@ This post is the first in a series of posts that will explore how the Bitcoin bl
 Data carriage refers to the practice of embedding arbitrary, non-financial data into Bitcoin transactions and storing it permanently on the blockchain.
 Data carriage is a controversial topic in the Bitcoin community, with some viewing it as a legitimate use case for the blockchain, while others see it as an abuse of the system that adds blockchain bloat and raises costs for everyone.
 
-While there are many ways to embed data in Bitcoin transactions, this and the following post will explore the use of Pay-to-Multisig (P2MS) script types for data carriage. 
-This instalment explains the fundamentals of P2MS and how it's used for data carriage while [Part 2](./p2ms-data-carry-2) examines the magnitude of P2MS data carriage and its implications.
+While there are many ways to embed data in Bitcoin transactions, this and the following posts will explore the use of Pay-to-Multisig (P2MS) script types for data carriage.
+This instalment explains the fundamentals of P2MS and how it's used for data carriage while [Part 2](./p2ms-data-carry-2) examines the magnitude of P2MS data carriage via an analysis of a snapshot of the UTXO set.
 Note that this post goes into detail in breaking down examples of the various protocols; these examples are collapsed by default but can be expanded.
 
 The use of P2MS script types seemed like a good place to start because:
@@ -702,13 +703,17 @@ Again, by no means being any form of endorsement, [here are full details](https:
 :::
 
 ## Other variants or protocols
-As documented in [Part 2](./p2ms-data-carry-2), Bitcoin Stamps, Counterparty and Omni are the dominant protocols that utilise P2MS outputs for data carrying purposes, combined accounting for over 94% of P2MS outputs in the UTXO set.
-Yet there are other minor protocols that also use P2MS outputs to carry data, such as Chancecoin, and observed identifier patterns such as `TB0001`, `TEST01`, `METROXMN`.
-These other protocols and identifier patterns involve unobfuscated data, so interpreting them is simply a matter of ASCII decoding.
+As documented in [Part 2](./p2ms-data-carry-2), Bitcoin Stamps, Counterparty and Omni are the dominant protocols that utilise P2MS outputs for data carrying purposes, combined accounting for over 98% of P2MS outputs in the UTXO set.
+Yet there are other approaches and minor protocols that also use P2MS outputs to carry data:
+1. **Minor standalone protocols**: Protocols with their own identifiers embedded in P2MS data: Chancecoin (`CHANCECO`), `TB0001`, `TEST01`, `METROXMN`
+2. **Hybrid `OP_RETURN` signalling**: Protocols that use `OP_RETURN` for identification alongside P2MS for data storage
+3. **Generic data storage**: Direct data embedding without protocol layers
+
+These other identifier patterns or protocols can often be simply identified by ASCII interpretation of the P2MS key data, or data of other outputs (`OP_RETURN`), though sometimes they have binary formats for messages.
 
 ### Chancecoin
 Chancecoin was a gambling protocol built on Bitcoin, only active for a short period in 2014, that used P2MS outputs for data carrying purposes in some circumstances.
-Like Counterparty, users were required to send bitcoin to a specific address, between certain dates, to obtain Chancecoin tokens (`CHA`).
+Like Counterparty, users were required to send bitcoin to a specific address, between certain dates, to obtain "Chancecoin tokens".
 In this case the address was [`1ChancecoinXXXXXXXXXXXXXXXXXZELUFD`](https://mempool.space/address/1ChancecoinXXXXXXXXXXXXXXXXXZELUFD).
 To date, 480.19571581 BTC have been sent to it.
 
@@ -719,19 +724,28 @@ Key characteristics:
 - Large Chancecoin messages are split across multiple P2MS outputs
 - Message format: [`CHANCECO`:8][MessageID:4][Data:variable]
 
-### Other identifier patterns
+### ASCII identifier patterns
 Other identifier patterns that have been observed in P2MS outputs in the UTXO set by simple ASCII decoding include `TB0001`, `TEST01`, `METROXMN`.
 There doesn't appear to be much information online about these identifiers, with the exception of `METROXMN` which is associated with [Metronotes XMN](https://bitcointalk.org/index.php?topic=974486.0), which unequivocally appears to be a scam.
 
 Although the identifiers are not obfuscated, the data that follows is likely representing some form of protocol or message format like the other data carrying methods.
-In the [companion repository](https://github.com/deadmanoz/data-carry-research), unlike the other protocols discussed here, no attempt has been made to interpret or decode the data beyond the identifier.  
+In the [companion repository](https://github.com/deadmanoz/data-carry-research), unlike the other protocols discussed here, no attempt has been made to interpret or decode the data beyond the identifier.
+
+### `OP_RETURN` signalling
+Some protocols employ a hybrid approach, using `OP_RETURN` outputs to signal or identify the protocol, while simultaneously using P2MS outputs to carry the actual data payload.
+This dual-output pattern provides explicit protocol identification through the `OP_RETURN` marker, while the larger data carrying capacity of P2MS outputs is used for the message content.
+Three distinct variants have been identified in the UTXO set using this approach:
+- "Protocol 47930" (`0xbb3a` marker) uses a 2-byte OP_RETURN prefix (`0xbb3a`) alongside {{green:2-of-2}} multisig outputs.
+- "RT Protocol" employs an ASCII `RT` identifier in its `OP_RETURN` output, paired with {{green:1-of-2}} multisig data storage.
+- "CLIPPERZ" is a password manager service that used Bitcoin's blockchain for encrypted data backup and notarization, creating `OP_RETURN` outputs containing `CLIPPERZ` alongside {{green:2-of-2}} multisig outputs.
+The `OP_RETURN` serves as an explicit protocol declaration, avoiding ambiguity in classification, while the P2MS outputs function as the primary data carrier.
 
 ## Generic Data Storage
 Data carrying in P2MS outputs need not rely on some standardised protocol and indeed there are many files (documents, images, etc.) and text, encoded, with or without any obfuscation, into P2MS pubkeys.
 
 There are many examples of using P2MS outputs for generic data storage, but perhaps the most famous two are:
 1) The Bitcoin Whitepaper PDF - a single transaction
-2) The Wikileaks cablegate data - uses multiple transactions
+2) The Wikileaks Cablegate data - uses multiple transactions
 
 Both of these examples, and many other instances of Bitcoin transaction data being used for generic data storage are very well documented by Ken Shirriff in [Hidden surprises in the Bitcoin blockchain and how they are stored: Nelson Mandela, Wikileaks, photos, and Python software](http://www.righto.com/2014/02/ascii-bernanke-wikileaks-photographs.html) and Ciro Santilli in [Cool data embedded in the Bitcoin blockchain: Ciro's Bitcoin Inscription Museum](https://cirosantilli.com/cool-data-embedded-in-the-bitcoin-blockchain).
 For the purposes of understanding how P2MS outputs have been used for generic data storage, we'll examine how we can extract the Bitcoin Whitepaper PDF.
@@ -823,7 +837,8 @@ The efficiency of the Counterparty protocol is lower than the other two due to p
 
 Comparison of the technical details of the major P2MS-using protocols.{#tab:technique-summary}
 
-Beyond these three major protocols, we've also seen P2MS transaction outputs leveraged by minor protocols like Chancecoin, and other projects with identifiers including `TB0001`, `TEST01` and `METROXMN`.
+Beyond these three major protocols, we also see P2MS transaction outputs leveraged by minor protocols like Chancecoin, and other projects with identifiers including `TB0001`, `TEST01` and `METROXMN`.
+And there's the `OP_RETURN` protocol identification approaches used with identifiers such as `RT` and `CLIPPERZ`, as well as "Protocol 47930" (with `0xbb3a` marker).
 In addition, P2MS transaction outputs have been used for generic data storage, with prominent examples including the Bitcoin whitepaper PDF and the Wikileaks Cablegate files.
 Such examples demonstrate that P2MS can be used for arbitrary file storage without any standardised protocol layer.
 
