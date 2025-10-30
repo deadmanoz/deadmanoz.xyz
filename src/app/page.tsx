@@ -22,7 +22,7 @@ export default function Home() {
             deadmanoz.xyz
           </h1>
           <p className="text-lg md:text-xl text-synthwave-peach/80 mt-6">
-            Mostly Bitcoin, occassionally other stuff
+            Mostly Bitcoin, occasionally other stuff
           </p>
         </header>
 
