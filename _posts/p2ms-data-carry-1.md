@@ -27,8 +27,8 @@ Counterparty maintains at least one real pubkey per output in its {{green:1-of-2
 Omni distinguishes itself through obfuscation based on SHA-256+XOR, keyed to the sender's address, and identification via the Exodus address (`1EXoDusj...`) in adjacent transaction outputs.
 Omni also maintains valid pubkeys in its {{green:1-of-2}} or {{green:1-of-3}} structures, so all Omni P2MS outputs can also be spent (again, in theory).
 
-A number of minor protocols, using identifiers such as `CHANCECO` (Chancecoin), `TB0001`, `TEST01` and `METROXMN`, also leverage P2MS for data carrying purposes.
-Additionally, several protocols employ a hybrid approach, using `OP_RETURN` outputs for protocol identification while using P2MS outputs for the actual data payload, a pattern that combines explicit signalling with larger storage capacity (including "Protocol 47930", `RT`, `CLIPPERZ`).
+A number of minor protocols also leverage P2MS for data carrying purposes, including protocols using identifiers such as `CHANCECO` (Chancecoin), `TB0001`, `TEST01` and `METROXMN`.
+Additionally, several protocols employ hybrid approaches that use P2MS alongside `OP_RETURN`. PPk (PPkPub) uses the combined data-carrying capacity of P2MS outputs + `OP_RETURN`, with a distinctive marker pubkey for identification, whereas others use `OP_RETURN` outputs for explicit protocol signalling with the larger storage capacity of P2MS outputs used for the data payload (e.g., "Protocol 47930", `CLIPPERZ`).
 Beyond protocol-based approaches, P2MS has also been used for generic data storage, with notable examples including the Bitcoin whitepaper PDF and Wikileaks Cablegate files.
 
 ## Introduction
@@ -90,7 +90,7 @@ This fake key, `0202020202020202020202020202020202020202020202020202020202020202
 The ability to generate predetermined patterns of public keys such as Key Burn addresses in this instance, or burn addresses in general, is almost impossible because it requires generating a private key that leads to the desired public key.
 Said another way, the probability of arriving at a pre-determined pattern for an ECC-256 public key is "infinitesimally small to the point where a computer would need to grind away at keys for billions of years in order to produce a valid private key" [[Bitcoin Stamps||https://github.com/mikeinspace/stamps/blob/main/Key-Burn.md]]. 
 
-Because of the near impossibility of generating a private key that leads to a predetermined pattern in a public key, the existence of a highly improbably patterned public key is accepted as evidence that there is no corresponding private key... and that the key cannot be used to spend the output!
+Because of the near impossibility of generating a private key that leads to a predetermined pattern in a public key, the existence of a highly improbable patterned public key is accepted as evidence that there is no corresponding private key... and that the key cannot be used to spend the output!
 
 According to the [official Bitcoin Stamps protocol documentation](https://github.com/mikeinspace/stamps/blob/main/Key-Burn.md), there are 4 Key Burn addresses/patterns/public keys:
 - `022222222222222222222222222222222222222222222222222222222222222222`
@@ -705,11 +705,29 @@ Again, by no means being any form of endorsement, [here are full details](https:
 ## Other variants or protocols
 As documented in [Part 2](./p2ms-data-carry-2), Bitcoin Stamps, Counterparty and Omni are the dominant protocols that utilise P2MS outputs for data carrying purposes, combined accounting for over 98% of P2MS outputs in the UTXO set.
 Yet there are other approaches and minor protocols that also use P2MS outputs to carry data:
-1. **Minor standalone protocols**: Protocols with their own identifiers embedded in P2MS data: Chancecoin (`CHANCECO`), `TB0001`, `TEST01`, `METROXMN`
+1. **Minor standalone protocols**: Protocols with their own identifiers embedded in P2MS data: PPk (PPkPub), Chancecoin (`CHANCECO`), `TB0001`, `TEST01`, `METROXMN`
 2. **Hybrid `OP_RETURN` signalling**: Protocols that use `OP_RETURN` for identification alongside P2MS for data storage
 3. **Generic data storage**: Direct data embedding without protocol layers
 
 These other identifier patterns or protocols can often be simply identified by ASCII interpretation of the P2MS key data, or data of other outputs (`OP_RETURN`), though sometimes they have binary formats for messages.
+
+### PPk (PPkPub)
+PPk (PPkPub) was a blockchain infrastructure protocol developed by researchers at Beijing University of Posts and Telecommunications between 2016-2019, designed to create a decentralized naming and identity system built on Bitcoin (see [English documentation](https://github.com/ppkpub/docs/tree/master/English)).
+The protocol appears to have been abandoned since 2019.
+
+The protocol used so-called ODIN (Open Data Index Name) identifiers to reference resources stored in Bitcoin transactions.
+The naming structure follows the format `ppk:[BTC_BLOCK_HEIGHT].[BTC_TRANS_INDEX]/[DSS]`.
+For example, `ppk:426896.1290/message.txt` points to TXID [`a7fcc739...`](https://mempool.space/tx/a7fcc7391e2db0fe13b3a12d37fdbdc6138b2c76a9a447020fa92071a64dfe0c) at position 1290 in block [426,896](https://mempool.space/block/0000000000000000016b4c3097e5cdef14379670e126dc8aab6a9054ba1af499), with `message.txt` as the Data Source Suffix (DSS), which is basically an (optional) resource path.
+
+So given `ppk:426896.1290/message.txt`, anyone can locate block 426,896, find transaction at position 1290, detect the PPk marker, extract the payload, and decode the message.
+This design leverages Bitcoin "blockchain coordinates" (block height, transaction index within block) as a naming system: globally unique (no collision risk), deterministic, independently verifiable (anyone can reconstruct it), decentralised (no central registry), and immutable (unchanging once mined).
+
+ODINs are retroactive identifiers constructed from these "blockchain coordinates" after mining (not embedded beforehand).
+When created, PPk transactions contain only the JSON data payload, in the form of title registration (`RT`), registration information, or message text, split across P2MS and `OP_RETURN` outputs, plus a distinctive marker pubkey (`0320a0de360cc2ae8672db7d557086a4e7c8eca062c0a5a4ba9922dee0aacf3e12`) at position 2 in the P2MS output.
+No block height, transaction index, or ODIN appears in the transaction itself.
+
+Decoders construct the ODIN deterministically by detecting the marker pubkey, extracting the payload from P2MS and `OP_RETURN` outputs, inferring the resource path from payload type (RT becomes `profile.json`, registration data becomes, for example, `reg_315.txt`, messages become `message.txt`), looking up "blockchain coordinates", and constructing `ppk:[height].[index]/[path]`.
+Data is unobfuscated and directly readable and both {{green:1-of-2}} and {{green:1-of-3}} multisig configurations are used.
 
 ### Chancecoin
 Chancecoin was a gambling protocol built on Bitcoin, only active for a short period in 2014, that used P2MS outputs for data carrying purposes in some circumstances.
@@ -837,8 +855,10 @@ The efficiency of the Counterparty protocol is lower than the other two due to p
 
 Comparison of the technical details of the major P2MS-using protocols.{#tab:technique-summary}
 
-Beyond these three major protocols, we also see P2MS transaction outputs leveraged by minor protocols like Chancecoin, and other projects with identifiers including `TB0001`, `TEST01` and `METROXMN`.
-And there's the `OP_RETURN` protocol identification approaches used with identifiers such as `RT` and `CLIPPERZ`, as well as "Protocol 47930" (with `0xbb3a` marker).
+Beyond these three major protocols, we also see P2MS transaction outputs leveraged by minor protocols.
+PPk (PPkPub) uses a distinctive hybrid approach with a marker pubkey in P2MS outputs combined with protocol data in `OP_RETURN` outputs.
+Other minor protocols include Chancecoin and projects with identifiers `TB0001`, `TEST01` and `METROXMN`.
+Additional hybrid `OP_RETURN` + P2MS protocols exist, such as "Protocol 47930" (with `0xbb3a` marker) and `CLIPPERZ`.
 In addition, P2MS transaction outputs have been used for generic data storage, with prominent examples including the Bitcoin whitepaper PDF and the Wikileaks Cablegate files.
 Such examples demonstrate that P2MS can be used for arbitrary file storage without any standardised protocol layer.
 
@@ -880,3 +900,7 @@ Also be sure to check out the [companion GitHub repo](https://github.com/deadman
 - [Dominating OP Returns: The Impact of Omni and Veriblock on Bitcoin (2020)](https://www.blockchainresearchlab.org/wp-content/uploads/2020/03/BRL-Working-Paper-No-7-Dominating-OP-Returns.pdf)
 - [An Analysis of Data Hidden In Bitcoin Addresses (2021)](https://www.researchgate.net/publication/351897792_An_Analysis_of_Data_Hidden_in_Bitcoin_Addresses)
 - [Bitcoin Burn Addresses: Unveiling the Permanent Losses and Their Underlying Causes (2025)](https://arxiv.org/pdf/2503.14057)
+
+## Changelog
+
+- 2025-11-24: Added PPk
