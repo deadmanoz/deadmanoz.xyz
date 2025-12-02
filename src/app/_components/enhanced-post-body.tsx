@@ -121,6 +121,59 @@ function PostBodyContent({ content }: Props) {
     };
   }, [content, modalOpen]);
 
+  // Add anchor links to headings for easy copying
+  useEffect(() => {
+    const markdownContainer = document.querySelector(`.${markdownStyles.markdown}`);
+    if (!markdownContainer) return;
+
+    const headings = markdownContainer.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6');
+
+    headings.forEach(heading => {
+      // Skip if already processed
+      if (heading.querySelector('.heading-anchor')) return;
+
+      const id = heading.id;
+      if (!id) return;
+
+      // Make heading clickable
+      heading.style.cursor = 'pointer';
+      heading.classList.add('heading-with-anchor');
+
+      // Create anchor link icon
+      const anchor = document.createElement('a');
+      anchor.href = `#${id}`;
+      anchor.className = 'heading-anchor';
+      anchor.setAttribute('aria-label', 'Copy link to this section');
+      anchor.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+
+      // Prevent default anchor behavior and copy URL instead
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = `${window.location.origin}${window.location.pathname}#${id}`;
+        navigator.clipboard.writeText(url).then(() => {
+          // Show feedback
+          heading.classList.add('link-copied');
+          setTimeout(() => heading.classList.remove('link-copied'), 2000);
+        });
+      });
+
+      // Also allow clicking the heading text to copy
+      heading.addEventListener('click', (e) => {
+        // Only if not clicking on a link inside the heading
+        if ((e.target as HTMLElement).tagName === 'A') return;
+
+        const url = `${window.location.origin}${window.location.pathname}#${id}`;
+        navigator.clipboard.writeText(url).then(() => {
+          heading.classList.add('link-copied');
+          setTimeout(() => heading.classList.remove('link-copied'), 2000);
+        });
+      });
+
+      heading.appendChild(anchor);
+    });
+  }, [content]);
+
   // Handle annotation tooltips with HTML content
   useEffect(() => {
     const markdownContainer = document.querySelector(`.${markdownStyles.markdown}`);
@@ -538,6 +591,77 @@ function PostBodyContent({ content }: Props) {
             width: 1.5rem;
             height: 1.5rem;
           }
+        }
+
+        /* Heading anchor links */
+        .heading-with-anchor {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          transition: all 0.2s ease;
+        }
+
+        .heading-with-anchor:hover {
+          text-decoration: none;
+        }
+
+        .heading-anchor {
+          opacity: 0;
+          margin-left: 0.5rem;
+          color: var(--theme-text-secondary);
+          transition: all 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          flex-shrink: 0;
+        }
+
+        .heading-anchor svg {
+          width: 0.75em;
+          height: 0.75em;
+        }
+
+        .heading-with-anchor:hover .heading-anchor,
+        .heading-anchor:focus {
+          opacity: 1;
+          color: var(--theme-neon-cyan);
+        }
+
+        .heading-anchor:hover {
+          color: var(--theme-neon-pink);
+          text-shadow: 0 0 10px currentColor;
+          transform: scale(1.1);
+        }
+
+        /* Copied feedback */
+        .link-copied {
+          position: relative;
+        }
+
+        .link-copied::after {
+          content: 'Link copied!';
+          position: absolute;
+          left: 0;
+          top: 100%;
+          transform: translateY(0.25rem);
+          background: var(--theme-bg-secondary);
+          color: var(--theme-neon-green);
+          border: 1px solid var(--theme-neon-green);
+          padding: 0.25rem 0.75rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          white-space: nowrap;
+          animation: fadeInOut 2s ease forwards;
+          box-shadow: 0 0 10px rgba(32, 229, 22, 0.3);
+          z-index: 10;
+        }
+
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(0); }
+          15% { opacity: 1; transform: translateY(0.25rem); }
+          85% { opacity: 1; transform: translateY(0.25rem); }
+          100% { opacity: 0; transform: translateY(0.25rem); }
         }
       `}</style>
       <div className={isWideContent ? "max-w-6xl mx-auto" : "max-w-2xl mx-auto"}>
