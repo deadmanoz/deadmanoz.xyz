@@ -50,6 +50,32 @@ const colorMap: Record<string, string> = {
   'indigo': '#6366F1'
 };
 
+// Process URLs in captions to make them clickable
+function processCaptionLinks(caption: string): string {
+  // First decode HTML entities that might have been encoded
+  let processed = caption
+    .replace(/&#91;/g, '[')
+    .replace(/&#93;/g, ']')
+    .replace(/&#40;/g, '(')
+    .replace(/&#41;/g, ')')
+    .replace(/&lbrack;/g, '[')
+    .replace(/&rbrack;/g, ']')
+    .replace(/&lpar;/g, '(')
+    .replace(/&rpar;/g, ')');
+
+  // Convert markdown links [text](url) to anchor tags
+  processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+  // Convert bare URLs (not already in anchor tags) to clickable links
+  // Match URLs that aren't preceded by href=" or already wrapped
+  processed = processed.replace(
+    /(?<!href="|>)(https?:\/\/[^\s<>)"]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
+
+  return processed;
+}
+
 // Process colored text with syntax {{color:text}}
 function processColoredText(htmlString: string): string {
   return htmlString.replace(/\{\{([^:]+):([^}]+)\}\}/g, (match, colorName, text) => {
@@ -59,6 +85,82 @@ function processColoredText(htmlString: string): string {
     }
     return match; // Return original if color not found
   });
+}
+
+// Store for preserving links in image alt text
+const imageAltLinkStore = new Map<string, { text: string; url: string }>();
+
+// Preserve markdown links in image alt text before remark processes them
+function preserveImageAltLinks(markdownString: string): string {
+  imageAltLinkStore.clear();
+  let counter = 0;
+  let result = '';
+  let i = 0;
+
+  while (i < markdownString.length) {
+    // Look for image start: ![
+    if (markdownString[i] === '!' && markdownString[i + 1] === '[') {
+      // Find the matching ] for the alt text by counting brackets
+      let bracketDepth = 1;
+      const altStart = i + 2;
+      let altEnd = altStart;
+
+      while (altEnd < markdownString.length && bracketDepth > 0) {
+        if (markdownString[altEnd] === '[') bracketDepth++;
+        else if (markdownString[altEnd] === ']') bracketDepth--;
+        if (bracketDepth > 0) altEnd++;
+      }
+
+      // Check if followed by (src)
+      if (altEnd < markdownString.length && markdownString[altEnd] === ']' && markdownString[altEnd + 1] === '(') {
+        // Find the closing ) for the src
+        const srcStart = altEnd + 2;
+        let srcEnd = srcStart;
+        let parenDepth = 1;
+
+        while (srcEnd < markdownString.length && parenDepth > 0) {
+          if (markdownString[srcEnd] === '(') parenDepth++;
+          else if (markdownString[srcEnd] === ')') parenDepth--;
+          if (parenDepth > 0) srcEnd++;
+        }
+
+        if (srcEnd < markdownString.length && markdownString[srcEnd] === ')') {
+          // We have a complete image: ![alt](src)
+          let alt = markdownString.slice(altStart, altEnd);
+          const src = markdownString.slice(srcStart, srcEnd);
+
+          // Replace markdown links in alt text with placeholders
+          alt = alt.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_linkMatch: string, linkText: string, linkUrl: string) => {
+            counter++;
+            const placeholder = `IMGALT_LINK_${counter}`;
+            imageAltLinkStore.set(placeholder, { text: linkText, url: linkUrl });
+            return placeholder;
+          });
+
+          result += `![${alt}](${src})`;
+          i = srcEnd + 1;
+          continue;
+        }
+      }
+    }
+
+    result += markdownString[i];
+    i++;
+  }
+
+  return result;
+}
+
+// Restore preserved links in image alt text (after HTML generation)
+function restoreImageAltLinks(htmlString: string): string {
+  let processed = htmlString;
+
+  for (const [placeholder, { text, url }] of imageAltLinkStore.entries()) {
+    // Replace placeholder with markdown link syntax (will be processed by processCaptionLinks later)
+    processed = processed.replace(new RegExp(placeholder, 'g'), `[${text}](${url})`);
+  }
+
+  return processed;
 }
 
 // Preserve math delimiters for client-side MathJax processing
@@ -331,9 +433,10 @@ function postProcessPlots(htmlString: string, figureRefs: Map<string, number>): 
         const figId = plotInfo.figId || id.replace('plot-', '');
         const figNum = figureRefs.get(figId);
 
+        const processedCaption = plotInfo.caption ? processCaptionLinks(plotInfo.caption) : '';
         const figureWrapper = `<figure class="figure-container" id="fig-${figId}">
           ${plotDiv}
-          <figcaption><strong>Figure ${figNum}:</strong> ${plotInfo.caption || ''}</figcaption>
+          <figcaption><strong>Figure ${figNum}:</strong> ${processedCaption}</figcaption>
         </figure>`;
 
         processed = processed.replace(new RegExp(`<p>${placeholder}</p>`, 'g'), figureWrapper);
@@ -355,21 +458,31 @@ function processFigures(markdown: string, htmlString: string): { html: string; f
   let figureCounter = 0;
   const figureRefs = new Map<string, number>();
 
-  // First pass: Find all figure definitions (images AND plots) in markdown and create mapping
-  // Image figures: ![alt](src){#fig:id}
-  const figurePattern = /!\[([^\]]*)\]\([^)]+\)\s*\{#fig:([^}]+)\}/g;
+  // First pass: Find ALL figure definitions (images AND plots) in document order
+  // We need to track positions to number them correctly
+  const figurePositions: Array<{ id: string; position: number }> = [];
+
+  // Find image figures: ![alt](src){#fig:id}
+  const imageFigurePattern = /!\[([^\]]*)\]\([^)]+\)\s*\{#fig:([^}]+)\}/g;
   let match;
-  while ((match = figurePattern.exec(markdown)) !== null) {
+  while ((match = imageFigurePattern.exec(markdown)) !== null) {
     const id = match[2];
-    if (!figureRefs.has(id)) {
-      figureRefs.set(id, ++figureCounter);
-    }
+    figurePositions.push({ id, position: match.index });
   }
 
-  // Plot figures: look in plotStore for figId entries
-  for (const plotInfo of plotStore.values()) {
-    if (plotInfo.figId && !figureRefs.has(plotInfo.figId)) {
-      figureRefs.set(plotInfo.figId, ++figureCounter);
+  // Find plot figures: :::plot{id}...:::\nCaption {#fig:id}
+  // We need to find the position in the original markdown where plot figures appear
+  const plotFigurePattern = /:::plot\{([^}]+)\}[\s\S]*?^:::$\s*\n[^\n]*\{#fig:([^}]+)\}/gm;
+  while ((match = plotFigurePattern.exec(markdown)) !== null) {
+    const id = match[2];
+    figurePositions.push({ id, position: match.index });
+  }
+
+  // Sort by position in document and assign numbers
+  figurePositions.sort((a, b) => a.position - b.position);
+  for (const { id } of figurePositions) {
+    if (!figureRefs.has(id)) {
+      figureRefs.set(id, ++figureCounter);
     }
   }
 
@@ -379,7 +492,8 @@ function processFigures(markdown: string, htmlString: string): { html: string; f
     (_match, src, alt, id) => {
       const figNum = figureRefs.get(id) || ++figureCounter;
       // Check if alt text starts with "Figure:" to use as caption
-      const caption = alt.startsWith('Figure:') ? alt.substring(7).trim() : alt;
+      const rawCaption = alt.startsWith('Figure:') ? alt.substring(7).trim() : alt;
+      const caption = processCaptionLinks(rawCaption);
       return `<figure class="figure-container" id="fig-${id}">
         <img src="${src}" alt="${alt}" />
         <figcaption><strong>Figure ${figNum}:</strong> ${caption}</figcaption>
@@ -456,8 +570,11 @@ function processTables(markdown: string, htmlString: string): string {
 }
 
 export default async function markdownToHtml(markdown: string) {
+  // Pre-process to preserve markdown links in image alt text
+  let processedMarkdown = preserveImageAltLinks(markdown);
+
   // Pre-process to preserve math delimiters using placeholders
-  let processedMarkdown = preserveMathDelimiters(markdown);
+  processedMarkdown = preserveMathDelimiters(processedMarkdown);
 
   // Process plot blocks BEFORE remark to preserve JSON data
   processedMarkdown = processPlotBlocks(processedMarkdown);
@@ -476,6 +593,9 @@ export default async function markdownToHtml(markdown: string) {
 
   // Restore math delimiters FIRST, before any other processing
   htmlString = restoreMathDelimiters(htmlString);
+
+  // Restore preserved links in image alt text (before figure processing)
+  htmlString = restoreImageAltLinks(htmlString);
 
   // Post-process transformations
   htmlString = processSuperscript(htmlString);
