@@ -516,7 +516,7 @@ For completeness, breaking it down (using knowledge of Counterparty message stru
 :::collapse{EXAMPLE: Counterparty - ARC4 obfuscation}
 Here's an example of another relatively simple Counterparty transaction, this time from block [368,602](https://mempool.space/block/0000000000000000102836b6107448289827c7eba93b7c37bc2b144bfc9cfb51), [`541e640f...`](https://mempool.space/tx/541e640fbb527c35e0ee32d724efa4a5506c4c52acfba1ebc3b45949780c08a8).
 This transaction has two {{green:1-of-3}} P2MS outputs.
-On the question of which key position represents the real pubkey, upon examination it's clear that the last of the three keys in each P2MS output is the real key as we have the same key present in both outputs: `0241e401603ff07343f84d3dcad01ddbd01385506cf85209d8b150fe6c93f6ee1f`).
+On the question of which key position represents the real pubkey, upon examination it's clear that the last of the three keys in each P2MS output is the real key as we have the same key present in both outputs: `0241e401...ee1f`).
 This is sender's public key, as can be confirmed by examining the `ScriptSig` of the transaction input in {@fig:mempool-p2ms-counterparty-2} with the key highlighted in {{yellow:yellow}}.
 
 ![Figure: Counterparty with ARC4 obfuscation transaction details (`541e640f...`).](/assets/blog/p2ms-data-carry/mempool.space-p2ms-counterparty-2.png) {#fig:mempool-p2ms-counterparty-2}
@@ -723,7 +723,7 @@ So given `ppk:426896.1290/message.txt`, anyone can locate block 426,896, find tr
 This design leverages Bitcoin "blockchain coordinates" (block height, transaction index within block) as a naming system: globally unique (no collision risk), deterministic, independently verifiable (anyone can reconstruct it), decentralised (no central registry), and immutable (unchanging once mined).
 
 ODINs are retroactive identifiers constructed from these "blockchain coordinates" after mining (not embedded beforehand).
-When created, PPk transactions contain only the JSON data payload, in the form of title registration (`RT`), registration information, or message text, split across P2MS and `OP_RETURN` outputs, plus a distinctive marker pubkey (`0320a0de360cc2ae8672db7d557086a4e7c8eca062c0a5a4ba9922dee0aacf3e12`) at position 2 in the P2MS output.
+When created, PPk transactions contain only the JSON data payload, in the form of title registration (`RT`), registration information, or message text, split across P2MS and `OP_RETURN` outputs, plus a distinctive marker pubkey (`0320a0de...3e12`) at position 2 in the P2MS output.
 No block height, transaction index, or ODIN appears in the transaction itself.
 
 Decoders construct the ODIN deterministically by detecting the marker pubkey, extracting the payload from P2MS and `OP_RETURN` outputs, inferring the resource path from payload type (RT becomes `profile.json`, registration data becomes, for example, `reg_315.txt`, messages become `message.txt`), looking up "blockchain coordinates", and constructing `ppk:[height].[index]/[path]`.
