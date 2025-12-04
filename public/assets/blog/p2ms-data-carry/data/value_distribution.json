@@ -1,0 +1,542 @@
+{
+  "data": [
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        16861.0,
+        1819546.0,
+        118209.0,
+        20692.0,
+        401831.0,
+        45911.0,
+        139.0,
+        94.0,
+        30.0,
+        93.0,
+        18.0,
+        27.0,
+        1.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "name": "All P2MS Outputs",
+      "type": "bar",
+      "marker": {
+        "color": "#34495E"
+      }
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        1777577.0,
+        5337.0,
+        0.0,
+        2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Bitcoin Stamps",
+      "type": "bar",
+      "marker": {
+        "color": "#E74C3C"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        13573.0,
+        106930.0,
+        11894.0,
+        396206.0,
+        25361.0,
+        9.0,
+        2.0,
+        4.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Counterparty",
+      "type": "bar",
+      "marker": {
+        "color": "#3498DB"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        67.0,
+        0.0,
+        0.0,
+        182.0,
+        561.0,
+        0.0,
+        6.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "ASCII Identifier Protocols",
+      "type": "bar",
+      "marker": {
+        "color": "#E67E22"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        3.0,
+        20826.0,
+        1.0,
+        6641.0,
+        1050.0,
+        14553.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Omni Layer",
+      "type": "bar",
+      "marker": {
+        "color": "#9B59B6"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        3938.0,
+        0.0,
+        0.0,
+        0.0,
+        1113.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Chancecoin",
+      "type": "bar",
+      "marker": {
+        "color": "#1ABC9C"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        0.0,
+        4708.0,
+        0.0,
+        20.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "PPk",
+      "type": "bar",
+      "marker": {
+        "color": "#16A085"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        1.0,
+        217.0,
+        8.0,
+        75.0,
+        761.0,
+        288.0,
+        2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "OP_RETURN Signalled",
+      "type": "bar",
+      "marker": {
+        "color": "#BB3A00"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        16847.0,
+        2208.0,
+        350.0,
+        2068.0,
+        3526.0,
+        3706.0,
+        32.0,
+        32.0,
+        4.0,
+        32.0,
+        12.0,
+        11.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "name": "Data Storage",
+      "type": "bar",
+      "marker": {
+        "color": "#F39C12"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        10.0,
+        1140.0,
+        860.0,
+        0.0,
+        20.0,
+        121.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Likely Data Storage",
+      "type": "bar",
+      "marker": {
+        "color": "#D35400"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-546 sats",
+        "546-1.0K sats",
+        "1.0K-2.7K sats",
+        "2.7K-5.0K sats",
+        "5.0K-10K sats",
+        "10K-50K sats",
+        "50K-100K sats",
+        "100K-500K sats",
+        "500K-1.0M sats",
+        "1.0M-5.0M sats",
+        "5.0M-10M sats",
+        "10M-50M sats",
+        "50M-1.0 BTC sats",
+        "1.0-5.0 BTC",
+        "5.0-10 BTC",
+        "10 BTC+"
+      ],
+      "y": [
+        0.0,
+        0.0,
+        15.0,
+        14.0,
+        64.0,
+        208.0,
+        96.0,
+        52.0,
+        22.0,
+        59.0,
+        6.0,
+        14.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "name": "Likely Legitimate Multisig",
+      "type": "bar",
+      "marker": {
+        "color": "#2ECC71"
+      },
+      "visible": "legendonly"
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "P2MS Output Value Distribution",
+      "font": {
+        "size": 16
+      }
+    },
+    "xaxis": {
+      "title": "Value Range (satoshis)",
+      "type": "category"
+    },
+    "yaxis": {
+      "title": "Number of Outputs",
+      "type": "log"
+    },
+    "hovermode": "x unified",
+    "hoverlabel": {
+      "namelength": -1
+    },
+    "barmode": "overlay",
+    "updatemenus": [
+      {
+        "type": "buttons",
+        "direction": "left",
+        "x": 0.0,
+        "y": 1.15,
+        "buttons": [
+          {
+            "label": "Linear",
+            "method": "relayout",
+            "args": [
+              {
+                "yaxis.type": "linear"
+              }
+            ]
+          },
+          {
+            "label": "Log",
+            "method": "relayout",
+            "args": [
+              {
+                "yaxis.type": "log"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "legend": {
+      "orientation": "v",
+      "x": 1.02,
+      "y": 1.0,
+      "xanchor": "left"
+    }
+  }
+}

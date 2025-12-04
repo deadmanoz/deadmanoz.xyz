@@ -1,0 +1,406 @@
+{
+  "data": [
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        22964.0,
+        1173080.0,
+        114284.0,
+        16126.0,
+        2802.0,
+        774.0,
+        441.0,
+        5.0,
+        9.0,
+        1.0
+      ],
+      "name": "All P2MS Transactions",
+      "type": "bar",
+      "marker": {
+        "color": "#34495E"
+      }
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        22923.0,
+        907536.0,
+        35093.0,
+        3125.0,
+        763.0,
+        271.0,
+        157.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Bitcoin Stamps",
+      "type": "bar",
+      "marker": {
+        "color": "#E74C3C"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        13.0,
+        220326.0,
+        69703.0,
+        11231.0,
+        1794.0,
+        459.0,
+        149.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "name": "Counterparty",
+      "type": "bar",
+      "marker": {
+        "color": "#3498DB"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        0.0,
+        387.0,
+        271.0,
+        18.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "ASCII Identifier Protocols",
+      "type": "bar",
+      "marker": {
+        "color": "#E67E22"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        0.0,
+        30602.0,
+        8335.0,
+        1496.0,
+        124.0,
+        9.0,
+        4.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "name": "Omni Layer",
+      "type": "bar",
+      "marker": {
+        "color": "#9B59B6"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        0.0,
+        2528.0,
+        118.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Chancecoin",
+      "type": "bar",
+      "marker": {
+        "color": "#1ABC9C"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        0.0,
+        4487.0,
+        218.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "PPk",
+      "type": "bar",
+      "marker": {
+        "color": "#16A085"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        0.0,
+        1277.0,
+        53.0,
+        8.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "OP_RETURN Signalled",
+      "type": "bar",
+      "marker": {
+        "color": "#BB3A00"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        10.0,
+        4622.0,
+        190.0,
+        162.0,
+        111.0,
+        35.0,
+        131.0,
+        2.0,
+        9.0,
+        1.0
+      ],
+      "name": "Data Storage",
+      "type": "bar",
+      "marker": {
+        "color": "#F39C12"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        1.0,
+        834.0,
+        284.0,
+        78.0,
+        5.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Likely Data Storage",
+      "type": "bar",
+      "marker": {
+        "color": "#D35400"
+      },
+      "visible": "legendonly"
+    },
+    {
+      "x": [
+        "0-250",
+        "250-500",
+        "500-1K",
+        "1K-2K",
+        "2K-5K",
+        "5K-10K",
+        "10K-25K",
+        "25K-50K",
+        "50K-100K",
+        "100K+"
+      ],
+      "y": [
+        17.0,
+        481.0,
+        19.0,
+        6.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "Likely Legitimate Multisig",
+      "type": "bar",
+      "marker": {
+        "color": "#2ECC71"
+      },
+      "visible": "legendonly"
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "P2MS Transaction Size Distribution by Protocol"
+    },
+    "xaxis": {
+      "title": "Transaction Size (bytes)",
+      "tickangle": -45
+    },
+    "yaxis": {
+      "title": "Transaction Count"
+    },
+    "hovermode": "x unified",
+    "hoverlabel": {
+      "namelength": -1
+    },
+    "barmode": "overlay",
+    "updatemenus": [
+      {
+        "type": "buttons",
+        "direction": "left",
+        "x": 0.0,
+        "y": 1.15,
+        "buttons": [
+          {
+            "label": "Linear",
+            "method": "relayout",
+            "args": [
+              {
+                "yaxis.type": "linear"
+              }
+            ]
+          },
+          {
+            "label": "Log",
+            "method": "relayout",
+            "args": [
+              {
+                "yaxis.type": "log"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "legend": {
+      "orientation": "v",
+      "x": 1.02,
+      "y": 1.0,
+      "xanchor": "left"
+    }
+  }
+}
