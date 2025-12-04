@@ -468,7 +468,7 @@ P2MS UTXO Value Distribution by protocol and value range, as of block height 918
 
 The value of UTXOs is relevant in the context of dust limits, as outputs below the dust threshold are non-standard and would not be relayed by most Bitcoin nodes were they to appear in a transaction.
 It might seem that the dust limit for P2MS outputs depends on the multisig configuration and key types used, but this is only true for the creation, and not spending, of P2MS outputs.
-The following unpacks how Bitcoin Core calculates the dust threshold for outputs; we'll find that the dust threshold to spend P2MS outputs is 546 sats, ing spending to a non-segwit output (e.g., P2PKH), or 294 sats, in spending to a segwit output (e.g., P2WPKH), _**regardless of the multisig configuration or key types used**_.
+The following unpacks how Bitcoin Core calculates the dust threshold for outputs; we'll find that the dust threshold to spend P2MS outputs is 546 sats when spending to a non-segwit output (e.g., P2PKH), or 294 sats when spending to a segwit output (e.g., P2WPKH), _**regardless of the multisig configuration or key types used**_.
 
 :::collapse{Bitcoin Core Policy & Dust Threshold Calculation}
 Each output is checked whether it is dust via [`IsDust`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L65), with the output value evaluated against the dust threshold ([`GetDustThreshold`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L26)). 
@@ -530,7 +530,7 @@ Note that there is an `OP_0` dummy element to address the extra stack element co
 
 | Multisig configuration | `scriptSig` breakdown | `scriptSig` size (bytes) | Total size (bytes) |
 |---|---|---:|---:|
-| {{green:1-of-n}} | 1 (`OP_0`) + 1 (`OP_PUSHBYTES_72`) + 72 (`<signature>`)) |  74 | 115 |
+| {{green:1-of-n}} | 1 (`OP_0`) + 1 (`OP_PUSHBYTES_72`) + 72 (`<signature>`) |  74 | 115 |
 | {{green:2-of-n}} | 1 (`OP_0`) + 2 * (1 (`OP_PUSHBYTES_72`) + 72 (`<signature>`)) |  147 | 188 |
 | {{green:3-of-n}} | 1 (`OP_0`) + 3 * (1 (`OP_PUSHBYTES_72`) + 72 (`<signature>`)) |  220 | 261 |
 
@@ -607,7 +607,7 @@ Bitcoin Stamps dominates fee expenditure at 218.5 BTC (77.7% of all P2MS-related
 **{{cyan:Over 281 BTC has been spent on transaction fees to embed data in P2MS outputs, with Bitcoin Stamps accounting for ~78%.}}**
 :::
 
-The Data Storage category shows the highest average fee per transaction at 107,034 sats due to the larger transaction sizes required for bulk data embedding (e.g., "WikiLeaks Cablegate" files, "Bitcoin Whitepaper").
+The Data Storage category shows the highest average fee per transaction at 105,195 sats due to the larger transaction sizes required for bulk data embedding (e.g., "WikiLeaks Cablegate" files, "Bitcoin Whitepaper").
 Conversely, PPk transactions paid the lowest fees at just 1,295 sats average, a result of both the protocol's age (operating during lower fee periods) and its small payload sizes.
 
 ## P2MS UTXOs by protocol/use
@@ -678,7 +678,7 @@ Despite the relatively low value locked in outputs (14.19 BTC), Bitcoin Stamps u
 For example, with the protocol having emerged during the 2023 Ordinals/Inscriptions hype, the fact that 
 people chose to use Bitcoin Stamps over Ordinals/Inscriptions can perhaps be seen as a preference for permanence over lower cost.
 
-Although the average value per Bitcoin Stamps P2MS output is just 796 sats ({@tab:stamps-economics}), with the average size of a Classic Stamp being 17.32 outputs per transaction ({@tab:stamps-variants}), the average cost per Classic Stamp transaction is ~13,787 sats just for the outputs alone, plus transaction fees.
+Although the average value per Bitcoin Stamps P2MS output is just 796 sats ({@tab:stamps-economics}), with the average size of a Classic Stamp being 17.28 outputs per transaction ({@tab:stamps-variants}), the average cost per Classic Stamp transaction is ~13,760 sats just for the outputs alone, plus transaction fees.
 On the matter of fees, Bitcoin Stamps users have paid approximately 218.50 BTC in transaction fees to embed data using P2MS outputs since the protocol's inception.
 
 | Metric | Value |
@@ -776,7 +776,7 @@ Like Counterparty, Omni has 20+ message types, which can be consolidated into a 
 |---------|-------------:|--------:|-------------|
 | Omni Transfer | 37,421 | 37,432 | Token transfers between addresses |
 | Omni Issuance | 1,198 | 3,689 | Creating new tokens/assets |
-| Omni DEX | 1,857 | 1,857 | Decentralized exchange operations |
+| Omni DEX | 1,857 | 1,857 | Decentralised exchange operations |
 | Omni Failed Deobfuscation | 52 | 56 | Transactions that couldn't be decoded |
 | Omni Destruction | 24 | 24 | Burning/destroying tokens |
 | Omni Administration | 17 | 17 | Token management operations |
@@ -1031,7 +1031,7 @@ Each unspendable output adds to the UTXO set size that every [[full node||Nodes 
 This is a cost imposed on the entire network.
 
 However, the "permanence guarantee" offered by UTXO set storage is overstated.
-While pruned nodes discard block data (including `OP_RETURN` outputs), over 90% of Bitcoin full nodes ([as of late 2025]((https://bitnodes.io/nodes/))) run in archival mode, retaining the complete blockchain history.
+While pruned nodes discard block data (including `OP_RETURN` outputs), over 90% of Bitcoin full nodes ([as of late 2025](https://bitnodes.io/nodes/)) run in archival mode, retaining the complete blockchain history.
 Data embedded via `OP_RETURN` is therefore preserved across the vast majority of the network.
 Forcing data into the UTXO set, rather than block storage, comes at disproportionate cost to the network with no practical permanence benefit.
 
