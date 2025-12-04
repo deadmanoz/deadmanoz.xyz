@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import markdownStyles from "./markdown-styles.module.css";
 import { ImageModal } from "./image-modal";
 import { InteractivePlot } from "./interactive-plot";
@@ -682,19 +682,5 @@ function PostBodyContent({ content }: Props) {
 }
 
 export function EnhancedPostBody({ content }: Props) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PostBodyContent content={content} />
-    </Suspense>
-  );
+  return <PostBodyContent content={content} />;
 }
