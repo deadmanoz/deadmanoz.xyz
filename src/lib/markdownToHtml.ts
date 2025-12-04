@@ -463,12 +463,46 @@ function processFigures(markdown: string, htmlString: string): { html: string; f
   const figurePositions: Array<{ id: string; position: number }> = [];
 
   // Find image figures: ![alt](src){#fig:id}
-  const imageFigurePattern = /!\[([^\]]*)\]\([^)]+\)\s*\{#fig:([^}]+)\}/g;
-  let match;
-  while ((match = imageFigurePattern.exec(markdown)) !== null) {
-    const id = match[2];
-    figurePositions.push({ id, position: match.index });
+  // Use a more robust approach that handles markdown links in alt text
+  // Pattern: ![ ... ]( ... ){#fig:id} where alt text may contain nested brackets
+  let searchIndex = 0;
+  while (searchIndex < markdown.length) {
+    const imgStart = markdown.indexOf('![', searchIndex);
+    if (imgStart === -1) break;
+
+    // Find matching ] for alt text by counting brackets
+    let bracketDepth = 1;
+    let altEnd = imgStart + 2;
+    while (altEnd < markdown.length && bracketDepth > 0) {
+      if (markdown[altEnd] === '[') bracketDepth++;
+      else if (markdown[altEnd] === ']') bracketDepth--;
+      altEnd++;
+    }
+
+    // Check if followed by (src){#fig:id}
+    if (altEnd < markdown.length && markdown[altEnd] === '(') {
+      // Find matching ) for src
+      let parenDepth = 1;
+      let srcEnd = altEnd + 1;
+      while (srcEnd < markdown.length && parenDepth > 0) {
+        if (markdown[srcEnd] === '(') parenDepth++;
+        else if (markdown[srcEnd] === ')') parenDepth--;
+        srcEnd++;
+      }
+
+      // Check for {#fig:id} after the image
+      const afterImg = markdown.slice(srcEnd);
+      const figIdMatch = afterImg.match(/^\s*\{#fig:([^}]+)\}/);
+      if (figIdMatch) {
+        const id = figIdMatch[1];
+        figurePositions.push({ id, position: imgStart });
+      }
+    }
+
+    searchIndex = imgStart + 1;
   }
+
+  let match;
 
   // Find plot figures: :::plot{id}...:::\nCaption {#fig:id}
   // We need to find the position in the original markdown where plot figures appear
