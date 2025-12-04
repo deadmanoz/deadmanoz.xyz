@@ -7,12 +7,13 @@ author:
   name: deadmanoz
 ogImage:
   url: '/assets/melb-graffiti.png'
-hidden: false
+hidden: true
 ---
 
 # Welcome to deadmanoz.xyz
 
 Testing the features of this website, including table-of-contents, annotations (hover footnotes), automatic image captioning, coloured text, and math rendering.
+Also a canary post to see that everything is working after changes are made.
 
 ## Math Rendering
 

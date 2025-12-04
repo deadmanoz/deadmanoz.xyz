@@ -28,7 +28,8 @@ Omni distinguishes itself through obfuscation based on SHA-256+XOR, keyed to the
 Omni also maintains valid pubkeys in its {{green:1-of-2}} or {{green:1-of-3}} structures, so all Omni P2MS outputs can also be spent (again, in theory).
 
 A number of minor protocols also leverage P2MS for data carrying purposes, including protocols using identifiers such as `CHANCECO` (Chancecoin), `TB0001`, `TEST01` and `METROXMN`.
-Additionally, several protocols employ hybrid approaches that use P2MS alongside `OP_RETURN`. PPk (PPkPub) uses the combined data-carrying capacity of P2MS outputs + `OP_RETURN`, with a distinctive marker pubkey for identification, whereas others use `OP_RETURN` outputs for explicit protocol signalling with the larger storage capacity of P2MS outputs used for the data payload (e.g., "Protocol 47930", `CLIPPERZ`).
+Additionally, several protocols employ hybrid approaches that use P2MS alongside `OP_RETURN`.
+PPk (PPkPub) uses the combined data-carrying capacity of P2MS outputs + `OP_RETURN`, with a distinctive marker pubkey for identification, whereas others use `OP_RETURN` outputs for explicit protocol signalling with the larger storage capacity of P2MS outputs used for the data payload (e.g., "Protocol 47930", `CLIPPERZ`).
 Beyond protocol-based approaches, P2MS has also been used for generic data storage, with notable examples including the Bitcoin whitepaper PDF and Wikileaks Cablegate files.
 
 ## Introduction
@@ -47,7 +48,8 @@ The use of P2MS script types seemed like a good place to start because:
 - There's been a significant increase in P2MS UTXOs since early 2023 as per {@fig:p2ms_analysis}, yet the encumbered value remains **tiny**.
 - P2MS data carrying is regularly used, albeit much less so than other approaches (e.g., P2TR-based approaches), but it remains understudied compared to other approaches.
 
-There have been a number of analyses of data carriage in Bitcoin, but they generally focus on the other data carriage methods. Pay-to-Fake-Multisig (P2FMS) as the use of P2MS for data carriage is sometimes called, is often just a side note.
+There have been a number of analyses of data carriage in Bitcoin, but they generally focus on the other data carriage methods.
+Pay-to-Fake-Multisig (P2FMS) as the use of P2MS for data carriage is sometimes called, is often just a side note.
 See the [References](#references) section for links to some of these other analyses.
 
 ![Figure: the number of P2MS UTXOs and encumbered value over time (block height increments of 50,000).](/assets/blog/p2ms-data-carry/p2ms_analysis.png) {#fig:p2ms_analysis}
@@ -263,7 +265,7 @@ Bitcoin Stamps were developed in response to most NFTs being _"merely image poin
 They were a means to achieve permanence in _"storing art on the blockchain"_ and indeed STAMP is an acronym for Secure, Tradeable Art Maintained Securely.
 The [original spec](https://github.com/mikeinspace/stamps/blob/main/BitcoinStamps.md) also stated that Bitcoin Stamps encode:
 >_"an image's binary content to a base64 string, placing this string as a suffix to `STAMP:` in a transaction's description key, and then broadcasting it using the Counterparty protocol onto the Bitcoin ledger._
->_The length of the string means that Counterparty defaults to bare multisig, thereby chunking the data into outputs rather than using the limited (and prunable) OP_RETURN._
+>_The length of the string means that Counterparty defaults to bare multisig, thereby chunking the data into outputs rather than using the limited (and prunable) `OP_RETURN`._
 >_By doing so, the data is preserved in such a manner that is impossible to prune from a full Bitcoin Node, preserving the data immutably forever."_
 
 The above examination of the [`eb96a65e...`](https://mempool.space/tx/eb96a65e4a332f2c84cb847268f614c037e038d2c386eb08d49271966c1b0000) transaction is but just one example of Bitcoin Stamps embedding arbitrary data in P2MS outputs.
@@ -706,7 +708,7 @@ Again, by no means being any form of endorsement, [here are full details](https:
 As documented in [Part 2](./p2ms-data-carry-2), Bitcoin Stamps, Counterparty and Omni are the dominant protocols that utilise P2MS outputs for data carrying purposes, combined accounting for over 98% of P2MS outputs in the UTXO set.
 Yet there are other approaches and minor protocols that also use P2MS outputs to carry data:
 1. **Minor standalone protocols**: Protocols with their own identifiers embedded in P2MS data: PPk (PPkPub), Chancecoin (`CHANCECO`), `TB0001`, `TEST01`, `METROXMN`
-2. **Hybrid `OP_RETURN` signalling**: Protocols that use `OP_RETURN` for identification alongside P2MS for data storage
+2. **Hybrid OP_RETURN signalling**: Protocols that use `OP_RETURN` for identification alongside P2MS for data storage
 3. **Generic data storage**: Direct data embedding without protocol layers
 
 These other identifier patterns or protocols can often be simply identified by ASCII interpretation of the P2MS key data, or data of other outputs (`OP_RETURN`), though sometimes they have binary formats for messages.
@@ -749,11 +751,11 @@ There doesn't appear to be much information online about these identifiers, with
 Although the identifiers are not obfuscated, the data that follows is likely representing some form of protocol or message format like the other data carrying methods.
 In the [companion repository](https://github.com/deadmanoz/data-carry-research), unlike the other protocols discussed here, no attempt has been made to interpret or decode the data beyond the identifier.
 
-### `OP_RETURN` signalling
+### OP_RETURN signalling
 Some protocols employ a hybrid approach, using `OP_RETURN` outputs to signal or identify the protocol, while simultaneously using P2MS outputs to carry the actual data payload.
 This dual-output pattern provides explicit protocol identification through the `OP_RETURN` marker, while the larger data carrying capacity of P2MS outputs is used for the message content.
 Three distinct variants have been identified in the UTXO set using this approach:
-- "Protocol 47930" (`0xbb3a` marker) uses a 2-byte OP_RETURN prefix (`0xbb3a`) alongside {{green:2-of-2}} multisig outputs.
+- "Protocol 47930" (`0xbb3a` marker) uses a 2-byte `OP_RETURN` prefix (`0xbb3a`) alongside {{green:2-of-2}} multisig outputs.
 - "RT Protocol" employs an ASCII `RT` identifier in its `OP_RETURN` output, paired with {{green:1-of-2}} multisig data storage.
 - "CLIPPERZ" is a password manager service that used Bitcoin's blockchain for encrypted data backup and notarization, creating `OP_RETURN` outputs containing `CLIPPERZ` alongside {{green:2-of-2}} multisig outputs.
 The `OP_RETURN` serves as an explicit protocol declaration, avoiding ambiguity in classification, while the P2MS outputs function as the primary data carrier.
