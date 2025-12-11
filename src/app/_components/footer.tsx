@@ -1,4 +1,4 @@
-import { FaXTwitter, FaGithub, FaBolt } from "react-icons/fa6";
+import { FaXTwitter, FaGithub, FaBolt, FaRss } from "react-icons/fa6";
 import { PrimalIcon } from "./primal-icon";
 
 export function Footer() {
@@ -32,6 +32,13 @@ export function Footer() {
             aria-label="GitHub"
           >
             <FaGithub size={24} />
+          </a>
+          <a
+            href="/feed.xml"
+            className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
+            aria-label="RSS Feed"
+          >
+            <FaRss size={24} />
           </a>
         </div>
         <div className="mb-10">

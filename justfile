@@ -16,6 +16,10 @@ dev:
 dev-fast:
     DISABLE_GIT_METADATA=true npm run dev
 
+# Generate RSS and Atom feeds
+generate-rss:
+    npx tsx scripts/generate-rss.ts
+
 # Build for production (with git metadata by default)
 build:
     npm run build
@@ -71,7 +75,7 @@ kill-port:
 # Restart dev server (kill port + start dev)
 restart: kill-port dev
 
-# Deploy to CloudFlare Workers
+# Deploy to CloudFlare Workers (usually done via CI/CD)
 deploy:
     npm run build
     npx wrangler pages deploy out
