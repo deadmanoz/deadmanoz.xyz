@@ -99,13 +99,13 @@ Note that the findings in this post are fully reproducible by using the <a href=
 </tr>
 </tbody>
 </table>
-<p>Classification methodology {#tab:classification-methodology}</p>
+<p><strong>Table 1:</strong> Classification methodology</p>
 <p>Protocols are checked in a specific precedence order to avoid misclassification.
 This ordering is important because some protocols use others as transport mechanisms, e.g., early Bitcoin Stamps transactions used Counterparty as a transport layer, requiring Bitcoin Stamps detection to occur before Counterparty classification.</p>
 <h2 id="analysing-p2ms-utxos">Analysing P2MS UTXOs</h2>
 <p>The snapshot of the UTXO set at block height <a href="https://mempool.space/block/00000000000000000000bd33bb70d3d9f967b25bddc254ec4bf05655adba119e">918,997</a> (14 October 2025) contains 2,423,456 P2MS transaction outputs created between block height 170,741 (transaction <a href="https://mempool.space/tx/947539645c59e6ab0cda61826cbacb55ef97a8178f012f8c18abe504bf66d4ce"><code>94753964...</code></a>) through to the snapshot height, across 1,330,493 transactions.
 The ~2.4M P2MS transaction outputs account for 1.46% of the total transaction outputs in the UTXO set (166,127,819), yet only 0.00034851% of the total Bitcoin supply is encumbered in P2MS outputs (69.47467961 BTC).
-{@tab:high-level-stats} summarises some of the various high-level stats pertaining to P2MS outputs as of block height <a href="https://mempool.space/block/00000000000000000000bd33bb70d3d9f967b25bddc254ec4bf05655adba119e">918,997</a>.</p>
+Table 2 summarises some of the various high-level stats pertaining to P2MS outputs as of block height <a href="https://mempool.space/block/00000000000000000000bd33bb70d3d9f967b25bddc254ec4bf05655adba119e">918,997</a>.</p>
 <table>
 <thead>
 <tr>
@@ -156,18 +156,18 @@ The ~2.4M P2MS transaction outputs account for 1.46% of the total transaction ou
 </tr>
 </tbody>
 </table>
-<p>High-level P2MS stats as of block height 918,997 (14 October 2025).{#tab:high-level-stats}</p>
-<p>:::alert{info}
-<strong>{{cyan:Only 0.00035% of the total Bitcoin supply is encumbered in P2MS outputs (~69.5 BTC).}}</strong>
-:::</p>
+<p><strong>Table 2:</strong> High-level P2MS stats as of block height 918,997 (14 October 2025).</p>
+<blockquote>
+<p><strong>Only 0.00035% of the total Bitcoin supply is encumbered in P2MS outputs (~69.5 BTC).</strong></p>
+</blockquote>
 <h3 id="top-level-classification-breakdown">Top-level classification breakdown</h3>
-<p>{@tab:high-level-classification} presents a classification breakdown of the P2MS transaction outputs.
+<p>Table 3 presents a classification breakdown of the P2MS transaction outputs.
 The combined contribution of the three dominant protocols in Bitcoin Stamps, Counterparty and Omni, is 98.21% of all P2MS outputs.
 If we include the other data carrying classifications of Chancecoin, PPk, OP_RETURN Signalled, ASCII Identifier Protocols, Data Storage and Likely Data Storage, then this value rises to 99.98%.
 The remaining 0.02% represents what appears to be Likely Legitimate Multisig usage rather than data carriage.</p>
-<p>:::alert{warning}
-<strong>{{orange:Approximately 99.98% of all P2MS transaction outputs in the UTXO set are used for data carrying purposes.}}</strong>
-:::</p>
+<blockquote>
+<p><strong>Approximately 99.98% of all P2MS transaction outputs in the UTXO set are used for data carrying purposes.</strong></p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -240,11 +240,11 @@ The remaining 0.02% represents what appears to be Likely Legitimate Multisig usa
 </tr>
 </tbody>
 </table>
-<p>Classification breakdown of P2MS outputs as of block height 918,997 (14 October 2025).{#tab:high-level-classification}</p>
-<p>:::alert{info}
-<strong>{{cyan:Bitcoin Stamps dominates unspent P2MS outputs, accounting for 73.57% of all such outputs.}}</strong>
-:::</p>
-<p>{@tab:value-by-classification} presents a breakdown by value encumbered in P2MS outputs.
+<p><strong>Table 3:</strong> Classification breakdown of P2MS outputs as of block height 918,997 (14 October 2025).</p>
+<blockquote>
+<p><strong>Bitcoin Stamps dominates unspent P2MS outputs, accounting for 73.57% of all such outputs.</strong></p>
+</blockquote>
+<p>Table 4 presents a breakdown by value encumbered in P2MS outputs.
 Despite Bitcoin Stamps dominating by output count (73.57%), Counterparty leads by value with 35.87 BTC (51.6%) across its 553,981 outputs.
 Bitcoin Stamps, with nearly four times as many outputs, holds only 14.19 BTC (20.4%) due to its dust-level output values.
 The distribution of output value is examined in the <a href="#value-distribution">UTXO value breakdown section</a>.</p>
@@ -342,15 +342,15 @@ The distribution of output value is examined in the <a href="#value-distribution
 </tr>
 </tbody>
 </table>
-<p>Value by classification breakdown of P2MS outputs as of block height 918,997 (14 October 2025).{#tab:value-by-classification}</p>
-<p>:::alert{info}
-<strong>{{cyan:The average value of Bitcoin Stamps classified P2MS outputs is just 796 sats.}}</strong>
-:::</p>
+<p><strong>Table 4:</strong> Value by classification breakdown of P2MS outputs as of block height 918,997 (14 October 2025).</p>
+<blockquote>
+<p><strong>The average value of Bitcoin Stamps classified P2MS outputs is just 796 sats.</strong></p>
+</blockquote>
 <h3 id="multisig-configuration-breakdown">Multisig configuration breakdown</h3>
 <h4 id="standardness-rules">Standardness rules</h4>
-<p>P2MS supports up to {{green:n=3}} public keys for <strong>standard</strong> {{green:m-of-n}} multisig configurations (where {{green:m≤n}}).
-However, <a href="https://bitcoin.stackexchange.com/questions/23893/what-are-the-limits-of-m-and-n-in-m-of-n-multisig-addresses">consensus rules</a> allow for any {{green:m-of-n}} combination where {{green:1≤m≤n≤20}}.
-That is, {{green:m-of-n}} combinations outside of the <strong>standard</strong> multisig range are considered <strong>non-standard</strong> by policy, failing Bitcoin Core's <code>IsStandard</code> evaluation (see <a href="https://github.com/bitcoin/bitcoin/blob/439e58c4d8194ca37f70346727d31f52e69592ec/src/policy/policy.cpp#L53-L74">policy.cpp</a>):</p>
+<p>P2MS supports up to n=3 public keys for <strong>standard</strong> m-of-n multisig configurations (where m≤n).
+However, <a href="https://bitcoin.stackexchange.com/questions/23893/what-are-the-limits-of-m-and-n-in-m-of-n-multisig-addresses">consensus rules</a> allow for any m-of-n combination where 1≤m≤n≤20.
+That is, m-of-n combinations outside of the <strong>standard</strong> multisig range are considered <strong>non-standard</strong> by policy, failing Bitcoin Core's <code>IsStandard</code> evaluation (see <a href="https://github.com/bitcoin/bitcoin/blob/439e58c4d8194ca37f70346727d31f52e69592ec/src/policy/policy.cpp#L53-L74">policy.cpp</a>):</p>
 <pre><code class="hljs language-c++"><span class="hljs-comment">// Support up to x-of-3 multisig txns as standard</span>
 <span class="hljs-keyword">if</span> (n &#x3C; <span class="hljs-number">1</span> || n > <span class="hljs-number">3</span>)
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -359,7 +359,7 @@ That is, {{green:m-of-n}} combinations outside of the <strong>standard</strong> 
 <span class="hljs-comment">///</span>
 </code></pre>
 <p>The classification produced by the <a href="https://github.com/in3rsha/bitcoin-utxo-dump/blob/9b1c015308f779ac529083ed7922cc551b8ddb53/utxodump.go#L514-L522"><code>bitcoin-utxo-dump</code></a> tool is more permissive than that of Bitcoin Core (see snippet from <code>bitcoin-utxo-dump</code> below).
-Specifically, {{green:non-standard}} scripts that are at least 37 bytes in length and end with the <code>OP_CHECKMULTISIG</code> opcode are marked as <code>multisig</code> (P2MS).
+Specifically, non-standard scripts that are at least 37 bytes in length and end with the <code>OP_CHECKMULTISIG</code> opcode are marked as <code>multisig</code> (P2MS).
 This, however, does not pose a significant discrepancy - only 48 UTXOs match this criteria in the analysed UTXO set snapshot.</p>
 <pre><code class="hljs language-go"><span class="hljs-comment">// P2MS</span>
 <span class="hljs-comment">// if there is a script, it's at least 37 bytes in length (min size for a P2MS)</span>
@@ -375,7 +375,7 @@ default:
     scriptTypeCount["non-standard"] += 1
 </span></code></pre>
 <h4 id="observed-configurations">Observed configurations</h4>
-<p>{@tab:multisig-configurations} shows the prevalence of different multisig configurations in the P2MS outputs in the UTXO set at the analysis block height.</p>
+<p>Table 5 shows the prevalence of different multisig configurations in the P2MS outputs in the UTXO set at the analysis block height.</p>
 <table>
 <thead>
 <tr>
@@ -386,45 +386,45 @@ default:
 </thead>
 <tbody>
 <tr>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">2,213,925</td>
 <td align="right">91.35%</td>
 </tr>
 <tr>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">204,619</td>
 <td align="right">8.44%</td>
 </tr>
 <tr>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">3,262</td>
 <td align="right">0.13%</td>
 </tr>
 <tr>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">1,121</td>
 <td align="right">0.05%</td>
 </tr>
 <tr>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">509</td>
 <td align="right">0.02%</td>
 </tr>
 <tr>
-<td>{{green:3-of-3}}</td>
+<td>3-of-3</td>
 <td align="right">20</td>
 <td align="right">0.0%</td>
 </tr>
 </tbody>
 </table>
-<p>Prevalence of different multisig configurations observed in the UTXO set of block height 918,997 (14 October 2025).{#tab:multisig-configurations}</p>
-<p>The {{green:1-of-3}} multisig configuration dominates, accounting for 2,213,925 outputs or 91.35% of all P2MS outputs in the UTXO set.
-This dominance is almost entirely attributable to Bitcoin Stamps, which exclusively uses {{green:1-of-3}} configurations, though Counterparty and Data Storage also favour {{green:1-of-3}}.</p>
-<p>The {{green:1-of-2}} multisig configuration accounts for 8.44%, largely due to Counterparty.
-90.16% of Omni P2MS outputs use {{green:1-of-2}}, and Chancecoin exclusively uses this configuration.</p>
-<p>The remaining configurations are marginal: {{green:2-of-2}} represents just 0.13% (3,262 outputs), while {{green:1-of-1}}, {{green:2-of-3}}, and {{green:3-of-3}} collectively account for less than 0.1% of the UTXO set.
-{@tab:multisig-protocol} gives the full breakdown by protocol.</p>
-<p>:::collapse{TABLE: Multisig configuration by protocol breakdown}</p>
+<p><strong>Table 5:</strong> Prevalence of different multisig configurations observed in the UTXO set of block height 918,997 (14 October 2025).</p>
+<p>The 1-of-3 multisig configuration dominates, accounting for 2,213,925 outputs or 91.35% of all P2MS outputs in the UTXO set.
+This dominance is almost entirely attributable to Bitcoin Stamps, which exclusively uses 1-of-3 configurations, though Counterparty and Data Storage also favour 1-of-3.</p>
+<p>The 1-of-2 multisig configuration accounts for 8.44%, largely due to Counterparty.
+90.16% of Omni P2MS outputs use 1-of-2, and Chancecoin exclusively uses this configuration.</p>
+<p>The remaining configurations are marginal: 2-of-2 represents just 0.13% (3,262 outputs), while 1-of-1, 2-of-3, and 3-of-3 collectively account for less than 0.1% of the UTXO set.
+Table 6 gives the full breakdown by protocol.</p>
+<p><strong>TABLE: Multisig configuration by protocol breakdown</strong></p>
 <table>
 <thead>
 <tr>
@@ -437,224 +437,223 @@ This dominance is almost entirely attributable to Bitcoin Stamps, which exclusiv
 <tbody>
 <tr>
 <td>Bitcoin Stamps</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">1,782,916</td>
 <td align="right">100.0%</td>
 </tr>
 <tr>
 <td>Counterparty</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">399,412</td>
 <td align="right">72.1%</td>
 </tr>
 <tr>
 <td>Counterparty</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">153,930</td>
 <td align="right">27.79%</td>
 </tr>
 <tr>
 <td>Counterparty</td>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">625</td>
 <td align="right">0.11%</td>
 </tr>
 <tr>
 <td>Counterparty</td>
-<td>{{green:3-of-3}}</td>
+<td>3-of-3</td>
 <td align="right">8</td>
 <td align="right">0.0%</td>
 </tr>
 <tr>
 <td>Counterparty</td>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">6</td>
 <td align="right">0.0%</td>
 </tr>
 <tr>
 <td>Omni Layer</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">38,839</td>
 <td align="right">90.16%</td>
 </tr>
 <tr>
 <td>Omni Layer</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">4,236</td>
 <td align="right">9.83%</td>
 </tr>
 <tr>
 <td>Omni Layer</td>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">2</td>
 <td align="right">0.0%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">23,307</td>
 <td align="right">80.84%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">4,590</td>
 <td align="right">15.92%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">418</td>
 <td align="right">1.45%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">368</td>
 <td align="right">1.28%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">137</td>
 <td align="right">0.48%</td>
 </tr>
 <tr>
 <td>Data Storage</td>
-<td>{{green:3-of-3}}</td>
+<td>3-of-3</td>
 <td align="right">11</td>
 <td align="right">0.04%</td>
 </tr>
 <tr>
 <td>Chancecoin</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">5,051</td>
 <td align="right">100.0%</td>
 </tr>
 <tr>
 <td>PPk</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">3,330</td>
 <td align="right">70.43%</td>
 </tr>
 <tr>
 <td>PPk</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">1,398</td>
 <td align="right">29.57%</td>
 </tr>
 <tr>
 <td>Likely Data Storage</td>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">854</td>
 <td align="right">39.68%</td>
 </tr>
 <tr>
 <td>Likely Data Storage</td>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">697</td>
 <td align="right">32.39%</td>
 </tr>
 <tr>
 <td>Likely Data Storage</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">299</td>
 <td align="right">13.89%</td>
 </tr>
 <tr>
 <td>Likely Data Storage</td>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">291</td>
 <td align="right">13.52%</td>
 </tr>
 <tr>
 <td>Likely Data Storage</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">11</td>
 <td align="right">0.51%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">1,137</td>
 <td align="right">84.1%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">146</td>
 <td align="right">10.8%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">62</td>
 <td align="right">4.59%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">5</td>
 <td align="right">0.37%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:3-of-3}}</td>
+<td>3-of-3</td>
 <td align="right">1</td>
 <td align="right">0.07%</td>
 </tr>
 <tr>
 <td>OP_RETURN Signalled</td>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">1</td>
 <td align="right">0.07%</td>
 </tr>
 <tr>
 <td>ASCII Identifier Protocols</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">516</td>
 <td align="right">63.24%</td>
 </tr>
 <tr>
 <td>ASCII Identifier Protocols</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">300</td>
 <td align="right">36.76%</td>
 </tr>
 <tr>
 <td>Likely Legitimate Multisig</td>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td align="right">228</td>
 <td align="right">41.30%</td>
 </tr>
 <tr>
 <td>Likely Legitimate Multisig</td>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td align="right">138</td>
 <td align="right">25.00%</td>
 </tr>
 <tr>
 <td>Likely Legitimate Multisig</td>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td align="right">70</td>
 <td align="right">12.68%</td>
 </tr>
 <tr>
 <td>Likely Legitimate Multisig</td>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td align="right">63</td>
 <td align="right">11.41%</td>
 </tr>
 <tr>
 <td>Likely Legitimate Multisig</td>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td align="right">53</td>
 <td align="right">9.60%</td>
 </tr>
 </tbody>
 </table>
-<p>Breakdown of multisig configurations by protocol as of block height 918,997 (14 October 2025).{#tab:multisig-protocol}</p>
-<p>:::</p>
+<p><strong>Table 6:</strong> Breakdown of multisig configurations by protocol as of block height 918,997 (14 October 2025).</p>
 <h3 id="spendability-breakdown">Spendability breakdown</h3>
 <p>In the context of P2MS, a spendable output contains at least one valid public key with a known corresponding private key, meaning the output could theoretically be spent to recover the encumbered bitcoin.
 An unspendable output either contains no valid public keys or uses keys for which no private key is known to exist (such as Bitcoin Stamps' Key Burn addresses), permanently locking the bitcoin in the UTXO set.</p>
@@ -669,7 +668,7 @@ Again, as covered in <a href="./p2ms-data-carry-1#summarising-the-main-technique
 <li>Counterparty, Omni and Chancecoin maintain at least one valid public key per output, ensuring spendability and avoiding permanent UTXO set pollution.</li>
 </ul>
 <p>Combining these two components, we can classify P2MS outputs as either spendable or unspendable.</p>
-<p>{@tab:spendability-breakdown} presents the top-level spendability breakdown.
+<p>Table 7 presents the top-level spendability breakdown.
 Of the 2.4M P2MS outputs in the UTXO set, 1.8M (74.37%) are unspendable and will remain in the UTXO set forever.</p>
 <table>
 <thead>
@@ -698,14 +697,14 @@ Of the 2.4M P2MS outputs in the UTXO set, 1.8M (74.37%) are unspendable and will
 </tr>
 </tbody>
 </table>
-<p>Spendability breakdown of P2MS outputs in the UTXO set, as of block height 918,997 (14 October 2025).{#tab:spendability-breakdown}</p>
+<p><strong>Table 7:</strong> Spendability breakdown of P2MS outputs in the UTXO set, as of block height 918,997 (14 October 2025).</p>
 <p>Notably, the value distribution is inverted: although 74.37% of outputs are unspendable, they contain only 20.54% of the total BTC value (~14.3 BTC).
 The remaining 79.46% of value (~55.2 BTC) resides in spendable outputs.
 This inversion occurs because Bitcoin Stamps outputs use minimal dust-level amounts (546-1000 sats), while legitimate multisig and older Counterparty/Omni transactions encumber higher amounts.</p>
-<p>:::alert{info}
-<strong>{{cyan:~79.5% of the total value of P2MS outputs is spendable (~55.2 BTC), only 20.5% (~14.3 BTC) is unspendable.}}</strong>
-:::</p>
-<p>{@tab:spendability-by-protocol} breaks down spendability by protocol.
+<blockquote>
+<p><strong>~79.5% of the total value of P2MS outputs is spendable (~55.2 BTC), only 20.5% (~14.3 BTC) is unspendable.</strong></p>
+</blockquote>
+<p>Table 8 breaks down spendability by protocol.
 Bitcoin Stamps is responsible for 1,782,916 (98.9%) of the unspendable P2MS outputs in the UTXO set.
 In contrast, Counterparty, Omni, Chancecoin, PPk, and legitimate multisig outputs are 100% spendable.</p>
 <table>
@@ -786,16 +785,18 @@ In contrast, Counterparty, Omni, Chancecoin, PPk, and legitimate multisig output
 </tr>
 </tbody>
 </table>
-<p>Spendability of P2MS outputs in the UTXO set, separated by protocol classification, as of block height 918,997 (14 October 2025).{#tab:spendability-by-protocol}</p>
-<p>:::alert{warning}
-<strong>{{orange:Almost 75% of P2MS outputs in the UTXO set are unspendable, with Bitcoin Stamps responsible for virtually all of them.}}</strong>
-:::</p>
+<p><strong>Table 8:</strong> Spendability of P2MS outputs in the UTXO set, separated by protocol classification, as of block height 918,997 (14 October 2025).</p>
+<blockquote>
+<p><strong>Almost 75% of P2MS outputs in the UTXO set are unspendable, with Bitcoin Stamps responsible for virtually all of them.</strong></p>
+</blockquote>
 <h4 id="spendability-over-time">Spendability over time</h4>
 <p>The 74.37% unspendability figure reflects the accumulated history of P2MS usage since 2012.
 However, recent years show an even more pronounced trend: almost all P2MS outputs created since 2023 are unspendable due to Bitcoin Stamps' design.
-{@fig:spendability-over-time} visualises this dramatic shift.</p>
+Figure 1 visualises this dramatic shift.</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>P2MS output spendability over time, showing the percentage of spendable (green) vs unspendable (red) outputs created each month. As per the UTXO set as of block height 918,997 (14 October 2025).</p>
 <h4 id="spendability-reasons">Spendability reasons</h4>
-<p>Breaking down the underlying reasons for spendability provides additional granularity ({@tab:spendability-reasons}):</p>
+<p>Breaking down the underlying reasons for spendability provides additional granularity (Table 9):</p>
 <table>
 <thead>
 <tr>
@@ -827,13 +828,13 @@ However, recent years show an even more pronounced trend: almost all P2MS output
 </tr>
 </tbody>
 </table>
-<p>Classified reasons for P2MS UTXO spendability, as of block height 918,997 (14 October 2025).{#tab:spendability-reasons}</p>
+<p><strong>Table 9:</strong> Classified reasons for P2MS UTXO spendability, as of block height 918,997 (14 October 2025).</p>
 <p>The "mixed Key Burn and data" classification (73.57%) represents Bitcoin Stamps outputs that deliberately combine Key Burn addresses with data-carrying keys, making them effectively unspendable.
 "All data keys" (0.80%) encompasses outputs where all keys are used purely for data carriage with none representing valid, spendable public keys - primarily early Data Storage efforts.
 "Contains real pubkey" (25.61%) indicates outputs that include at least one valid public key that could theoretically be used to spend the output, covering Counterparty, Omni, Chancecoin, and PPk transactions.
 "All valid EC points" (0.02%) represents outputs where all keys are valid points on the ECDSA secp256k1 curve, suggesting legitimate multisig usage.</p>
 <h3 id="utxo-age-distribution">UTXO age distribution</h3>
-<p>In considering the block height at which each unspent P2MS output was created alongside the protocol classification, we can plot the age distribution as per {@fig:utxo-age}.
+<p>In considering the block height at which each unspent P2MS output was created alongside the protocol classification, we can plot the age distribution as per Figure 2.
 This groups the age by month and shows annotations for when:</p>
 <ul>
 <li>P2MS was made standard (March 2012)</li>
@@ -841,7 +842,8 @@ This groups the age by month and shows annotations for when:</p>
 <li>Counterparty was launched (January 2014)</li>
 <li>Bitcoin Stamps was launched (April 2023)</li>
 </ul>
-<p>Distribution of the age (per-month) of P2MS outputs in the UTXO set, separated by protocol, as of block height 918,997 (14 October 2025). {#fig:utxo-age}</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>Distribution of the age (per-month) of P2MS outputs in the UTXO set, separated by protocol, as of block height 918,997 (14 October 2025).</p>
 <p>There are a few interesting observations to be made from this visualisation:</p>
 <ul>
 <li>We can see the rise and fall in the popularity of Omni (2014-2016)</li>
@@ -850,7 +852,7 @@ This groups the age by month and shows annotations for when:</p>
 </ul>
 <h3 id="data-content-type-breakdown">Data content type breakdown</h3>
 <p>With support for the detection, deobfuscation, parsing and interpretation of various protocols implemented in <a href="https://github.com/deadmanoz/data-carry-research"><code>data-carry-research</code></a>, we can consider the type of data that is embedded in P2MS UTXOs.
-{@tab:content-types} shows the distribution of detected content types across P2MS transactions and outputs.</p>
+Table 10 shows the distribution of detected content types across P2MS transactions and outputs.</p>
 <table>
 <thead>
 <tr>
@@ -962,7 +964,7 @@ This groups the age by month and shows annotations for when:</p>
 </tr>
 </tbody>
 </table>
-<p>Content type distribution across P2MS transactions and outputs as of block height 918,997 (14 October 2025).{#tab:content-types}</p>
+<p><strong>Table 10:</strong> Content type distribution across P2MS transactions and outputs as of block height 918,997 (14 October 2025).</p>
 <p>Takeaways from this breakdown include:</p>
 <ul>
 <li>The dominant content type is <code>application/json</code> (~72%), primarily from the "SRC-20", "SRC-721", and "SRC-101" sub-protocols of Bitcoin Stamps, all of which use JSON-formatted messages.</li>
@@ -975,7 +977,7 @@ Collectively, image formats represent approximately 3% of outputs but only 0.31%
 <h3 id="data-size-breakdown">Data size breakdown</h3>
 <p>Given the commentary that appears whenever discussing the UTXO set, another natural question to ask about the P2MS outputs is "what is the data size of the P2MS outputs"?
 At the highest level, we can answer this question by simply considering the full size of each P2MS script.
-For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compressed public keys has a size of 105 bytes:</p>
+For example, a "typical" 1-of-3 P2MS output script with 33-byte compressed public keys has a size of 105 bytes:</p>
 <ul>
 <li><code>OP_1</code> - 1 byte</li>
 <li><code>OP_PUSHBYTES_33 &#x3C;33-byte pubkey></code> - 1 + 33 bytes</li>
@@ -998,7 +1000,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 </thead>
 <tbody>
 <tr>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td>CCC</td>
 <td align="right">105 B</td>
 <td align="right">2,123,648</td>
@@ -1006,7 +1008,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">87.63%</td>
 </tr>
 <tr>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td>CC</td>
 <td align="right">71 B</td>
 <td align="right">177,783</td>
@@ -1014,7 +1016,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">7.34%</td>
 </tr>
 <tr>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td>CCU</td>
 <td align="right">137 B</td>
 <td align="right">73,426</td>
@@ -1022,7 +1024,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">3.03%</td>
 </tr>
 <tr>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td>UUU</td>
 <td align="right">201 B</td>
 <td align="right">16,835</td>
@@ -1030,7 +1032,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.69%</td>
 </tr>
 <tr>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td>CU</td>
 <td align="right">103 B</td>
 <td align="right">26,690</td>
@@ -1038,7 +1040,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">1.10%</td>
 </tr>
 <tr>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td>CC</td>
 <td align="right">71 B</td>
 <td align="right">3,241</td>
@@ -1046,7 +1048,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.13%</td>
 </tr>
 <tr>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td>U</td>
 <td align="right">69 B</td>
 <td align="right">752</td>
@@ -1054,7 +1056,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.03%</td>
 </tr>
 <tr>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td>CCC</td>
 <td align="right">105 B</td>
 <td align="right">482</td>
@@ -1062,7 +1064,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.02%</td>
 </tr>
 <tr>
-<td>{{green:1-of-2}}</td>
+<td>1-of-2</td>
 <td>UU</td>
 <td align="right">135 B</td>
 <td align="right">146</td>
@@ -1070,7 +1072,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.01%</td>
 </tr>
 <tr>
-<td>{{green:1-of-1}}</td>
+<td>1-of-1</td>
 <td>C</td>
 <td align="right">37 B</td>
 <td align="right">369</td>
@@ -1078,7 +1080,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">0.02%</td>
 </tr>
 <tr>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td>UUU</td>
 <td align="right">201 B</td>
 <td align="right">22</td>
@@ -1086,7 +1088,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">&#x3C;0.01%</td>
 </tr>
 <tr>
-<td>{{green:1-of-3}}</td>
+<td>1-of-3</td>
 <td>CUU</td>
 <td align="right">169 B</td>
 <td align="right">16</td>
@@ -1094,7 +1096,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">&#x3C;0.01%</td>
 </tr>
 <tr>
-<td>{{green:3-of-3}}</td>
+<td>3-of-3</td>
 <td>CCC</td>
 <td align="right">105 B</td>
 <td align="right">20</td>
@@ -1102,7 +1104,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">&#x3C;0.01%</td>
 </tr>
 <tr>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td>UU</td>
 <td align="right">135 B</td>
 <td align="right">11</td>
@@ -1110,7 +1112,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">&#x3C;0.01%</td>
 </tr>
 <tr>
-<td>{{green:2-of-2}}</td>
+<td>2-of-2</td>
 <td>CU</td>
 <td align="right">103 B</td>
 <td align="right">10</td>
@@ -1118,7 +1120,7 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 <td align="right">&#x3C;0.01%</td>
 </tr>
 <tr>
-<td>{{green:2-of-3}}</td>
+<td>2-of-3</td>
 <td>CCU</td>
 <td align="right">137 B</td>
 <td align="right">5</td>
@@ -1135,19 +1137,21 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 </tr>
 </tbody>
 </table>
-<p>P2MS multisig configurations in the UTXO set showing key combinations, script sizes, and total data footprint. C = compressed keys (33 bytes), U = uncompressed keys (65 bytes).{#tab:multisig-script-sizes}</p>
-<p>{@tab:multisig-script-sizes} reveals that the total data size of all P2MS outputs in the UTXO set is 252.2 MB, with {{green:1-of-3}} multisig with compressed keys accounting for 223 MB (87.63%) of this data footprint alone.
+<p><strong>Table 11:</strong> P2MS multisig configurations in the UTXO set showing key combinations, script sizes, and total data footprint. C = compressed keys (33 bytes), U = uncompressed keys (65 bytes).</p>
+<p>Table 11 reveals that the total data size of all P2MS outputs in the UTXO set is 252.2 MB, with 1-of-3 multisig with compressed keys accounting for 223 MB (87.63%) of this data footprint alone.
 Note that the entire UTXO set at block height 918,997 is approximately 11.4 GB in size, meaning P2MS outputs account for ~2.2% of the total UTXO set size, despite only representing 1.46% of the total outputs.</p>
 <p>As a point of reference, according to BitMEX Research on <a href="https://www.bitmex.com/blog/ordinals-impact-on-node-runners">Ordinals - Impact on Node Runners</a>, Ordinal images and other data take up around 30GB of blockchain space as of September 2025, with an additional ~27GB used by BRC-20 related transactions.
 So the contribution of P2MS outputs to the overall UTXO set size is relatively minor in comparison, though the effectively unspendable nature of much of the P2MS data does raise questions about UTXO set bloat and long-term sustainability.</p>
 <h3 id="transaction-size-distribution">Transaction size distribution</h3>
 <p>While the previous section examined the size of individual P2MS outputs, it's also informative to consider the size of entire transactions that contain P2MS outputs.
 Transaction size directly determines block space consumption and, consequently, the fees paid by users of these data-carrying protocols.</p>
-<p>{@fig:tx-size-distribution} shows the distribution of transaction sizes across the 1.33 million transactions relating to the unspent P2MS outputs.
+<p>Figure 3 shows the distribution of transaction sizes across the 1.33 million transactions relating to the unspent P2MS outputs.
 The overwhelming majority of transactions (1.17M, or 88%) fall within the 250-500 byte range, reflecting the typical size of P2MS transactions used by Bitcoin Stamps and Counterparty.</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>Distribution of P2MS transaction sizes, as of block height 918,997 (14 October 2025).</p>
 <h3 id="utxo-value-breakdown">UTXO value breakdown</h3>
 <h4 id="value-distribution">Value distribution</h4>
-<p>{@fig:value-distribution} shows the distribution of P2MS output values across different ranges, with protocol-specific breakdowns available via the legend.
+<p>Figure 4 shows the distribution of P2MS output values across different ranges, with protocol-specific breakdowns available via the legend.
 This figure reveals the following insights:</p>
 <ul>
 <li><strong>A mode at 546-1K sats</strong>: 1.82M outputs (75% of all P2MS outputs), almost entirely attributable to Bitcoin Stamps.
@@ -1156,12 +1160,14 @@ This is just above the 546 sat dust threshold, obviously motivated by ensuring t
 <li><strong>Sub-dust range (0-546 sats) contains 16,861 outputs</strong>: Data Storage accounting for nearly all of them (16,847).
 This is explored in the following.</li>
 </ul>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>P2MS UTXO Value Distribution by protocol and value range, as of block height 918,997 (14 October 2025).</p>
 <h4 id="dust-threshold-analysis">Dust threshold analysis</h4>
 <p>The value of UTXOs is relevant in the context of dust limits, as outputs below the dust threshold are non-standard and would not be relayed by most Bitcoin nodes were they to appear in a transaction.
 It might seem that the dust limit for P2MS outputs depends on the multisig configuration and key types used, but this is only true for the creation, and not spending, of P2MS outputs.
 The following unpacks how Bitcoin Core calculates the dust threshold for outputs; we'll find that the dust threshold to spend P2MS outputs is 546 sats when spending to a non-segwit output (e.g., P2PKH), or 294 sats when spending to a segwit output (e.g., P2WPKH), <em><strong>regardless of the multisig configuration or key types used</strong></em>.</p>
-<p>:::collapse{Bitcoin Core Policy &#x26; Dust Threshold Calculation}
-Each output is checked whether it is dust via <a href="https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L65"><code>IsDust</code></a>, with the output value evaluated against the dust threshold (<a href="https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L26"><code>GetDustThreshold</code></a>).
+<p><strong>Bitcoin Core Policy &#x26; Dust Threshold Calculation</strong></p>
+<p>Each output is checked whether it is dust via <a href="https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L65"><code>IsDust</code></a>, with the output value evaluated against the dust threshold (<a href="https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L26"><code>GetDustThreshold</code></a>).
 Both of these methods require a value for the <code>dustRelayFeeIn</code> argument; this is <code>DUST_RELAY_TX_FEE</code> which has a current value of 3000 sat/kvB (set <a href="https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.h#L64">here</a>).</p>
 <pre><code class="hljs language-c++"><span class="hljs-function">CAmount <span class="hljs-title">GetDustThreshold</span><span class="hljs-params">(<span class="hljs-type">const</span> CTxOut&#x26; txout, <span class="hljs-type">const</span> CFeeRate&#x26; dustRelayFeeIn)</span>
 </span>{
@@ -1213,7 +1219,7 @@ As the comment suggests, this 148 bytes is an assumption of the size of the <cod
 </ul>
 <p>Although this fixed input size is used for all non-segwit inputs, it's worth considering what the input size would look like to spend a P2MS output.
 We'd have the common elements of <code>txid</code> (32 bytes), <code>vout</code> (4 bytes), <code>scriptSig</code> length (1 byte), and <code>sequence</code> (4 bytes), for 41 bytes.
-The <code>scriptSig</code> is where we'd see variation depending on the number of required signatures ({{green:m}}) in the {{green:m-of-n}} multisig configuration.
+The <code>scriptSig</code> is where we'd see variation depending on the number of required signatures (m) in the m-of-n multisig configuration.
 Note that there is an <code>OP_0</code> dummy element to address the extra stack element consumed by <code>OP_CHECKMULTISIG</code> and <code>OP_CHECKMULTISIGVERIFY</code>, as per <a href="https://github.com/bitcoin/bips/blob/master/bip-0147.mediawiki">BIP-147</a>, and we assume the mid-point 72-bytes for a signature.</p>
 <table>
 <thead>
@@ -1226,19 +1232,19 @@ Note that there is an <code>OP_0</code> dummy element to address the extra stack
 </thead>
 <tbody>
 <tr>
-<td>{{green:1-of-n}}</td>
+<td>1-of-n</td>
 <td>1 (<code>OP_0</code>) + 1 (<code>OP_PUSHBYTES_72</code>) + 72 (<code>&#x3C;signature></code>)</td>
 <td align="right">74</td>
 <td align="right">115</td>
 </tr>
 <tr>
-<td>{{green:2-of-n}}</td>
+<td>2-of-n</td>
 <td>1 (<code>OP_0</code>) + 2 * (1 (<code>OP_PUSHBYTES_72</code>) + 72 (<code>&#x3C;signature></code>))</td>
 <td align="right">147</td>
 <td align="right">188</td>
 </tr>
 <tr>
-<td>{{green:3-of-n}}</td>
+<td>3-of-n</td>
 <td>1 (<code>OP_0</code>) + 3 * (1 (<code>OP_PUSHBYTES_72</code>) + 72 (<code>&#x3C;signature></code>))</td>
 <td align="right">220</td>
 <td align="right">261</td>
@@ -1249,12 +1255,12 @@ Note that there is an <code>OP_0</code> dummy element to address the extra stack
 <ul>
 <li>8 bytes: <code>amount</code></li>
 <li>1 byte: <code>scriptPubKey</code> length</li>
-<li>1 byte: <code>OP_m</code>, for the {{green:m}} in {{green:m-of-n}}</li>
-<li>34 * {{green:n}} bytes: {{green:n}} * (1 (<code>OP_PUSHBYTES_33</code>) + 33 (<code>&#x3C;33-byte-compressed-key></code>))</li>
-<li>1 byte: <code>OP_n</code>, for the {{green:n}} in {{green:m-of-n}}</li>
+<li>1 byte: <code>OP_m</code>, for the m in m-of-n</li>
+<li>34 * n bytes: n * (1 (<code>OP_PUSHBYTES_33</code>) + 33 (<code>&#x3C;33-byte-compressed-key></code>))</li>
+<li>1 byte: <code>OP_n</code>, for the n in m-of-n</li>
 <li>1 byte: <code>OP_CHECKMULTISIG</code></li>
 </ul>
-<p>Because the dust threshold is calculated based on the total size of the output plus an assumed fixed size of 148 bytes for the input, the dust threshold only depends on {{green:n}}, the number of keys in the multisig configuration, and NOT on {{green:m}}, the number of required signatures.</p>
+<p>Because the dust threshold is calculated based on the total size of the output plus an assumed fixed size of 148 bytes for the input, the dust threshold only depends on n, the number of keys in the multisig configuration, and NOT on m, the number of required signatures.</p>
 <table>
 <thead>
 <tr>
@@ -1266,19 +1272,19 @@ Note that there is an <code>OP_0</code> dummy element to address the extra stack
 </thead>
 <tbody>
 <tr>
-<td>{{green:m-of-1}}</td>
+<td>m-of-1</td>
 <td align="right">46</td>
 <td align="right">194</td>
 <td align="right">582</td>
 </tr>
 <tr>
-<td>{{green:m-of-2}}</td>
+<td>m-of-2</td>
 <td align="right">80</td>
 <td align="right">228</td>
 <td align="right">684</td>
 </tr>
 <tr>
-<td>{{green:m-of-3}}</td>
+<td>m-of-3</td>
 <td align="right">114</td>
 <td align="right">262</td>
 <td align="right">786</td>
@@ -1288,8 +1294,7 @@ Note that there is an <code>OP_0</code> dummy element to address the extra stack
 <p>When spending P2MS UTXOs, the minimum output value <strong>is determined by the destination output type</strong>—546 sats for P2PKH or 294 sats for P2WPKH—regardless of the P2MS configuration being spent.
 This is because the dust threshold calculation uses the fixed 148-byte input size assumption.
 For example, spending a P2MS UTXO to create a P2PKH output requires the P2MS UTXO to have sufficient value to cover the 546 sat minimum plus transaction fees.</p>
-<p>:::</p>
-<p>Having established the theoretical dust thresholds, we can now examine how many P2MS outputs actually fall below these thresholds. {@tab:dust-analysis} shows the breakdown by protocol.</p>
+<p>Having established the theoretical dust thresholds, we can now examine how many P2MS outputs actually fall below these thresholds. Table 12 shows the breakdown by protocol.</p>
 <table>
 <thead>
 <tr>
@@ -1380,13 +1385,13 @@ For example, spending a P2MS UTXO to create a P2PKH output requires the P2MS UTX
 </tr>
 </tbody>
 </table>
-<p>Dust threshold analysis of P2MS UTXOs as of block height 918,997 (14 October 2025).{#tab:dust-analysis}</p>
+<p><strong>Table 12:</strong> Dust threshold analysis of P2MS UTXOs as of block height 918,997 (14 October 2025).</p>
 <p>The results reveal that 99.3% of P2MS outputs are at or above the 546 sat threshold, meaning they are not considered dust for spending purposes.
 Only 16,861 outputs (0.7%) fall below the dust threshold, and notably all of these are below 294 sats (dust for all destination types).</p>
 <p>The Data Storage category is the clear outlier, with 58% of its outputs (16,847) below the dust threshold.
 These sub-dust outputs largely correspond to the data embedding efforts of 2013.</p>
 <h3 id="fee-breakdown">Fee breakdown</h3>
-<p>Beyond the value locked in P2MS outputs, users have paid substantial transaction fees to embed data using this script type. {@tab:fee-breakdown} shows the total fees paid by each protocol classification, for all transactions creating unspent P2MS outputs.</p>
+<p>Beyond the value locked in P2MS outputs, users have paid substantial transaction fees to embed data using this script type. Table 13 shows the total fees paid by each protocol classification, for all transactions creating unspent P2MS outputs.</p>
 <table>
 <thead>
 <tr>
@@ -1477,25 +1482,25 @@ These sub-dust outputs largely correspond to the data embedding efforts of 2013.
 </tr>
 </tbody>
 </table>
-<p>Fee breakdown of P2MS UTXOs by protocol classification as of block height 918,997 (14 October 2025).{#tab:fee-breakdown}</p>
+<p><strong>Table 13:</strong> Fee breakdown of P2MS UTXOs by protocol classification as of block height 918,997 (14 October 2025).</p>
 <p>Bitcoin Stamps dominates fee expenditure at 218.5 BTC (77.7% of all P2MS-related fees), reflecting both its transaction volume and its emergence during higher fee environments in 2023.
-{@fig:stamps-weekly-fees} shows the weekly distribution of Bitcoin Stamps fees since the protocol's launch.</p>
-<p>:::alert{info}
-<strong>{{cyan:Over 281 BTC has been spent on transaction fees to embed data in P2MS outputs, with Bitcoin Stamps accounting for ~78%.}}</strong>
-:::</p>
+Figure 5 shows the weekly distribution of Bitcoin Stamps fees since the protocol's launch.</p>
+<blockquote>
+<p><strong>Over 281 BTC has been spent on transaction fees to embed data in P2MS outputs, with Bitcoin Stamps accounting for ~78%.</strong></p>
+</blockquote>
 <p>The Data Storage category shows the highest average fee per transaction at 105,195 sats due to the larger transaction sizes required for bulk data embedding (e.g., "WikiLeaks Cablegate" files, "Bitcoin Whitepaper").
 Conversely, PPk transactions paid the lowest fees at just 1,295 sats average, a result of both the protocol's age (operating during lower fee periods) and its small payload sizes.</p>
 <h2 id="p2ms-utxos-by-protocoluse">P2MS UTXOs by protocol/use</h2>
 <p>The following sections provide deeper analysis of the major protocols, including covering the various sub-protocols or variants where applicable.
 If you don't care for the details, e.g., of the various Counterparty or Omni message types, I recommend just reading the Bitcoin Stamps section immediately following, and then skip ahead to the <a href="#what-to-make-of-all-this">summary section - "What to make of all this?"</a>.</p>
 <h3 id="bitcoin-stamps">Bitcoin Stamps</h3>
-<p>As briefly covered in <a href="./p2ms-data-carry-1#bitcoin-stamps-sub-protocols">Part 1</a>, the primary indicator of a Bitcoin Stamp is the presence of designated "Key Burn" in the third pubkey position of a {{green:1-of-3}} multisig.
+<p>As briefly covered in <a href="./p2ms-data-carry-1#bitcoin-stamps-sub-protocols">Part 1</a>, the primary indicator of a Bitcoin Stamp is the presence of designated "Key Burn" in the third pubkey position of a 1-of-3 multisig.
 In the classification system, after Key Burn detection, data is extracted from the first two pubkeys and ARC4-decrypted using the first input's txid as the key.
 The decrypted payload must contain a <code>stamp:</code> (or variant) signature to confirm validity.</p>
 <p>Variant classification then proceeds in priority order: compressed data (ZLIB/GZIP) is identified first, followed by image formats (PNG, GIF, JPEG, WebP, SVG, BMP, PDF) which constitute the "Classic" variant.
 JSON payloads are parsed for protocol markers such as <code>"p":"src-20"</code> ("SRC-20" - fungible tokens), <code>"p":"src-721"</code> ("SRC-721" - non-fungible tokens) and <code>"p":"src-101"</code> ("SRC-101" - naming service). HTML documents and generic binary data fall into subsequent categories.</p>
 <p>The system also distinguishes between "Pure" Bitcoin Stamps (direct P2MS encoding) and those embedded within Counterparty transport, which exhibit both <code>CNTRPRTY</code> and <code>stamp:</code> signatures in the decrypted payload.</p>
-<p>{@tab:stamps-variants} shows the composition of P2MS outputs associated with Bitcoin Stamps in the UTXO set.</p>
+<p>Table 14 shows the composition of P2MS outputs associated with Bitcoin Stamps in the UTXO set.</p>
 <table>
 <thead>
 <tr>
@@ -1572,7 +1577,7 @@ JSON payloads are parsed for protocol markers such as <code>"p":"src-20"</code> 
 </tr>
 </tbody>
 </table>
-<p>Bitcoin Stamps sub-protocol composition as of block height 918,997 (14 October 2025).{#tab:stamps-variants}</p>
+<p><strong>Table 14:</strong> Bitcoin Stamps sub-protocol composition as of block height 918,997 (14 October 2025).</p>
 <p>"SRC-20" tokens dominate at ~90% of Bitcoin Stamps P2MS outputs, reflecting the protocol's primary use for "fungible token operations". "SRC-20" is a JSON-only protocol, so all "SRC-20" P2MS outputs contain JSON data like the following (as decoded in <a href="./p2ms-data-carry-1#data-carrying-in-p2ms-a-bitcoin-stamps-example">Part 1</a>):</p>
 <pre><code class="hljs language-json">stamp<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
 	<span class="hljs-attr">"p"</span><span class="hljs-punctuation">:</span><span class="hljs-string">"src-20"</span><span class="hljs-punctuation">,</span>
@@ -1593,7 +1598,7 @@ Approximately 4,200 images, predominantly PNGs and GIFs have been embedded using
 <li>JPEG images: 60 (1%)</li>
 <li>Other formats: 44 (1%)</li>
 </ul>
-<p>Bitcoin Stamps utilises two distinct transport mechanisms, as summarised in {@tab:stamps-transport}.
+<p>Bitcoin Stamps utilises two distinct transport mechanisms, as summarised in Table 15.
 Counterparty was the original transport layer for Bitcoin Stamps, but given the significant overhead, a native Bitcoin Stamps transport mechanism was later developed and introduced.
 The overheads of Counterparty were explored in <a href="./p2ms-data-carry-1#summarising-the-main-techniques">Part 1</a>.</p>
 <table>
@@ -1617,11 +1622,11 @@ The overheads of Counterparty were explored in <a href="./p2ms-data-carry-1#summ
 </tr>
 </tbody>
 </table>
-<p>Bitcoin Stamps transport mechanism breakdown.{#tab:stamps-transport}</p>
+<p><strong>Table 15:</strong> Bitcoin Stamps transport mechanism breakdown.</p>
 <p>Despite the relatively low value locked in outputs (14.19 BTC), Bitcoin Stamps users have demonstrated their willingness to pay for the "permanence guarantee".
 For example, with the protocol having emerged during the 2023 Ordinals/Inscriptions hype, the fact that
 people chose to use Bitcoin Stamps over Ordinals/Inscriptions can perhaps be seen as a preference for permanence over lower cost.</p>
-<p>Although the average value per Bitcoin Stamps P2MS output is just 796 sats ({@tab:stamps-economics}), with the average size of a Classic Stamp being 17.28 outputs per transaction ({@tab:stamps-variants}), the average cost per Classic Stamp transaction is ~13,760 sats just for the outputs alone, plus transaction fees.
+<p>Although the average value per Bitcoin Stamps P2MS output is just 796 sats (Table 16), with the average size of a Classic Stamp being 17.28 outputs per transaction (Table 14), the average cost per Classic Stamp transaction is ~13,760 sats just for the outputs alone, plus transaction fees.
 On the matter of fees, Bitcoin Stamps users have paid approximately 218.50 BTC in transaction fees to embed data using P2MS outputs since the protocol's inception.</p>
 <table>
 <thead>
@@ -1653,23 +1658,27 @@ On the matter of fees, Bitcoin Stamps users have paid approximately 218.50 BTC i
 </tr>
 </tbody>
 </table>
-<p>Economic metrics for Bitcoin Stamps P2MS outputs.{#tab:stamps-economics}</p>
-<p>{@fig:stamps-weekly-fees} shows the weekly distribution of these fees over time.
+<p><strong>Table 16:</strong> Economic metrics for Bitcoin Stamps P2MS outputs.</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>Bitcoin Stamps weekly fee expenditure from protocol inception (April 2023) through October 2025. The average sats/vbyte trace (green) is available via the legend.</p>
+<p>Figure 5 shows the weekly distribution of these fees over time.
 The chart displays total weekly fees (bars) alongside average fee per transaction (blue line) on a secondary axis.</p>
 <p>This data reveals:</p>
 <ul>
-<li><strong>Peak activity in late 2023</strong>: Weekly fees peaked at over 51 BTC during the week of 14 December 2023, coinciding with broader network congestion and high demand for block space (see {@fig:mempool-3y}).
+<li><strong>Peak activity in late 2023</strong>: Weekly fees peaked at over 51 BTC during the week of 14 December 2023, coinciding with broader network congestion and high demand for block space (see figure).
 During this period, average fees per transaction reached approximately 167,500 sats (~US$70 at the time!).</li>
 <li><strong>Majority of fees paid over a handful of weeks</strong>: ~66% of all Bitcoin Stamps fees were paid during just 10 weeks between November 2023 and February 2024, so simply considering the total fees paid can be misleading without temporal context.</li>
 </ul>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool-graph-3y-1764302242.svg" alt="Figure: Bitcoin mempool size (in MvB) from November 2022 to November 2025, showing periods of elevated congestion. From mempool.space">{#fig:mempool-3y}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool-graph-3y-1764302242.svg" alt="Figure: Bitcoin mempool size (in MvB) from November 2022 to November 2025, showing periods of elevated congestion. From mempool.space"></p>
 <p>The "Stamp" in Bitcoin Stamps is (presumably) a backronym: Secure Tradeable Artifacts Maintained Permanently.
 And the original motivation was <a href="https://github.com/mikeinspace/stamps/blob/main/BitcoinStamps.md"><em>"Storing 'Art on the Blockchain' as a method of achieving permanence"</em></a>.
 Yet we've seen that the dominant use case for Bitcoin Stamps is fungible token operations ("SRC-20"), which arguably diverges from the original intent of "art".</p>
-<p>{@fig:stamps-variant-temporal} explores how the distribution of Bitcoin Stamps variants (those utilising P2MS) has evolved over time.
+<p>Figure 6 explores how the distribution of Bitcoin Stamps variants (those utilising P2MS) has evolved over time.
 It's clear that the "art" use case ("Classic Stamps") has not been seen since March 2024, with only "SRC-20" and "SRC-101" seeing use in 2025.
 This is important context if one were to consider if the continued use of P2MS outputs by Bitcoin Stamps is justified, especially given their deliberately unspendable design.
 This is discussed further in the <a href="#what-to-make-of-all-this">summary section</a>.</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>Weekly distribution of Bitcoin Stamps variants by output count.</p>
 <h3 id="counterparty">Counterparty</h3>
 <p>Counterparty is the second largest contributor to P2MS outputs in the UTXO set, accounting for ~23% of all such outputs.
 Unlike Bitcoin Stamps' deliberately unspendable outputs, every Counterparty P2MS output contains, in theory, at least one valid public key, ensuring spendability and avoiding permanent UTXO set inclusion.
@@ -1745,13 +1754,13 @@ Although there are 20+ different Counterparty protocol message types, they have 
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Counterparty variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:counterparty-variants}</p>
+<p><strong>Table 17:</strong> Breakdown of Counterparty variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>Counterparty uses two primary multisig configurations:</p>
 <ul>
-<li>{{green:1-of-3}}: 72.10% of outputs</li>
-<li>{{green:1-of-2}}: 27.79% of outputs</li>
+<li>1-of-3: 72.10% of outputs</li>
+<li>1-of-2: 27.79% of outputs</li>
 </ul>
-<p>The remaining configurations ({{green:2-of-2}}, {{green:2-of-3}}, {{green:3-of-3}}) account for 0.11% of all Counterparty P2MS UTXOs.</p>
+<p>The remaining configurations (2-of-2, 2-of-3, 3-of-3) account for 0.11% of all Counterparty P2MS UTXOs.</p>
 <h3 id="omni">Omni</h3>
 <p>Omni is a distant third in terms of P2MS UTXO contribution, accounting for ~1.8% of all such outputs.
 Similar to Counterparty, every Omni P2MS output contains at least one valid public key, ensuring spendability and avoiding permanent UTXO set inclusion.
@@ -1829,8 +1838,8 @@ If deobfuscation is not successful, the transaction and P2MS outputs are marked 
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Omni variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:omni-variants}</p>
-<p>Omni primarily uses the {{green:1-of-2}} multisig configuration, accounting for 90.16% of outputs, with the remaining 9.83% using {{green:1-of-3}} (though there are 2 Omni UTXOs that use the odd {{green:1-of-1}} configuration).</p>
+<p><strong>Table 18:</strong> Breakdown of Omni variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
+<p>Omni primarily uses the 1-of-2 multisig configuration, accounting for 90.16% of outputs, with the remaining 9.83% using 1-of-3 (though there are 2 Omni UTXOs that use the odd 1-of-1 configuration).</p>
 <h3 id="chancecoin">Chancecoin</h3>
 <p>Chancecoin was a gambling-focused protocol that operated on Bitcoin from 2014-2015, using P2MS outputs for its message encoding.
 Like Counterparty and Omni, Chancecoin maintains at least one valid public key per output, ensuring spendability.
@@ -1898,8 +1907,8 @@ Like Counterparty and Omni, Chancecoin maintains at least one valid public key p
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Chancecoin variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:chancecoin-variants}</p>
-<p>Chancecoin exclusively uses the {{green:1-of-2}} multisig configuration (100% of outputs).</p>
+<p><strong>Table 19:</strong> Breakdown of Chancecoin variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
+<p>Chancecoin exclusively uses the 1-of-2 multisig configuration (100% of outputs).</p>
 <h3 id="ppk">PPk</h3>
 <p>PPk was a decentralised identity and naming protocol that operated on Bitcoin, using P2MS and <code>OP_RETURN</code> outputs for message encoding.
 PPk aimed to provide a decentralised alternative to DNS and digital identity systems.</p>
@@ -1953,11 +1962,11 @@ Once detected, variant classification examines the combined P2MS and <code>OP_RE
 </tr>
 </tbody>
 </table>
-<p>Breakdown of PPk variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:ppk-variants}</p>
+<p><strong>Table 20:</strong> Breakdown of PPk variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>PPk uses two multisig configurations:</p>
 <ul>
-<li>{{green:1-of-3}}: 70.43% of outputs</li>
-<li>{{green:1-of-2}}: 29.57% of outputs</li>
+<li>1-of-3: 70.43% of outputs</li>
+<li>1-of-2: 29.57% of outputs</li>
 </ul>
 <p>All 4,728 PPk P2MS outputs appear spendable and only a small amount of value, ~0.05 BTC, is locked in them.</p>
 <h3 id="op_return-signalled">OP_RETURN Signalled</h3>
@@ -1999,17 +2008,17 @@ Often the <code>OP_RETURN</code> serves as a protocol identifier, with P2MS outp
 </tr>
 </tbody>
 </table>
-<p>Breakdown of OP_RETURN Signalled variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:opreturn-signalled-variants}</p>
+<p><strong>Table 21:</strong> Breakdown of OP_RETURN Signalled variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>The largest category is "Protocol47930" (54.9%), representing transactions featuring the <code>0xbb3a</code> marker (47930 in decimal).
 "Generic ASCII" (27.5%) captures various ASCII-based identifiers that don't match known protocols, examples include <code>CC</code> (138 outputs), <code>8EC=</code> (104 outputs) and <code>DEVCHA</code> (30 outputs).
 "CLIPPERZ" (17.6%) corresponds to the <a href="https://clipperz.is/">Clipperz</a> open-source password manager, which at some point in the past seems to have used Bitcoin as a backup storage feature.</p>
 <p>Unlike dedicated data-carrying protocols, OP_RETURN Signalled transactions show an odd mix of multisig configurations:</p>
 <ul>
-<li>{{green:2-of-2}}: 84.1% of outputs</li>
-<li>{{green:1-of-2}}: 10.8% of outputs</li>
-<li>{{green:1-of-3}}: 4.6% of outputs</li>
+<li>2-of-2: 84.1% of outputs</li>
+<li>1-of-2: 10.8% of outputs</li>
+<li>1-of-3: 4.6% of outputs</li>
 </ul>
-<p>The prevalence of {{green:2-of-2}} configurations (rather than the {{green:1-of-n}} patterns typical of data-carrying protocols) is notable, since these require multiple valid signatures to spend.
+<p>The prevalence of 2-of-2 configurations (rather than the 1-of-n patterns typical of data-carrying protocols) is notable, since these require multiple valid signatures to spend.
 Analysis of EC-point validity shows that 92.53% of these OP_RETURN Signalled P2MS outputs are actually spendable, with ~0.11 BTC currently locked across all OP_RETURN Signalled P2MS outputs.</p>
 <h3 id="ascii-identifier-protocols">ASCII Identifier Protocols</h3>
 <p>The ASCII Identifier Protocols classification captures P2MS transactions where the embedded data begins with a recognisable ASCII string identifier.
@@ -2057,15 +2066,15 @@ These represent various experimental or short-lived protocols that used P2MS for
 </tr>
 </tbody>
 </table>
-<p>Breakdown of ASCII identifier protocol variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:ascii-identifier-variants}</p>
+<p><strong>Table 22:</strong> Breakdown of ASCII identifier protocol variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p><code>TB0001</code> (41.9%) is the most common variant, though the protocol's purpose remains unidentified. <code>METROXMN</code> (22.2%) is associated with <a href="https://bitcointalk.org/index.php?topic=974486.0">Metronotes XMN</a>, which appears to be a scam. <code>TEST01</code> (21.9%) likely represents testing activity during protocol development or experimentation.
 The "Other ASCII Protocol" category (14.0%) is almost entirely <code>NEWBCOIN</code> (113 of 114 outputs), an unknown protocol from late 2014.
 Approximately half of the <code>NEWBCOIN</code> transactions (11 of 20) embed gzip-compressed data across multiple P2MS outputs per transaction (9–10 outputs each), while the remainder are single-output transactions without compression.
 The single non-<code>NEWBCOIN</code> output is <code>PRVCY</code> from March 2015.</p>
 <p>ASCII Identifier Protocols use two multisig configurations:</p>
 <ul>
-<li>{{green:1-of-2}}: 63.24% of outputs</li>
-<li>{{green:1-of-3}}: 36.76% of outputs</li>
+<li>1-of-2: 63.24% of outputs</li>
+<li>1-of-3: 36.76% of outputs</li>
 </ul>
 <p>All 816 ASCII Identifier Protocols P2MS outputs are spendable.</p>
 <h3 id="data-storage">Data Storage</h3>
@@ -2129,19 +2138,19 @@ This suggests that early data embedders typically stored raw text, compressed ar
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Data Storage variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:data-storage-variants}</p>
+<p><strong>Table 23:</strong> Breakdown of Data Storage variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>The "WikiLeaks Cablegate" files dominate this category at 46.3%, representing diplomatic cables embedded across thousands of P2MS outputs.
 As explored in <a href="./p2ms-data-carry-1#generic-data-storage">Part 1</a>, this is one of the most famous examples of data storage in P2MS, alongside the Bitcoin whitepaper PDF, which itself was also embedded in April 2013 across 946 P2MS outputs (3.3%).
 "Embedded Data" (36.5%) captures various other data embedding efforts.
 "Proof of Burn" (13.9%) represents outputs created specifically to demonstrate destruction of bitcoin value.</p>
 <p>Data Storage shows diverse multisig configurations, reflecting its ad-hoc nature:</p>
 <ul>
-<li>{{green:1-of-3}}: 80.84% of outputs</li>
-<li>{{green:1-of-2}}: 15.92% of outputs</li>
-<li>{{green:2-of-2}}: 1.45% of outputs</li>
-<li>{{green:1-of-1}}: 1.28% of outputs</li>
-<li>{{green:2-of-3}}: 0.48% of outputs</li>
-<li>{{green:3-of-3}}: 0.04% of outputs</li>
+<li>1-of-3: 80.84% of outputs</li>
+<li>1-of-2: 15.92% of outputs</li>
+<li>2-of-2: 1.45% of outputs</li>
+<li>1-of-1: 1.28% of outputs</li>
+<li>2-of-3: 0.48% of outputs</li>
+<li>3-of-3: 0.04% of outputs</li>
 </ul>
 <p>Only 33.29% of Data Storage P2MS outputs are spendable, with the majority (66.71%) being unspendable due to all keys being used for data carriage or proof-of-burn patterns. ~10.18 BTC is currently locked in Data Storage P2MS outputs.</p>
 <h3 id="likely-data-storage">Likely Data Storage</h3>
@@ -2183,20 +2192,20 @@ Unlike Data Storage (which has confirmed data patterns), Likely Data Storage rep
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Likely Data Storage variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:likely-data-storage-variants}</p>
+<p><strong>Table 24:</strong> Breakdown of Likely Data Storage variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>The dominant variant is "Dust Amount" (63.52%), capturing outputs where the encumbered value is less than 1000 sats.
 "High Output Count" (36.06%) identifies transactions that feature 5+ P2MS outputs, a pattern perhaps indicative of bulk data embedding rather than normal multisig usage.
 "Invalid EC Point" (0.42%) represents outputs where at least one pubkey is provably not a valid point on the secp256k1 curve, again indicative of data carrying rather than legitimate multisig.</p>
 <p>The Likely Data Storage has the following multisig configuration profile:</p>
 <ul>
-<li>{{green:2-of-2}}: 39.68% of outputs</li>
-<li>{{green:1-of-1}}: 32.39% of outputs</li>
-<li>{{green:1-of-3}}: 13.89% of outputs</li>
-<li>{{green:2-of-3}}: 13.52% of outputs</li>
-<li>{{green:1-of-2}}: 0.51% of outputs</li>
+<li>2-of-2: 39.68% of outputs</li>
+<li>1-of-1: 32.39% of outputs</li>
+<li>1-of-3: 13.89% of outputs</li>
+<li>2-of-3: 13.52% of outputs</li>
+<li>1-of-2: 0.51% of outputs</li>
 </ul>
-<p>This distribution is notably different from both Data Storage (e.g., 80.84% {{green:1-of-3}}) and established data-carrying protocols.
-Specifically, {{green:2-of-2}} at 39.68% is more commonly associated with legitimate multisig arrangements as opposed to data carriage.</p>
+<p>This distribution is notably different from both Data Storage (e.g., 80.84% 1-of-3) and established data-carrying protocols.
+Specifically, 2-of-2 at 39.68% is more commonly associated with legitimate multisig arrangements as opposed to data carriage.</p>
 <p>99.86% of Likely Data Storage P2MS outputs are spendable, with only 3 outputs being unspendable.
 ~0.03 BTC is currently locked in Likely Data Storage outputs.</p>
 <h3 id="likely-legitimate-multisig">Likely Legitimate Multisig</h3>
@@ -2238,17 +2247,17 @@ These outputs exhibit characteristics consistent with legitimate multisig usage:
 </tr>
 </tbody>
 </table>
-<p>Breakdown of Likely Legitimate Multisig variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:likely-legitimate-multisig-variants}</p>
+<p><strong>Table 25:</strong> Breakdown of Likely Legitimate Multisig variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).</p>
 <p>The vast majority (97.8%) are standard legitimate multisig outputs.
 The "Null-Padded" variant (1.3%) represents outputs where public keys contain null padding, potentially indicating older wallet software or non-standard key generation.
 "Duplicate Keys" (0.9%) captures the unusual case where the same public key appears multiple times in a multisig script, which while technically valid, suggests implementation bugs.</p>
 <p>Likely Legitimate Multisig shows the most diverse multisig configuration profile of any classification:</p>
 <ul>
-<li>{{green:2-of-2}}: 41.30% of outputs</li>
-<li>{{green:1-of-2}}: 25.00% of outputs</li>
-<li>{{green:2-of-3}}: 12.68% of outputs</li>
-<li>{{green:1-of-3}}: 11.41% of outputs</li>
-<li>{{green:1-of-1}}: 9.60% of outputs</li>
+<li>2-of-2: 41.30% of outputs</li>
+<li>1-of-2: 25.00% of outputs</li>
+<li>2-of-3: 12.68% of outputs</li>
+<li>1-of-3: 11.41% of outputs</li>
+<li>1-of-1: 9.60% of outputs</li>
 </ul>
 <p>All 552 Likely Legitimate Multisig P2MS outputs are spendable (100%), as would be expected.
 The total value locked in these outputs is approximately 6.50 BTC which accounts for ~9.4% of the total value encumbered in P2MS outputs.
@@ -2260,10 +2269,12 @@ The findings are stark: over 99.98% of P2MS UTXOs serve data embedding protocols
 This represents a fundamental departure from the script type's intended purpose of enabling multisig custody arrangements and is largely driven by one protocol: Bitcoin Stamps.</p>
 <h3 id="p2ms-usage-over-time">P2MS usage over time</h3>
 <p>Though the content here is centred on P2MS UTXOs, it would be remiss to not consider the totality of P2MS usage, including P2MS outputs that have already been spent.
-{@fig:cumulative-p2ms} shows the cumulative number of P2MS outputs created (purple line) versus the cumulative number of P2MS inputs spent (blue line) over time.</p>
+Figure 7 shows the cumulative number of P2MS outputs created (purple line) versus the cumulative number of P2MS inputs spent (blue line) over time.</p>
 <p>Of the ~2.71M P2MS outputs created through to 14 October 2025, approximately 288K have ever been spent as inputs, yielding a spend rate of just 10.6%.
 Only ~8% of the spent P2MS outputs were spent in the last ~6 years, with the remaining ~92% having been spent in the ~8 years prior (2012–2020).
 Since Bitcoin Stamps launched, the creation of P2MS outputs has vastly outpaced their spending, leading to a growing accumulation of P2MS outputs in the UTXO set.</p>
+<p><strong>[Interactive plot - view on website]</strong></p>
+<p>Cumulative P2MS inputs (spent) and outputs (created) over time. The dramatic divergence since Bitcoin Stamps launched in early 2023 illustrates that P2MS outputs are being created far faster than they are being spent. Data sourced from <a href="https://mainnet.observer">mainnet.observer</a>.</p>
 <h3 id="bitcoin-stamps-permanence">Bitcoin Stamps permanence</h3>
 <p>When Bitcoin Stamps launched in early 2023, its creators justified using P2MS on the grounds of permanence and "art": art encoded in deliberately unspendable outputs would remain in the UTXO set indefinitely.
 This rationale was controversial, with objection to deliberate UTXO set pollution, but the protocol forged ahead regardless.</p>
@@ -2285,7 +2296,7 @@ Transactions with <code>OP_RETURN</code> outputs of any size (up to the transact
 This fundamentally changes the data carriage landscape on Bitcoin.</p>
 <h3 id="bitcoin-stamps-current-usage-doesnt-justify-p2ms">Bitcoin Stamps' current usage doesn't justify P2MS</h3>
 <p>The data shows that Bitcoin Stamps' use case has evolved significantly from its original "art" focus.
-As shown in {@fig:stamps-variant-temporal}, no P2MS "Classic Stamps" (images) have been created since March 2024, and only the JSON-based sub-protocols of Bitcoin Stamps (SRC-20, SRC-101) have leveraged P2MS in 2025.</p>
+As shown in Figure 6, no P2MS "Classic Stamps" (images) have been created since March 2024, and only the JSON-based sub-protocols of Bitcoin Stamps (SRC-20, SRC-101) have leveraged P2MS in 2025.</p>
 <p>Bitcoin Stamps' current P2MS usage is entirely for simple JSON payloads, not art.
 These JSON payloads do not inherently require the permanence guarantee that P2MS provides.
 They could function identically using <code>OP_RETURN</code> outputs, which:</p>
@@ -2379,12 +2390,12 @@ Even so, it persisted - and still persists - as a vehicle for data carriage, wit
 Three major protocols dominate this practice: Bitcoin Stamps, Counterparty and Omni.</p>
 <p>Bitcoin Stamps employs ARC4 obfuscation (TXID-keyed) and can be identified by distinctive Key Burn patterns in the original pub keys (<code>0x0222...</code>, <code>0x0333...</code>, etc).
 A protocol identifier, e.g., <code>stamp:</code>, appears only once in the deobfuscated key data.
-Bitcoin Stamps uses {{green:1-of-3}} P2M outputs, with one Key Burn pubkey and two data pubkeys per output, so no private keys exist that can spend the output.</p>
+Bitcoin Stamps uses 1-of-3 P2M outputs, with one Key Burn pubkey and two data pubkeys per output, so no private keys exist that can spend the output.</p>
 <p>Counterparty also uses ARC4 obfuscation (TXID-keyed) but is identified by the string <code>CNTRPRTY</code> being present in the deobfuscated key data.
 The identifier appears once per ARC4-obfuscated output, so multi-output transactions sacrifice data carrying efficiency.
-Counterparty maintains at least one real pubkey per output in its {{green:1-of-2}} or {{green:1-of-3}} configurations, so most Counterparty-related P2MS outputs remain spendable in theory (apart from <a href="#bitcoin-stamps---classic-stamp-image-counterparty-transport">Classic Stamps</a>).</p>
+Counterparty maintains at least one real pubkey per output in its 1-of-2 or 1-of-3 configurations, so most Counterparty-related P2MS outputs remain spendable in theory (apart from <a href="#bitcoin-stamps---classic-stamp-image-counterparty-transport">Classic Stamps</a>).</p>
 <p>Omni distinguishes itself through obfuscation based on SHA-256+XOR, keyed to the sender's address, and identification via the Exodus address (<code>1EXoDusj...</code>) in adjacent transaction outputs.
-Omni also maintains valid pubkeys in its {{green:1-of-2}} or {{green:1-of-3}} structures, so all Omni P2MS outputs can also be spent (again, in theory).</p>
+Omni also maintains valid pubkeys in its 1-of-2 or 1-of-3 structures, so all Omni P2MS outputs can also be spent (again, in theory).</p>
 <p>A number of minor protocols also leverage P2MS for data carrying purposes, including protocols using identifiers such as <code>CHANCECO</code> (Chancecoin), <code>TB0001</code>, <code>TEST01</code> and <code>METROXMN</code>.
 Additionally, several protocols employ hybrid approaches that use P2MS alongside <code>OP_RETURN</code>.
 PPk (PPkPub) uses the combined data-carrying capacity of P2MS outputs + <code>OP_RETURN</code>, with a distinctive marker pubkey for identification, whereas others use <code>OP_RETURN</code> outputs for explicit protocol signalling with the larger storage capacity of P2MS outputs used for the data payload (e.g., "Protocol 47930", <code>CLIPPERZ</code>).
@@ -2400,25 +2411,25 @@ Note that this post goes into detail in breaking down examples of the various pr
 <ul>
 <li>It's the legacy script type for multisig that has long been superseded by other script types that enable multisig, including P2SH and P2WSH, with these newer script types being more economical to use.</li>
 <li>Given the above, there's no real reason for anyone to use P2MS for multisig, yet it <em>is</em> still used, for data carriage.</li>
-<li>There's been a significant increase in P2MS UTXOs since early 2023 as per {@fig:p2ms_analysis}, yet the encumbered value remains <strong>tiny</strong>.</li>
+<li>There's been a significant increase in P2MS UTXOs since early 2023 as per Figure 1, yet the encumbered value remains <strong>tiny</strong>.</li>
 <li>P2MS data carrying is regularly used, albeit much less so than other approaches (e.g., P2TR-based approaches), but it remains understudied compared to other approaches.</li>
 </ul>
 <p>There have been a number of analyses of data carriage in Bitcoin, but they generally focus on the other data carriage methods.
 Pay-to-Fake-Multisig (P2FMS) as the use of P2MS for data carriage is sometimes called, is often just a side note.
 See the <a href="#references">References</a> section for links to some of these other analyses.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms_analysis.png" alt="Figure: the number of P2MS UTXOs and encumbered value over time (block height increments of 50,000)."> {#fig:p2ms_analysis}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms_analysis.png" alt="Figure 1: the number of P2MS UTXOs and encumbered value over time (block height increments of 50,000)."></p>
 <h2 id="p2ms-fundamentals">P2MS fundamentals</h2>
-<p>P2MS is a script type that allows users to lock bitcoins to multiple ({{green:n}}) public keys, and require signatures for some or all ({{green:m}}) of those public keys to unlock and spend; an {{green:m-of-n}} multisig.
+<p>P2MS is a script type that allows users to lock bitcoins to multiple (n) public keys, and require signatures for some or all (m) of those public keys to unlock and spend; an m-of-n multisig.
 P2MS is sometimes referred to as raw or bare multisig, as the public keys used to create the lock are directly accessible in the locking script (the <code>ScriptPubKey</code>).
 This is in contrast to the more modern multisig constructs of P2SH and P2WSH where the public keys used to create the lock are obfuscated by hashing before being input into the locking script.</p>
 <p>Here's an example of a recent transaction from block height <a href="https://mempool.space/block/00000000000000000000708a6447d56220de4d4b2ac7462a6f533d3609320be5">903,379</a> (June 2025) that features two P2MS outputs that are relevant to the following content: <a href="https://mempool.space/tx/eb96a65e4a332f2c84cb847268f614c037e038d2c386eb08d49271966c1b0000">eb96a65e...</a></p>
 <p>The <code>ScriptPubKey</code> of the first P2MS output is:</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-output.png" alt="Figure: the first P2MS output as shown on mempool.space."> {#fig:mempool-p2ms-output}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-output.png" alt="Figure 2: the first P2MS output as shown on mempool.space."></p>
 <pre><code>512103d587bbd682a301f2933de3efd59ec3aa0e5a305d3b4597a8d71880895ebd9f002102660224cd2ffbf92fada23aa883f0c51f2d55ae13394a40d6538ff2a63d0dce002102020202020202020202020202020202020202020202020202020202020202020253ae
 </code></pre>
 <p>This <code>ScriptPubKey</code> is 105 bytes, comprised of the following:</p>
 <ul>
-<li>OP_1 (<code>51</code>), this is {{green:m}} in the {{green:m-of-n}} multisig</li>
+<li>OP_1 (<code>51</code>), this is m in the m-of-n multisig</li>
 <li>3x sets of OP_PUSHBYTES_33 (<code>21</code>) followed by 33-byte public keys
 <ul>
 <li><code>21 03d587bbd682a301f2933de3efd59ec3aa0e5a305d3b4597a8d71880895ebd9f00</code></li>
@@ -2426,12 +2437,12 @@ This is in contrast to the more modern multisig constructs of P2SH and P2WSH whe
 <li><code>21 020202020202020202020202020202020202020202020202020202020202020202</code></li>
 </ul>
 </li>
-<li>OP_3 (<code>53</code>), this is {{green:n}} in {{green:m-of-n}}, so it's a {{green:1-of-3}} multisig</li>
+<li>OP_3 (<code>53</code>), this is n in m-of-n, so it's a 1-of-3 multisig</li>
 <li>OP_CHECKMULTISIG (<code>ae</code>)</li>
 </ul>
 <p>Those first two public keys on the surface look like they could be proper public keys, but that 3rd key looks "fake".
 Indeed, even <a href="https://mempool.space/tx/eb96a65e4a332f2c84cb847268f614c037e038d2c386eb08d49271966c1b0000">mempool.space</a> indicates as such, what's the deal with that?</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-fake-pubkey.png" alt="Figure: mempool.space marking the P2MS as having a fake pubkey."> {#fig:mempool-p2ms-fake-pubkey}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-fake-pubkey.png" alt="Figure 3: mempool.space marking the P2MS as having a fake pubkey."></p>
 <h2 id="fake-keys">Fake keys</h2>
 <p>The 3rd key is indeed a fake key in the sense that it's not a public key that has a known corresponding private key.
 This fake key, <code>020202020202020202020202020202020202020202020202020202020202020202</code>, is actually one of the <em>Key Burn</em> addresses that are used by Bitcoin Stamps, one of the leading data carrying protocols that use P2MS.</p>
@@ -2445,7 +2456,7 @@ Said another way, the probability of arriving at a pre-determined pattern for an
 <li><code>020202020202020202020202020202020202020202020202020202020202020202</code></li>
 <li><code>030303030303030303030303030303030303030303030303030303030303030303</code></li>
 </ul>
-<p>The Key Burn technique assigns one of the above Key Burn keys to last key position in the {{green:1-of-3}} multisig, leaving the first two keys as possibilities to spend the output.</p>
+<p>The Key Burn technique assigns one of the above Key Burn keys to last key position in the 1-of-3 multisig, leaving the first two keys as possibilities to spend the output.</p>
 <p>The first two keys, however, are actually the data-carrying component (as we shall later learn from understanding how Bitcoin Stamps works), although we can't always definitively prove that they represent "fake" public keys.
 That is, we can run a check to see if a given public key is a valid point on the ECDSA secp256k1 curve, if it is not, we know that it is truly a fake public key, yet if it is a valid point, then it could either be a true key or just "data" that happens to correspond to a point on the curve!</p>
 <p>For example, using the 1st and 2nd keys above:</p>
@@ -2453,7 +2464,7 @@ That is, we can run a check to see if a given public key is a valid point on the
 <li>1st key: <code>03d587bbd682a301f2933de3efd59ec3aa0e5a305d3b4597a8d71880895ebd9f00</code> is a valid point</li>
 <li>2nd key: <code>02660224cd2ffbf92fada23aa883f0c51f2d55ae13394a40d6538ff2a63d0dce00</code> is NOT a valid point</li>
 </ul>
-<p>:::collapse{CODE: Python code to validate a public key on the secp256k1 curve}</p>
+<p><strong>CODE: Python code to validate a public key on the secp256k1 curve</strong></p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># Validate public key on secp256k1 curve</span>
 <span class="hljs-comment"># Returns True if point (x,y) satisfies: y² = x³ + 7 (mod p)</span>
 
@@ -2487,12 +2498,11 @@ p = <span class="hljs-number">0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
 <span class="hljs-comment"># Usage: is_valid_pubkey("03d587bbd682a301f2933de3efd59ec3aa0e5a305d3b4597a8d71880895ebd9f00")</span>
 </code></pre>
-<p>:::</p>
 <p>Suffice it to say, checking whether a given public key is a valid point on the ECDSA secp256k1 curve is insufficient to definitely prove that the key is data or otherwise - sometimes a public key will be a valid point yet it just represents data (as with the 1st key above).</p>
 <p>We have yet to see how keys can represent data; let’s examine how data is embedded.</p>
 <h2 id="data-carrying-in-p2ms---a-bitcoin-stamps-example">Data carrying in P2MS - A Bitcoin Stamps example</h2>
 <p>Note that the following is provided to give a concrete example of how Bitcoin Stamps embeds arbitrary, non-financial data into Bitcoin transactions; the aim is not to cover the minutiae of how such protocols operate at a higher level (e.g., deploying, minting, transferring etc.).</p>
-<p>Bitcoin Stamps inserts data into {{green:1-of-3}} P2MS transaction outputs, with the data encoded to look like public keys for the first two keys ("data keys"), and a Key Burn address used for the third.
+<p>Bitcoin Stamps inserts data into 1-of-3 P2MS transaction outputs, with the data encoded to look like public keys for the first two keys ("data keys"), and a Key Burn address used for the third.
 Setting the Key Burn address aside, with compressed public keys being 33 bytes, the first and last bytes are stripped from each of the data keys, leaving 31 bytes apiece.
 Concatenate the byte strings into a single 62-byte string:</p>
 <pre><code>d587bbd682a301f2933de3efd59ec3aa0e5a305d3b4597a8d71880895ebd9f + 
@@ -2548,10 +2558,10 @@ Transfer because this is what the <code>op</code> was in this example; in other 
 The main point is that <code>vout[0]</code> is always some real address.</p>
 <p>The 4th transaction output, <code>vout[3]</code>, with an address <a href="https://mempool.space/address/bc1qdmsmn42qajk7ucmkhcszmcd6g7e3svq0jyx3l5">bc1qdmsmn42q...</a>, is the change address.
 In this example, it's actually just the same address that was the single transaction input to this transaction - change is going back to original spending address.</p>
-<p>The transaction details in {@fig:mempool-p2ms-tx-details} show that the first three outputs have a value of 790 sats each.
+<p>The transaction details in Figure 4 show that the first three outputs have a value of 790 sats each.
 I don't think this value has any significance other than it safely exceeds all dust limits - <a href="https://bitcoin.stackexchange.com/questions/10986/what-is-meant-by-bitcoin-dust">the highest being 546 sats for P2PKH for the default configuration of 3 sat/vByte</a>.
 That is, these values ensure that each output and thus the overall transaction is valid, yet is low enough to have low monetary value.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-tx-details.png" alt="Figure: the transaction details."> {#fig:mempool-p2ms-tx-details}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-tx-details.png" alt="Figure 4: the transaction details."></p>
 <h3 id="unspendable-p2ms-outputs">Unspendable P2MS outputs</h3>
 <p>In the above we established that the P2MS transaction outputs were actually purely for data carrying (or were Key Burn) and did not involve real public keys.
 As such, these P2MS outputs are effectively unspendable outputs, and, given the current design of Bitcoin, they'll remain in the UTXO set of every Bitcoin node.
@@ -2597,7 +2607,7 @@ Such systems are, for example, used to replace standard Bitcoin addresses like <
 The permanence of P2MS, and the guarantee of unspendability via the use of no real pubkeys, were purportedly the rationale for developing SRC-101.</p>
 <p>All this is to say that, even within a single ecosystem (Bitcoin Stamps), there are a number of permutations and variants of how data is encoding for data carrying purpose that we need to consider for classification and analysis purposes.</p>
 <h3 id="bitcoin-stamps---classic-stamp-image-counterparty-transport">Bitcoin Stamps - Classic Stamp image (Counterparty transport)</h3>
-<p>:::collapse{EXAMPLE: Bitcoin Stamps - Classic Stamp image (Counterparty transport)}</p>
+<p><strong>EXAMPLE: Bitcoin Stamps - Classic Stamp image (Counterparty transport)</strong></p>
 <p><a href="https://mempool.space/tx/54fdeda90c4573f8a93fa45251a3c6214bcc79aa8549728dfb08ffe3e7dd3d81"><code>54fdeda9...</code></a> is a transaction from block height <a href="https://mempool.space/block/000000000000000000048a022a551b879bd87160c55b22e1f3b9a3d3b2410094">809,193</a> with 79 outputs, 77 of which are P2MS outputs.
 A review of the P2MS outputs shows that all have the <code>022222222222222222222222222222222222222222222222222222222222222222</code> Key Burn pattern and the TXID of <code>vin[0]</code> is :</p>
 <pre><code>3b2b5e1de60ba341b8ba85e35b09800edb118dc7bee246d54b11420f01aabac5
@@ -2734,10 +2744,9 @@ That is, each P2MS output has 9 bytes (1 length prefix, 8 <code>CNTRPRTY</code>)
 This is probably one reason why Bitcoin Stamps opted for a new protocol - improve efficiency by not requiring a length prefix and <code>CNTRPRTY</code> identifier in each P2MS output.</p>
 <p>Once we've stripped all length prefixes and <code>CNTRPRTY</code> identifiers from all the deobfuscated P2MS outputs and concatenated them, we end up with 4,004 bytes of base64 data which decodes to a 3,003-byte GIF.
 The size discrepancy is base64 encoding overhead: every 4 base64 characters is 3 bytes of binary data, so 4,004 / 4 = 1,001 groups x 3 = 3,003 bytes.
-The recovered image is shown in {@fig:54fdeda9.gif}.</p>
+The recovered image is shown in Figure 5.</p>
 <p>This example has shown how Bitcoin Stamps created 77 P2MS unspendable outputs in transaction <a href="https://mempool.space/tx/54fdeda90c4573f8a93fa45251a3c6214bcc79aa8549728dfb08ffe3e7dd3d81"><code>54fdeda9...</code></a> for the purpose of storing a single 3kB GIF.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/54fdeda90c4573f8a93fa45251a3c6214bcc79aa8549728dfb08ffe3e7dd3d81.gif" alt="Figure: the GIF embedded in the 77 P2MS outputs of transaction 54fdeda9...."> {#fig:54fdeda9.gif}</p>
-<p>:::</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/54fdeda90c4573f8a93fa45251a3c6214bcc79aa8549728dfb08ffe3e7dd3d81.gif" alt="Figure 5: the GIF embedded in the 77 P2MS outputs of transaction 54fdeda9...."></p>
 <h2 id="counterparty">Counterparty</h2>
 <p>We began our exploration of data carrying in P2MS with Bitcoin Stamps because this protocol is both the most prolific user of P2MS for data carrying purposes, and is largely the only protocol still in active use today.
 It started, however, with Classic Stamps leveraging Counterparty, which was the first protocol to start using P2MS for data carrying purposes in a significant way back in 2014.</p>
@@ -2772,11 +2781,11 @@ However, unlike Bitcoin Stamps, there is no Key Burn key that provides a simple 
 An example of such is outlined in <a href="#counterparty---no-arc4-obfuscation">Counterparty - no ARC4 obfuscation</a>.</p>
 <p>Regardless of whether there is ARC4 obfuscation or not, the definitive indication that a Bitcoin transaction is a Counterparty transaction is if the string <code>CNTRPRTY</code> is present in the data.
 For the majority of Counterparty transactions involving ARC4, the deobfuscation process is necessary before <code>CNTRPRTY</code> can be detected, for those lacking ARC4 obfuscation, it is relatively straightforward to identify the <code>CNTRPRTY</code> prefix via ASCII decoding of P2MS data keys.</p>
-<p>In addition to there being a mix of data-encoding techniques, Counterparty also (primarily) uses both {{green:1-of-2}} and {{green:1-of-3}} P2MS transaction outputs.
+<p>In addition to there being a mix of data-encoding techniques, Counterparty also (primarily) uses both 1-of-2 and 1-of-3 P2MS transaction outputs.
 Depending on which, and when the Counterparty transaction was constructed, the real pubkey is in a different position:</p>
 <ul>
-<li>for {{green:1-of-2}}, the real pubkey is the first of the two keys</li>
-<li>for {{green:1-of-3}}, the real pubkey is either the first (newer) or last (older) of the three keys</li>
+<li>for 1-of-2, the real pubkey is the first of the two keys</li>
+<li>for 1-of-3, the real pubkey is either the first (newer) or last (older) of the three keys</li>
 </ul>
 <p>Being a real pubkey, and with each multisig requiring one key to spend, most Counterparty UTXOs can be spent, and thus removed from the UTXO set.
 Contrast this with Bitcoin Stamps, where the keys are either Key Burn or data keys thus no private key exists to spend the UTXO, so they will remain in the UTXO set.</p>
@@ -2797,8 +2806,8 @@ And again, depending on which particular variant of the Counterparty protocol we
 </blockquote>
 <p>The following examples examine a few Counterparty transactions that use some of the various methods described above to encode a variety of data in P2MS transactions.</p>
 <h3 id="counterparty---no-arc4-obfuscation">Counterparty - no ARC4 obfuscation</h3>
-<p>:::collapse{EXAMPLE: Counterparty - no ARC4 obfuscation}
-Let's look at an example of a simple Counterparty transaction from block <a href="https://mempool.space/block/0000000000000000c548d152b0873eabd83cfba496bb5dddfb2a639b65bf5e9e">290,929</a>, <a href="https://mempool.space/tx/585f50f12288cd9044705483672fbbddb71dff8198b390b40ab3de30db0a88dd"><code>585f50f1...</code></a> that has a single {{green:1-of-2}} P2MS output.
+<p><strong>EXAMPLE: Counterparty - no ARC4 obfuscation</strong></p>
+<p>Let's look at an example of a simple Counterparty transaction from block <a href="https://mempool.space/block/0000000000000000c548d152b0873eabd83cfba496bb5dddfb2a639b65bf5e9e">290,929</a>, <a href="https://mempool.space/tx/585f50f12288cd9044705483672fbbddb71dff8198b390b40ab3de30db0a88dd"><code>585f50f1...</code></a> that has a single 1-of-2 P2MS output.
 For this transaction, the two keys are:</p>
 <ul>
 <li><code>02dd842167b625c60c10eda494eadd54df7b30f372d717b946b1912f0ce59dddf6</code></li>
@@ -2848,14 +2857,13 @@ For completeness, breaking it down (using knowledge of Counterparty message stru
 </tr>
 </tbody>
 </table>
-<p>:::</p>
 <h3 id="counterparty---arc4-obfuscation">Counterparty - ARC4 obfuscation</h3>
-<p>:::collapse{EXAMPLE: Counterparty - ARC4 obfuscation}
-Here's an example of another relatively simple Counterparty transaction, this time from block <a href="https://mempool.space/block/0000000000000000102836b6107448289827c7eba93b7c37bc2b144bfc9cfb51">368,602</a>, <a href="https://mempool.space/tx/541e640fbb527c35e0ee32d724efa4a5506c4c52acfba1ebc3b45949780c08a8"><code>541e640f...</code></a>.
-This transaction has two {{green:1-of-3}} P2MS outputs.
+<p><strong>EXAMPLE: Counterparty - ARC4 obfuscation</strong></p>
+<p>Here's an example of another relatively simple Counterparty transaction, this time from block <a href="https://mempool.space/block/0000000000000000102836b6107448289827c7eba93b7c37bc2b144bfc9cfb51">368,602</a>, <a href="https://mempool.space/tx/541e640fbb527c35e0ee32d724efa4a5506c4c52acfba1ebc3b45949780c08a8"><code>541e640f...</code></a>.
+This transaction has two 1-of-3 P2MS outputs.
 On the question of which key position represents the real pubkey, upon examination it's clear that the last of the three keys in each P2MS output is the real key as we have the same key present in both outputs: <code>0241e401...ee1f</code>).
-This is sender's public key, as can be confirmed by examining the <code>ScriptSig</code> of the transaction input in {@fig:mempool-p2ms-counterparty-2} with the key highlighted in {{yellow:yellow}}.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-counterparty-2.png" alt="Figure: Counterparty with ARC4 obfuscation transaction details (541e640f...)."> {#fig:mempool-p2ms-counterparty-2}</p>
+This is sender's public key, as can be confirmed by examining the <code>ScriptSig</code> of the transaction input in Figure 6 with the key highlighted in yellow.</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-counterparty-2.png" alt="Figure 6: Counterparty with ARC4 obfuscation transaction details (541e640f...)."></p>
 <p>If we follow a process similar to <a href="#data-carrying-in-p2ms---a-bitcoin-stamps-example">the original Bitcoin Stamps example</a>, we end up with:</p>
 <ul>
 <li>a deobfuscation key of <code>de3dec665a89228593ffa3c0236dd098a6f9ef6ac698db016f8a3303ce728649</code> (TXID of first input)</li>
@@ -2954,8 +2962,7 @@ This is sender's public key, as can be confirmed by examining the <code>ScriptSi
 <p>The complete Counterparty message is reconstructed by reading each length-prefixed segment, verifying the <code>CNTRPRTY</code> header, and concatenating the following data.
 This structure allows messages to span multiple P2MS outputs while maintaining independent validation of each segment.
 Associated with this transaction is a vanity address, <a href="https://mempool.space/address/1SaLvationGodsMarveLousGracaLgYQS"><code>1SaLvationGodsMarveLousGracaLgYQS</code></a>, which is the first transaction output.</p>
-<p>And, for sake of completeness, here's some links to <a href="https://tokenscan.io/tx/296339">this transaction</a> and <a href="https://tokenscan.io/asset/SALVATION">"asset" (SALVATION)</a>.
-:::</p>
+<p>And, for sake of completeness, here's some links to <a href="https://tokenscan.io/tx/296339">this transaction</a> and <a href="https://tokenscan.io/asset/SALVATION">"asset" (SALVATION)</a>.</p>
 <h2 id="omni-formerly-mastercoin">Omni (formerly Mastercoin)</h2>
 <p>The Omni Protocol, originally known as Mastercoin, was the pioneering protocol for building a layer on top of Bitcoin - it predated Counterparty!
 Created by J.R. Willett and detailed in his January 2012 whitepaper <a href="https://bitcointalk.org/index.php?topic=56901.0">"The Second Bitcoin Whitepaper"</a>, Mastercoin sought to extend Bitcoin's functionality to enable more complex financial instruments and smart property without requiring any modifications to Bitcoin itself.</p>
@@ -2974,7 +2981,7 @@ This class was introduced with re-introduction of <code>OP_RETURN</code> in Bitc
 </ol>
 <p>The focus here is then on Class B Omni transactions, which are still used to this day for large transactions that do not fit within the (previous) default <code>OP_RETURN</code> policy limit specified by a majority of the network (e.g., 80 bytes).</p>
 <p>According to the <a href="https://github.com/OmniLayer/spec/blob/master/OmniSpecification.adoc#64-class-b-transactions-multisig-method">Omni specification</a>, the first pubkey in each Omni transaction P2MS transaction output <em>"should be a valid public key address designated by the sender which may be used to reclaim the bitcoin assigned to the output"</em>.
-The remaining key (in a {{green:1-of-2}}) or keys (in a {{green:1-of-3}}) must be compressed public keys, where each 33-byte compressed public key encapsulates an Omni Protocol packet.</p>
+The remaining key (in a 1-of-2) or keys (in a 1-of-3) must be compressed public keys, where each 33-byte compressed public key encapsulates an Omni Protocol packet.</p>
 <p>After stripping the first and last bytes, the first byte of each 31-byte "packet", is a sequence number which is used to order the packets.
 This can range between 1 and 255, which implies:</p>
 <ul>
@@ -2988,8 +2995,8 @@ The sender's address must be a P2PKH address, and:</p>
 <em>Multiple SHA256 passes are performed against an uppercase hex representation of the previous hash."</em></p>
 </blockquote>
 <h3 id="omni---single-packet">Omni - Single Packet</h3>
-<p>:::collapse{EXAMPLE: Omni - Single Packet}
-<a href="https://mempool.space/tx/0000297bd516c501aa9b143a5eac8adaf457fa78431e844092a7112815411d03"><code>0000297b...</code></a> is an Omni transaction with a single, {{green:1-of-2}} P2MS output in block <a href="https://mempool.space/block/00000000000000000f8cd15fe9923051dd231eb46e09c6e082dd859678df8eba">323,250</a>.
+<p><strong>EXAMPLE: Omni - Single Packet</strong></p>
+<p><a href="https://mempool.space/tx/0000297bd516c501aa9b143a5eac8adaf457fa78431e844092a7112815411d03"><code>0000297b...</code></a> is an Omni transaction with a single, 1-of-2 P2MS output in block <a href="https://mempool.space/block/00000000000000000f8cd15fe9923051dd231eb46e09c6e082dd859678df8eba">323,250</a>.
 It has an uncompressed (65-byte) key as the first pubkey, and a compressed (33-byte) key as the second pubkey.
 The first pubkey is the valid pubkey, so this (currently unspent) P2MS output of 5,678 sats could presumably be spent at some point.
 The second pubkey encapsulates the single Omni Protocol packet for this Omni transaction.</p>
@@ -3043,12 +3050,11 @@ The second pubkey encapsulates the single Omni Protocol packet for this Omni tra
 </tbody>
 </table>
 <p><a href="https://omniexplorer.info/properties/production">This is the official list</a> for the mapping between Currency ID value and name.</p>
-<p>:::</p>
 <h3 id="omni---multi-packet">Omni - Multi Packet</h3>
-<p>:::collapse{EXAMPLE: Omni - Multi Packet}
-A <em>very</em> recent (25 June 2025!) example of an Omni transaction involving multiple P2MS transaction outputs, and thus multiple Omni packets, is <a href="https://mempool.space/tx/153091863886921ab8bf6a7cc17ea99610795522f48b1824d2e417954e466281"><code>15309186...</code></a>.</p>
+<p><strong>EXAMPLE: Omni - Multi Packet</strong></p>
+<p>A <em>very</em> recent (25 June 2025!) example of an Omni transaction involving multiple P2MS transaction outputs, and thus multiple Omni packets, is <a href="https://mempool.space/tx/153091863886921ab8bf6a7cc17ea99610795522f48b1824d2e417954e466281"><code>15309186...</code></a>.</p>
 <p>The main difference from the single packet example above is that for each subsequent pubkey, we need to apply <code>SHA256</code> once more to the sender's address.
-So with a sender's address of <code>1D6oYjFVRAETW1Us9oS36YC71gfRw1omZB</code>, and there being 6 P2MS transaction outputs (the first 5 are {{green:1-of-3}}, the last is a {{green:1-of-2}}), we have 11 full 32-byte SHA256 results, with the index indicating the number of SHA256 rounds (remembering to convert to uppercase hex representation before each round):</p>
+So with a sender's address of <code>1D6oYjFVRAETW1Us9oS36YC71gfRw1omZB</code>, and there being 6 P2MS transaction outputs (the first 5 are 1-of-3, the last is a 1-of-2), we have 11 full 32-byte SHA256 results, with the index indicating the number of SHA256 rounds (remembering to convert to uppercase hex representation before each round):</p>
 <ol>
 <li>x<code>573a09227032f2dde9d2ecf3ffd930d69276754c3bc4343b01c14e0515741fa0</code></li>
 <li><code>bc9197079fb1e344370ab8ee984291f1a3721b37901484dfb2079a158adc5e30</code></li>
@@ -3198,9 +3204,8 @@ We reach the end when we hit the null terminator <code>00</code> (byte 11).</p>
 </table>
 <p>As per the <a href="https://github.com/OmniLayer/spec/blob/master/OmniSpecification.adoc#field-number-of-coins">Omni spec for the number of coins</a> <em>"for divisible coins or tokens, the value in this field is to be divided by 100,000,000"</em>, so there are actually only 144 units of this "AnuCoin".
 And the sender was perhaps very impatient for the world to hear about "AnuCoin", significantly over-paying to get the transaction confirmed quickly:</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-anucoin.png" alt="Figure: 200,000 sat transaction fee for AnuCoin."> {#fig:mempool-p2ms-anucoin}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-anucoin.png" alt="Figure 7: 200,000 sat transaction fee for AnuCoin."></p>
 <p>Again, by no means being any form of endorsement, <a href="https://omniexplorer.info/asset/2147484218">here are full details</a> relating to this property/asset on Omni.</p>
-<p>:::</p>
 <h2 id="other-variants-or-protocols">Other variants or protocols</h2>
 <p>As documented in <a href="./p2ms-data-carry-2">Part 2</a>, Bitcoin Stamps, Counterparty and Omni are the dominant protocols that utilise P2MS outputs for data carrying purposes, combined accounting for over 98% of P2MS outputs in the UTXO set.
 Yet there are other approaches and minor protocols that also use P2MS outputs to carry data:</p>
@@ -3222,7 +3227,7 @@ This design leverages Bitcoin "blockchain coordinates" (block height, transactio
 When created, PPk transactions contain only the JSON data payload, in the form of title registration (<code>RT</code>), registration information, or message text, split across P2MS and <code>OP_RETURN</code> outputs, plus a distinctive marker pubkey (<code>0320a0de...3e12</code>) at position 2 in the P2MS output.
 No block height, transaction index, or ODIN appears in the transaction itself.</p>
 <p>Decoders construct the ODIN deterministically by detecting the marker pubkey, extracting the payload from P2MS and <code>OP_RETURN</code> outputs, inferring the resource path from payload type (RT becomes <code>profile.json</code>, registration data becomes, for example, <code>reg_315.txt</code>, messages become <code>message.txt</code>), looking up "blockchain coordinates", and constructing <code>ppk:[height].[index]/[path]</code>.
-Data is unobfuscated and directly readable and both {{green:1-of-2}} and {{green:1-of-3}} multisig configurations are used.</p>
+Data is unobfuscated and directly readable and both 1-of-2 and 1-of-3 multisig configurations are used.</p>
 <h3 id="chancecoin">Chancecoin</h3>
 <p>Chancecoin was a gambling protocol built on Bitcoin, only active for a short period in 2014, that used P2MS outputs for data carrying purposes in some circumstances.
 Like Counterparty, users were required to send bitcoin to a specific address, between certain dates, to obtain "Chancecoin tokens".
@@ -3231,7 +3236,7 @@ To date, 480.19571581 BTC have been sent to it.</p>
 <p>Key characteristics:</p>
 <ul>
 <li><code>CHANCECO</code> identifier present in ASCII interpretation, data is not obfuscated</li>
-<li>Uses {{green:1-of-2}} P2MS outputs, data is in the 2nd pubkey, the 1st is a valid pubkey</li>
+<li>Uses 1-of-2 P2MS outputs, data is in the 2nd pubkey, the 1st is a valid pubkey</li>
 <li>Each Chancecoin P2MS output has 32 bytes data carrying capability</li>
 <li>Large Chancecoin messages are split across multiple P2MS outputs</li>
 <li>Message format: [<code>CHANCECO</code>:8][MessageID:4][Data:variable]</li>
@@ -3246,9 +3251,9 @@ In the <a href="https://github.com/deadmanoz/data-carry-research">companion repo
 This dual-output pattern provides explicit protocol identification through the <code>OP_RETURN</code> marker, while the larger data carrying capacity of P2MS outputs is used for the message content.
 Three distinct variants have been identified in the UTXO set using this approach:</p>
 <ul>
-<li>"Protocol 47930" (<code>0xbb3a</code> marker) uses a 2-byte <code>OP_RETURN</code> prefix (<code>0xbb3a</code>) alongside {{green:2-of-2}} multisig outputs.</li>
-<li>"RT Protocol" employs an ASCII <code>RT</code> identifier in its <code>OP_RETURN</code> output, paired with {{green:1-of-2}} multisig data storage.</li>
-<li>"CLIPPERZ" is a password manager service that used Bitcoin's blockchain for encrypted data backup and notarization, creating <code>OP_RETURN</code> outputs containing <code>CLIPPERZ</code> alongside {{green:2-of-2}} multisig outputs.
+<li>"Protocol 47930" (<code>0xbb3a</code> marker) uses a 2-byte <code>OP_RETURN</code> prefix (<code>0xbb3a</code>) alongside 2-of-2 multisig outputs.</li>
+<li>"RT Protocol" employs an ASCII <code>RT</code> identifier in its <code>OP_RETURN</code> output, paired with 1-of-2 multisig data storage.</li>
+<li>"CLIPPERZ" is a password manager service that used Bitcoin's blockchain for encrypted data backup and notarization, creating <code>OP_RETURN</code> outputs containing <code>CLIPPERZ</code> alongside 2-of-2 multisig outputs.
 The <code>OP_RETURN</code> serves as an explicit protocol declaration, avoiding ambiguity in classification, while the P2MS outputs function as the primary data carrier.</li>
 </ul>
 <h2 id="generic-data-storage">Generic Data Storage</h2>
@@ -3263,15 +3268,15 @@ For the purposes of understanding how P2MS outputs have been used for generic da
 <h3 id="the-bitcoin-whitepaper-pdf">The Bitcoin whitepaper PDF</h3>
 <p>The following works through the process of extracting the Bitcoin whitepaper PDF from the transaction <a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713"><code>54e48e5f...</code></a> in block 230,009 (April 2013).
 Note that this is also documented in various places online, including some elegant one-liners on <a href="https://bitcoin.stackexchange.com/questions/35959/how-is-the-whitepaper-decoded-from-the-blockchain-tx-with-1000x-m-of-n-multisi">Bitcoin Stack Exchange</a></p>
-<p>:::collapse{EXAMPLE: Generic Data Storage - The Bitcoin Whitepaper PDF}
-One of the most famous examples of data embedding in Bitcoin is the Bitcoin whitepaper PDF embedded in transaction <a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713"><code>54e48e5f...</code></a>.
-This transaction has 948 outputs, 946 of which are {{green:1-of-3}} P2MS outputs, with the remaining two outputs being standard P2PKH outputs.
+<p><strong>EXAMPLE: Generic Data Storage - The Bitcoin Whitepaper PDF</strong></p>
+<p>One of the most famous examples of data embedding in Bitcoin is the Bitcoin whitepaper PDF embedded in transaction <a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713"><code>54e48e5f...</code></a>.
+This transaction has 948 outputs, 946 of which are 1-of-3 P2MS outputs, with the remaining two outputs being standard P2PKH outputs.
 All pubkeys involved are also 65-byte uncompressed pubkeys, presumably to maximise data carrying capacity.
 Unlike the protocol-based approaches we've examined (Bitcoin Stamps, Counterparty, Omni), this is a straightforward generic data storage example with no obfuscation or encryption.</p>
-<p>Examining the first output (<code>vout[0]</code>) as in {@fig:mempool-p2ms-whitepaper-1} we can see that the {{green:1-of-3}} P2MS output uses full 65-byte uncompressed pubkeys.
+<p>Examining the first output (<code>vout[0]</code>) as in Figure 8 we can see that the 1-of-3 P2MS output uses full 65-byte uncompressed pubkeys.
 With uncompressed pubkeys, typically starting with an <code>04</code> prefix, yet none of these keys starting with <code>04</code>, we know that none of these keys are valid pubkeys, and thus this P2MS output is unspendable.
 If we were to examine the remaining 945 P2MS outputs, we would see the same pattern: all 3 keys in each output are uncompressed pubkeys, and none of which are valid pubkeys.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-whitepaper-1.png" alt="Figure: details of first P2MS output of the Bitcoin whitepaper PDF transaction  (54e48e5f...)."> {#fig:mempool-p2ms-whitepaper-1}</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/mempool.space-p2ms-whitepaper-1.png" alt="Figure 8: details of first P2MS output of the Bitcoin whitepaper PDF transaction  (54e48e5f...)."></p>
 <p>The extraction is simpler than protocol-based approaches:</p>
 <p><strong>Step 1: Extract all pubkey data</strong></p>
 <p>For each of the 946 P2MS outputs, concatenate all three 65-byte chunks:</p>
@@ -3303,8 +3308,7 @@ Byte position 8-15:  25 50 44 46 2d 31 2e 34  (%PDF-1.4)
 <li><strong>Total size</strong>: 184,292 bytes</li>
 </ul>
 <p>The final extracted PDF is exactly <strong>184,292 bytes</strong> and can be saved as a valid PDF file.</p>
-<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms-whitepaper-cover.png" alt="Figure: the first page of the extracted Bitcoin whitepaper PDF."> {#fig:p2ms-whitepaper-cover}</p>
-<p>:::</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms-whitepaper-cover.png" alt="Figure 9: the first page of the extracted Bitcoin whitepaper PDF."></p>
 <h2 id="summarising-the-main-techniques">Summarising the main techniques</h2>
 <p>In the post we've explored the main methods of how data is carried in P2MS transaction outputs, including working through examples that showed how the various protocols or methods operate.
 The dominant protocols, Bitcoin Stamps, Counterparty, and Omni, account for over 94% of all P2MS UTXOs (as we shall learn in <a href="./p2ms-data-carry-2">Part 2</a>), with the following summarising the key technical distinctions between them.</p>
@@ -3345,9 +3349,9 @@ The efficiency of the Counterparty protocol is lower than the other two due to p
 </tr>
 <tr>
 <td>P2MS configuration</td>
-<td>{{green:1-of-3}}</td>
-<td>{{green:1-of-2}} or {{green:1-of-3}} (mostly)</td>
-<td>{{green:1-of-2}} or {{green:1-of-3}} (only)</td>
+<td>1-of-3</td>
+<td>1-of-2 or 1-of-3 (mostly)</td>
+<td>1-of-2 or 1-of-3 (only)</td>
 </tr>
 <tr>
 <td>Spendability</td>
@@ -3381,7 +3385,7 @@ The efficiency of the Counterparty protocol is lower than the other two due to p
 </tr>
 </tbody>
 </table>
-<p>Comparison of the technical details of the major P2MS-using protocols.{#tab:technique-summary}</p>
+<p><strong>Table 1:</strong> Comparison of the technical details of the major P2MS-using protocols.</p>
 <p>Beyond these three major protocols, we also see P2MS transaction outputs leveraged by minor protocols.
 PPk (PPkPub) uses a distinctive hybrid approach with a marker pubkey in P2MS outputs combined with protocol data in <code>OP_RETURN</code> outputs.
 Other minor protocols include Chancecoin and projects with identifiers <code>TB0001</code>, <code>TEST01</code> and <code>METROXMN</code>.
