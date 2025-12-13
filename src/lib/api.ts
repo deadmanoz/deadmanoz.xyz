@@ -2,6 +2,7 @@ import fs from "fs";
 import { join } from "path";
 import matter from "gray-matter";
 import { getGitMetadata, shouldFetchGitMetadata, GitMetadata } from "./git-metadata";
+import { type PostType } from "@/interfaces/post";
 
 const postsDirectory = join(process.cwd(), "_posts");
 
@@ -71,8 +72,18 @@ export async function getAllPostsWithGitData(fields: string[] = []) {
       return post;
     })
   );
-  
+
   return posts
     .filter((post) => !post.hidden)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+}
+
+export function getPostsByType(type: PostType, fields: string[] = []) {
+  const allPosts = getAllPosts([...fields, 'type']);
+  return allPosts.filter((post) => post.type === type);
+}
+
+export async function getPostsByTypeWithGitData(type: PostType, fields: string[] = []) {
+  const allPosts = await getAllPostsWithGitData([...fields, 'type']);
+  return allPosts.filter((post) => post.type === type);
 }

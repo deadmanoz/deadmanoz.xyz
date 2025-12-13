@@ -4,8 +4,8 @@ import { getAllPosts, getPostBySlug, getPostBySlugWithGitData } from "@/lib/api"
 import markdownToHtml from "@/lib/markdownToHtml";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
+import { Header } from "@/app/_components/header";
 import { TableOfContents } from "@/app/_components/table-of-contents";
-import Link from "next/link";
 
 export default async function Post({
   params,
@@ -21,6 +21,7 @@ export default async function Post({
     "content",
     "ogImage",
     "coverImage",
+    "type",
   ]);
 
   if (!post.slug) {
@@ -32,20 +33,25 @@ export default async function Post({
   return (
     <div className="min-h-screen flex flex-col relative">
       <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
-        <header className="py-10 w-full max-w-6xl">
-          <Link href="/" className="inline-flex items-center text-synthwave-neon-cyan hover:text-synthwave-neon-orange text-lg transition-all duration-300">
-            <span className="mr-2">←</span> Back to home
-          </Link>
-        </header>
-
         <main className="flex-1 w-full flex flex-col items-center">
+          {/* Header nav aligned with content */}
+          <div className="max-w-7xl w-full flex gap-12 items-start">
+            {/* TOC space - Desktop only, to match content layout */}
+            <div className="hidden xl:block w-64 shrink-0" />
+
+            {/* Header centered with content */}
+            <div className="flex-1 min-w-0">
+              <Header showTitle={false} activePage={post.type as "research" | "blog"} />
+            </div>
+          </div>
+
           {/* Title area with same layout as content */}
           <div className="max-w-7xl w-full flex gap-12 items-start mb-12">
             {/* TOC space - Desktop only, to match content layout */}
             <div className="hidden xl:block">
               <TableOfContents inline={true} />
             </div>
-            
+
             {/* Title content - aligned with body text */}
             <div className="flex-1 min-w-0 text-center">
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-8 neon-text" style={{fontFamily: 'var(--font-inter)'}}>

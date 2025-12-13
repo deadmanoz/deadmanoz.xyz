@@ -19,6 +19,12 @@ function PostBodyContent({ content }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState({ src: "", alt: "" });
   const [isWideContent, setIsWideContent] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Set mounted state after hydration to prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -665,10 +671,14 @@ function PostBodyContent({ content }: Props) {
         }
       `}</style>
       <div className={isWideContent ? "max-w-6xl mx-auto" : "max-w-2xl mx-auto"}>
-        <div
-          className={markdownStyles["markdown"]}
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        {isMounted ? (
+          <div
+            className={markdownStyles["markdown"]}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        ) : (
+          <div className={markdownStyles["markdown"]} />
+        )}
 
         <ImageModal
           isOpen={modalOpen}

@@ -3,6 +3,7 @@ title: 'Hello World'
 excerpt: 'Welcome to deadmanoz.xyz. Testing site features.'
 coverImage: '/assets/melb-graffiti.png'
 date: '2025-08-11T00:00:00.000Z'
+type: 'blog'
 author:
   name: deadmanoz
 ogImage:

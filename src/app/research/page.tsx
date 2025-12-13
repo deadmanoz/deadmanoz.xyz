@@ -1,11 +1,11 @@
-import { getAllPosts } from "@/lib/api";
+import { getPostsByType } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "@/app/_components/footer";
 import { Header } from "@/app/_components/header";
 
-export default function Home() {
-  const posts = getAllPosts([
+export default function ResearchPage() {
+  const posts = getPostsByType('research', [
     "title",
     "date",
     "slug",
@@ -13,39 +13,21 @@ export default function Home() {
     "coverImage",
     "excerpt",
     "hidden",
-    "type",
   ]);
 
   return (
     <div className="min-h-screen flex flex-col relative">
       <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
-        <Header activePage="home" />
+        <Header activePage="research" />
 
         <main className="flex-1 w-full flex flex-col items-center">
           <section className="mb-16 w-full max-w-6xl">
             <div className="flex flex-col gap-8 w-full">
               {posts.length === 0 ? (
-                <p className="text-synthwave-peach/60 text-center">No posts yet.</p>
+                <p className="text-synthwave-peach/60 text-center">No research posts yet.</p>
               ) : (
                 posts.map((post) => (
                   <article key={post.slug} className="card group w-full">
-                    <div className="flex items-center gap-3 mb-3">
-                      <Link
-                        href={post.type === "research" ? "/research" : "/blog"}
-                        className={`text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded border transition-colors duration-300 ${
-                          post.type === "research"
-                            ? "text-synthwave-neon-cyan border-synthwave-neon-cyan/50 hover:bg-synthwave-neon-cyan/10"
-                            : "text-synthwave-neon-orange border-synthwave-neon-orange/50 hover:bg-synthwave-neon-orange/10"
-                        }`}
-                      >
-                        {post.type}
-                      </Link>
-                      <span className="text-sm text-synthwave-peach/60">
-                        <time dateTime={post.date}>
-                          {new Date(post.date).toLocaleDateString()}
-                        </time>
-                      </span>
-                    </div>
                     {post.coverImage && (
                       <div className="mb-4">
                         <Link href={`/posts/${post.slug}`}>
@@ -67,6 +49,11 @@ export default function Home() {
                         {post.title}
                       </Link>
                     </h3>
+                    <div className="text-sm mb-4 text-synthwave-peach">
+                      <time dateTime={post.date}>
+                        {new Date(post.date).toLocaleDateString()}
+                      </time>
+                    </div>
                     <p className="text-base leading-relaxed mb-4 text-synthwave-peach/80">{post.excerpt}</p>
                     <Link
                       href={`/posts/${post.slug}`}
