@@ -32,11 +32,11 @@ export default function Home() {
                     <div className="flex items-center gap-3 mb-3">
                       <Link
                         href={post.type === "research" ? "/research" : "/blog"}
-                        className={`text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded border transition-colors duration-300 ${
-                          post.type === "research"
-                            ? "text-synthwave-neon-cyan border-synthwave-neon-cyan/50 hover:bg-synthwave-neon-cyan/10"
-                            : "text-synthwave-neon-orange border-synthwave-neon-orange/50 hover:bg-synthwave-neon-orange/10"
-                        }`}
+                        className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded transition-opacity duration-300 hover:opacity-80"
+                        style={{
+                          backgroundColor: post.type === "research" ? "#00A0D0" : "#FF6C11",
+                          color: "#000221",
+                        }}
                       >
                         {post.type}
                       </Link>
@@ -46,7 +46,7 @@ export default function Home() {
                         </time>
                       </span>
                     </div>
-                    {post.coverImage && (
+                    {post.coverImage && post.type === "research" && (
                       <div className="mb-4">
                         <Link href={`/posts/${post.slug}`}>
                           <Image

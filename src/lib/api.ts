@@ -1,13 +1,34 @@
 import fs from "fs";
-import { join } from "path";
+import { join, relative } from "path";
 import matter from "gray-matter";
 import { getGitMetadata, shouldFetchGitMetadata, GitMetadata } from "./git-metadata";
 import { type PostType } from "@/interfaces/post";
 
 const postsDirectory = join(process.cwd(), "_posts");
 
+/**
+ * Recursively find all markdown files in a directory
+ */
+function findMarkdownFiles(dir: string): string[] {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...findMarkdownFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
 export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
+  const files = findMarkdownFiles(postsDirectory);
+  // Return paths relative to postsDirectory (e.g., "2026/2026-01.md" or "hello-world.md")
+  return files.map((file) => relative(postsDirectory, file));
 }
 
 export function getPostBySlug(slug: string, fields: string[] = []) {
@@ -42,16 +63,17 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
 
 export async function getPostBySlugWithGitData(slug: string, fields: string[] = []) {
   const post = getPostBySlug(slug, fields);
-  
+
   // Fetch git metadata if we're in production or explicitly enabled
   if (shouldFetchGitMetadata()) {
-    const filePath = `_posts/${slug.replace(/\.md$/, "")}.md`;
+    const realSlug = slug.replace(/\.md$/, "");
+    const filePath = `_posts/${realSlug}.md`;
     const gitMetadata = await getGitMetadata(filePath);
     if (gitMetadata) {
       post.gitMetadata = gitMetadata;
     }
   }
-  
+
   return post;
 }
 

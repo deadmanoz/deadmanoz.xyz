@@ -10,10 +10,11 @@ import { TableOfContents } from "@/app/_components/table-of-contents";
 export default async function Post({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string[] }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlugWithGitData(slug, [
+  const slugPath = slug.join("/");
+  const post = await getPostBySlugWithGitData(slugPath, [
     "title",
     "date",
     "slug",
@@ -93,13 +94,30 @@ export default async function Post({
             </div>
           </div>
 
+          {/* Cover Image */}
+          {post.coverImage && (
+            <div className="max-w-7xl w-full flex gap-12 items-start mb-12">
+              {/* TOC space - Desktop only, to match content layout */}
+              <div className="hidden xl:block w-64 shrink-0" />
+
+              {/* Cover image centered with content */}
+              <div className="flex-1 min-w-0">
+                <img
+                  src={post.coverImage}
+                  alt={`Cover image for ${post.title}`}
+                  className="w-full h-auto rounded-lg shadow-lg shadow-synthwave-neon-cyan/20"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Content with TOC Layout */}
           <div className="max-w-7xl w-full flex gap-12 items-start mb-32">
             {/* TOC - Desktop only, inline */}
             <div className="hidden xl:block">
               <TableOfContents inline={true} />
             </div>
-            
+
             {/* Main Content */}
             <div className="flex-1 prose-synthwave min-w-0">
               <EnhancedPostBody content={content} />
@@ -127,10 +145,11 @@ export default async function Post({
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug, ["title", "excerpt", "ogImage", "slug"]);
+  const slugPath = slug.join("/");
+  const post = getPostBySlug(slugPath, ["title", "excerpt", "ogImage", "slug"]);
 
   if (!post.slug) {
     return notFound();
@@ -151,6 +170,6 @@ export async function generateStaticParams() {
   const posts = getAllPosts(["slug"]);
 
   return posts.map((post) => ({
-    slug: post.slug,
+    slug: post.slug.split("/"),
   }));
 }
