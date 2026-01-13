@@ -2,7 +2,7 @@
 title: 'NixOS & Peer Observer on a VPS'
 excerpt: 'My experience setting up NixOS and Peer Observer on a VPS for Bitcoin monitoring'
 coverImage: '/assets/blog/2026/nixos-peer-observer-vps-cover.png'
-date: '2026-01-07T00:00:00.000Z'
+date: '2026-01-13T00:00:00.000Z'
 type: 'blog'
 author:
   name: deadmanoz
@@ -18,32 +18,33 @@ peer-observer is a set of tooling developed by [B10C](https://b10c.me/) for moni
 This was, in part, motivated by the "call to action" put out by B10C in [his post from July 2025](https://b10c.me/projects/024-peer-observer/), and the idea of forming a "Bitcoin Network Operations Collective" (BNOC):
 > "_A loose, decentralized group of people who share the interest of monitoring the Bitcoin Network. A collective to enable sharing of ideas, discussion, data, tools, insights, and more... A place where a Bitcoin network incident could be analyzed, discussed, and ideally resolved..._"
 
-For a month or two I had been tinkering with a bit of a Frankenstein's monster peer-observer setup running on my home server, cobbled together with a pre-existing Bitcoin Core node and some Docker containers for the peer-observer stack, but had a number of issues.
+For a month or two I had been tinkering with a bit of a Frankenstein's monster peer-observer setup running on my home server, cobbled together with a pre-existing Bitcoin Core node and [some Docker containers for the peer-observer stack](https://github.com/ClubeBitcoinUnB/peer-observer-docker), but had a number of issues.
 
 Firstly, this was fragile and it was difficult to develop and test against.
-Secondly, my home server is on a residential ISP connection to the internet. As such, the Bitcoin Core node was "unreachable" and could not accept inbound connections, severely limiting the usefulness of such a peer-observer setup.
+Secondly, my home server is on a residential CGNAT connection to the internet.
+As such, the Bitcoin Core node was "unreachable" and could not accept inbound connections, severely limiting the usefulness of such a peer-observer setup.
 
 So it was obvious that I needed a more robust and production-like setup.
 I needed to set up an instance of peer-observer with a reachable Bitcoin Core node.
 And I wanted to do this on a NixOS foundation, given the pervasive use of Nix across all of B10C's projects (as well as across many other Bitcoin infrastructure projects).
 After asking B10C and some other members of the fledgling BNOC for recommendations, I settled on setting up a VPS on [OVHcloud](https://www.ovhcloud.com/en-au/).
 
-I was initially hoping to find a VPS provider that would support NixOS "out-of-the-box" but I found that this was likely to be a fool's errand: [as mentioned by Carl Dong at bitcoin++ 2023 nix-edition](https://www.youtube.com/live/bKTbis4elR8?si=5p4tLUu77Pw1PiYK&t=5780):
+I was initially hoping to find a VPS provider that would support NixOS "out-of-the-box" but I found that this was likely to be a fool's errand [as highlighted by Carl Dong in his presentation at bitcoin++ 2023 (nix-edition)](https://www.youtube.com/live/bKTbis4elR8?si=5p4tLUu77Pw1PiYK&t=5780):
 
 >"nobody supports NixOS... VPS providers don't have first class support for NixOS".
 
-Edouard Paris's post ([Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/)), which is where I found the link to the above talk, helped me understand that I could install NixOS on a VPS that initially came with another distro (e.g. Debian) installed.
+Edouard Paris's post ([Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/)), which is where I found the link to the above talk, helped me understand that I could install NixOS on a VPS that initially came with another distro installed (e.g. Debian).
 So I provisioned an Ubuntu 25.04 VPS with the following specs:
 - 6 vCores
 - 12GB RAM
 - 100GB SSD NVMe
 
 This cost around US$7.32/month (~AU$11.00/month at time of writing) for 6 months prepaid.
-Note that 100GB is sufficient with pruning enabled, but if you want a full archival node you'll need significantly more storage (I'll cover this in a future post).
+Note that 100GB is sufficient with pruning enabled and only storing a few days of logs (default is 4); if you want a full archival node you'll need significantly more storage (I'm aiming to cover this in a future post).
 
 ## Installing NixOS
 With my Ubuntu VPS provisioned and accessible, I began the work to set up NixOS.
-I more or less followed along with Edouard Paris's post ([Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/)).
+I more or less followed along with the earlier post ([Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/)).
 
 To perform some of the operations required for `nixos-anywhere`, you'll need root SSH access to your VPS.
 And don't make the same mistake I did in trying to prematurely lock down the VPS before you've got NixOS installed!
@@ -52,7 +53,7 @@ That is, I initially:
 2) Enabled SSH key-only authentication
 3) Changed the SSH port
 
-But doing these things caused problems during installation - fortunately I had multiple open SSH sessions to the VPS so I could intervene when necessary.
+But doing these things caused problems during installation - fortunately I had multiple open SSH sessions to the VPS so could intervene when necessary.
 
 :::alert{warning}
 **{{orange:Lock down the VPS _*after*_ you've installed NixOS}}**
@@ -109,7 +110,7 @@ The `infra-library` orchestrates quite a few systemd services:
 - `peer-observer-ebpf-extractor.service` - attaches to Bitcoin Core's USDT tracepoints via eBPF
 - `peer-observer-rpc-extractor.service` - polls Bitcoin Core's RPC for chain/mempool state
 - `peer-observer-p2p-extractor.service` - monitors P2P message traffic
-- `peer-observer-tool-metrics.service` - exposes Prometheus metrics for peer-observer data
+- `peer-observer-tool-metrics.service` - exposes metrics for prometheus scraping
 - `peer-observer-tool-websocket.service` - provides real-time event streaming
 - `fork-observer.service` - monitors chain tip and detects forks
 - `addrman-observer-proxy.service` - exposes address manager data
@@ -122,7 +123,7 @@ The `infra-library` orchestrates quite a few systemd services:
 
 I use [`just`](https://github.com/casey/just) as a command runner, so I have a `justfile` with commands to start, stop, restart and check the status and logs of all of the above services.
 
-Be prepared for IBD to take several days on a VPS, even with pruning enabled!
+Be prepared for IBD to take a day or two, even with pruning enabled!
 
 For more instructive details on how to set up peer-observer with NixOS in the manner I did, I'll be contributing to the [peer-observer/infra-library documentation](https://github.com/peer-observer/infra-library/issues/1).
 
@@ -151,7 +152,11 @@ Prometheus/Grafana on the central web-server scrape metrics from each peer-obser
 ![Figure: Peer Observer multi-node architecture](/assets/blog/2026/multi-node-deployment-illustration.png) {#fig:multi-node-deployment-illustration}
 
 ## Resources
+- [Bitcoin Network Operations Collective (BNOC)](https://bnoc.xyz/)
+- [Peer Observer GitHub Organisation](https://github.com/peer-observer)
+- [Peer Observer Docker](https://github.com/ClubeBitcoinUnB/peer-observer-docker)
+- [B10C - peer-observer: A tool and infrastructure for monitoring the Bitcoin P2P network for attacks and anomalies](https://b10c.me/projects/024-peer-observer/)
 - [NixOS Wiki - NixOS friendly hosters](https://nixos.wiki/wiki/NixOS_friendly_hosters)
 - [Edouard Paris - Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/blog/install-nixos-on-an-ovh-vps-with-nixos-anywhere)
-- [Carl Dong at bitcoin++ nix-edition - The Dark Arts of NixOS Deployments](https://www.youtube.com/watch?v=bKTbis4elR8&t=5519s)
+- [Carl Dong at bitcoin++ 2023 nix-edition - The Dark Arts of NixOS Deployments](https://www.youtube.com/watch?v=bKTbis4elR8&t=5519s)
 - [Quickstart Guide: nixos-anywhere](https://nix-community.github.io/nixos-anywhere/quickstart.html)
