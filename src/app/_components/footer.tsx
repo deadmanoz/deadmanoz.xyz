@@ -48,7 +48,7 @@ export function Footer() {
           <FaBolt size={16} />
           <span>Donate via Lightning</span>
         </a>
-        <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 justify-center">
+        <div className="flex flex-row gap-8 sm:gap-16 justify-center">
           <a
             href="https://pq-bitcoin.org"
             target="_blank"
