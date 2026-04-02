@@ -66,11 +66,13 @@
   @apply rounded px-1 py-0.5 text-sm;
   background: var(--theme-bg-secondary);
   color: var(--theme-neon-cyan);
+  white-space: nowrap;
 }
 
 .markdown pre code {
   @apply bg-transparent p-0;
   color: var(--theme-text-primary);
+  white-space: pre;
 }
 
 .markdown ul {

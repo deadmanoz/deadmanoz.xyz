@@ -208,7 +208,7 @@ function PostBodyContent({ content }: Props) {
         annotation.appendChild(arrowElement);
       }
     });
-  }, [content]);
+  }, [content, isMounted]);
 
   // Hydrate plot containers with InteractivePlot components
   useEffect(() => {
@@ -392,7 +392,7 @@ function PostBodyContent({ content }: Props) {
 
         .annotation {
           position: relative;
-          display: inline-block;
+          display: inline;
           cursor: help;
           color: var(--theme-neon-cyan);
           font-weight: 500;

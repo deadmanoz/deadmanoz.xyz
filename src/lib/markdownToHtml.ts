@@ -222,7 +222,8 @@ function processAnnotations(markdownString: string): string {
   annotationStore.clear(); // Clear previous annotations
 
   // Process [[text||tooltip]] pattern in markdown
-  return markdownString.replace(/\[\[([^\|\]]+)\|\|([^\]]+)\]\]/g, (match, text, tooltip) => {
+  // Tooltip capture allows one level of [...] nesting (for markdown links)
+  return markdownString.replace(/\[\[([^\|\]]+)\|\|((?:[^\[\]]|\[[^\]]*\])*)\]\]/g, (match, text, tooltip) => {
     counter++;
     const id = `annotation-${counter}`;
 
@@ -268,8 +269,11 @@ async function postProcessAnnotations(htmlString: string): Promise<string> {
       // We need to preserve HTML tags like <span> for styled content
       const escapedTooltip = tooltipHtml.replace(/"/g, '&quot;');
 
+      // Process inline code backticks in annotation display text
+      const displayText = data.text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
       // Replace placeholder with annotation span
-      const annotationSpan = `<span class="annotation" data-tooltip="${escapedTooltip}" id="${id}" tabindex="0" role="button" aria-describedby="tooltip-${id}">${data.text}</span>`;
+      const annotationSpan = `<span class="annotation" data-tooltip="${escapedTooltip}" id="${id}" tabindex="0" role="button" aria-describedby="tooltip-${id}">${displayText}</span>`;
 
       processed = processed.replace(placeholder, annotationSpan);
     }

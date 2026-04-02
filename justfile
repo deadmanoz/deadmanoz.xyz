@@ -84,3 +84,11 @@ deploy:
 preview:
     npm run build
     npx wrangler pages dev out
+
+# Generate plot data from data-carry-research
+generate-plots:
+    ./scripts/generate-plot-data.sh
+
+# Generate cumulative P2MS plot from CSV data (mainnet.observer)
+generate-cumulative-plot:
+    node scripts/generate-p2ms-plot.js
