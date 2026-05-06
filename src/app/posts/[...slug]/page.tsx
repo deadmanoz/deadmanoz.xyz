@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, isRoutablePost } from "@/lib/api";
+import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, getPostStatus, isRoutablePost } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
+import { ComingSoonContent } from "@/app/_components/coming-soon-content";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
 import { TableOfContents } from "@/app/_components/table-of-contents";
@@ -32,6 +33,10 @@ export default async function Post({
 
   if (!post.slug || !isRoutablePost(post)) {
     return notFound();
+  }
+
+  if (getPostStatus(post) === "placeholder") {
+    return <ComingSoonContent title={post.title} />;
   }
 
   if (!post.date) {

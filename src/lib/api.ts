@@ -122,7 +122,7 @@ export function isRoutablePost(post: PostItems): post is RoutablePostItems {
   return Boolean(
     typeof post.slug === "string" &&
       typeof post.title === "string" &&
-      (status === "published" || status === "canary")
+      (status === "published" || status === "placeholder" || status === "canary")
   );
 }
 
