@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://deadmanoz.xyz</id>
     <title>deadmanoz.xyz</title>
-    <updated>2025-12-04T00:00:00.000Z</updated>
+    <updated>2026-04-02T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <author>
         <name>deadmanoz</name>
@@ -13,7 +13,812 @@
     <subtitle>deadmanoz's website</subtitle>
     <logo>https://deadmanoz.xyz/favicon/apple-touch-icon.png</logo>
     <icon>https://deadmanoz.xyz/favicon/favicon.ico</icon>
-    <rights>© 2025 deadmanoz</rights>
+    <rights>© 2026 deadmanoz</rights>
+    <entry>
+        <title type="html"><![CDATA[Bitcoin node roles and network topology]]></title>
+        <id>https://deadmanoz.xyz/posts/2026/bitcoin-node-roles-p2p</id>
+        <link href="https://deadmanoz.xyz/posts/2026/bitcoin-node-roles-p2p"/>
+        <updated>2026-04-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[An examination of the roles, configuration, and connection management of Bitcoin nodes, and the resultant topology of the network]]></summary>
+        <content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Bitcoin's peer-to-peer (P2P) network is a distributed system that allows network participants (nodes) to interact without relying on a central authority.
+For the network to operate as efficiently and as decentralised as possible, Bitcoin nodes can operate in a variety of modes, fulfilling different roles.
+This post examines the various roles and modes of Bitcoin nodes and the topology of the Bitcoin network that this differentiation has led to.</p>
+<h2 id="node-reachability">Node reachability</h2>
+<p>One way of categorising nodes on the Bitcoin network is whether they are <strong>reachable</strong> or not.
+In essence, a node is reachable if other nodes on the network can initiate inbound connections to it.</p>
+<p>More concretely, a node is likely to be reachable when it is configured to accept inbound connections (<code>-listen=1</code>, the default), binds to an appropriate network interface, and its listening port (default 8333 for mainnet) is accessible from the outside, either because the machine has a public IP directly, or because NAT/firewall rules forward traffic appropriately.
+There are also other considerations such as number of available connection slots for inbound peers, and whether the necessary plumbing is in place for alternative networks (e.g., a Tor hidden service, an I2P service, or a CJDNS address).</p>
+<p><strong>NAT, CGNAT, and node reachability</strong></p>
+<p>When the ISP assigns a public IP address (static or dynamic) directly to a customer's router, the router uses <strong>Network Address Translation (NAT)</strong> to share that address across devices on the customer's local network.
+Outbound connections work transparently, the router tracks the mapping and routes replies back, but unsolicited inbound connections have no existing mapping and are dropped.
+Since the router holds a public IP, this is straightforward to solve: a <strong>port forwarding</strong> rule on the router can direct inbound traffic on the listening port (e.g. 8333) to the node's private LAN address.</p>
+<p>Some routers support <strong>NAT-PMP</strong> (NAT Port Mapping Protocol) or <strong>PCP</strong> (Port Control Protocol) to automate this.
+Bitcoin Core ships a built-in PCP/NAT-PMP implementation (since <a href="https://bitcoincore.org/en/releases/29.0/">v29.0</a> with <a href="https://github.com/bitcoin/bitcoin/pull/30043">PR #30043</a>) and enables it by default (since <a href="https://bitcoincore.org/en/releases/30.0/">v30.0</a> with <a href="https://github.com/bitcoin/bitcoin/pull/33004">PR #33004</a>), so a listening node behind a compatible router will automatically map its port without manual configuration.
+Earlier versions relied on UPnP via the miniupnpc library, but that was disabled by default in <a href="https://bitcoincore.org/en/releases/0.11.1/">v0.11.1</a> after <a href="https://bitcoincore.org/en/2024/07/03/disclose_upnp_rce/">multiple security vulnerabilities</a> and <a href="https://bitcoincore.org/en/releases/29.0/">dropped entirely in v29.0</a>.</p>
+<p>However, a growing share of connections never receive a public IP at all.
+<strong>Carrier-Grade NAT (CGNAT)</strong> places multiple customers behind a shared public IP at the ISP level, so port forwarding on the home router is useless.
+Mobile networks use CGNAT <a href="https://blog.cloudflare.com/detecting-cgn-to-reduce-collateral-damage/">almost universally</a>, and fixed-line adoption is growing as <a href="https://www.potaroo.net/tools/ipv4/">all five Regional Internet Registries have exhausted their IPv4 free pools</a>.
+For node operators behind CGNAT, the main workarounds are overlay networks: <strong>Tor</strong> hidden services (.onion), <strong>I2P</strong> (supported since Bitcoin Core <a href="https://bitcoincore.org/en/releases/22.0/">v22.0</a> with <a href="https://github.com/bitcoin/bitcoin/pull/20685">PR #20685</a>), or <strong>CJDNS</strong> (since <a href="https://bitcoincore.org/en/releases/23.0/">v23.0</a> with <a href="https://github.com/bitcoin/bitcoin/pull/23077">PR #23077</a>), all of which bypass NAT entirely.</p>
+<p>So the Bitcoin network consists of reachable nodes, openly connectable and therefore straightforward to survey, and unreachable nodes, which cannot accept inbound connections (due to not satisfying one or more of the criteria outlined above) and are therefore much harder to catalogue through network observation alone.
+The primary way of learning about unreachable nodes is through <code>addr</code> messages gossiped across the network, with the caveat that an address appearing in gossip only confirms that a node <em>existed</em> at some point, not that it is still running.</p>
+<p>As of April 2026, the long-running <a href="https://bitnodes.io/">Bitnodes project</a>,
+which aims to estimate "the size of the Bitcoin peer-to-peer network by finding
+all reachable and unreachable nodes", puts the total count at roughly 70,000,
+with around 23,000 (about a third) being reachable.
+That two-thirds are unreachable is unsurprising given the barriers facing home node operators: many sit behind NAT without port forwarding configured, and a growing share are behind CGNAT (see <a href="#node-reachability">above</a>), where inbound connections are impossible regardless of router settings.
+Node-in-a-box products (Umbrel, Start9, RaspiBlitz) sidestep this by defaulting to Tor, which makes them reachable within the .onion network but not from the clearnet.</p>
+<h2 id="node-connection-management">Node connection management</h2>
+<p>Every node on the network automatically maintains a small set of outbound connections to peers it has selected itself.
+Reachable nodes additionally allocate slots for inbound connections - peers that have discovered and connected to them.
+In total, under a default configuration, a node has a maximum of <a href="https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md">125 automatic peer connections</a> (<a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.h"><code>DEFAULT_MAX_PEER_CONNECTIONS</code></a>) to maintain (Figure 1).
+The way these connection slots are budgeted, and the distinct roles assigned to different connection types, are deliberate design decisions that balance node resource constraints against the network's need for robust connectivity between nodes.
+Note that, as explored in <a href="#other-connection-types">other connection types</a>, some special connection types have their own separate slot budgets and are not counted against this limit.</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/2026/bitcoin-connection-budget.png" alt="Figure 1: Bitcoin Core connection slot budget showing the 125-slot breakdown: 8 full-relay outbound, 2 block-relay-only outbound, 1 feeler, and 114 inbound slots, with the trust asymmetry between outbound and inbound connections."></p>
+<h3 id="outbound-connections">Outbound connections</h3>
+<p>In a default configuration, a node has 10 persistent outbound peers, and one short-lived feeler, for <a href="https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md">11 outbound peers</a>.
+The 10 persistent outbound peers consist of 8 outbound full-relay connections and 2 block-relay-only connections.
+The full-relay connections exchange all message types - addresses, transactions and blocks - with a default maximum of 8 specified by <a href="https://github.com/bitcoin/bitcoin/commit/c2fa70ddfd7711d514a701b3a7c8adb561acc3ff">Satoshi in 2010</a>.
+The block-relay-only connections, introduced in Bitcoin Core <a href="https://bitcoincore.org/en/releases/0.19.0.1/">v0.19.0.1</a> (in 2019 with <a href="https://github.com/bitcoin/bitcoin/pull/15759">PR #15759</a>), are only for the exchange of block headers and blocks.</p>
+<p>Feeler connections are short-lived outbound connections opened approximately every 2 minutes to test whether addresses in the node's peer database are reachable, promoting them from the <code>new</code> table (learned via gossip, untested) to the <code>tried</code> table (successfully connected to at least once) on success.
+These tables are part of the node's <strong>address manager</strong> (<code>AddrMan</code>), which tracks known peer addresses and is complex enough that it will be covered in a future post.</p>
+<h3 id="inbound-connections">Inbound connections</h3>
+<p>Unlike outbound connections, a reachable node has no say in who connects to it; any other node can claim one of its inbound slots.
+Inbound connections are therefore less trusted.
+A node relies on its outbound peers for its best approximation of the true network state.
+Inbound peers still contribute by relaying blocks and transactions to the wider network, and may even be the first to deliver them.</p>
+<p>With a default cap of 125 automatic connections, 11 of which are reserved for outbound, there are up to 114 inbound slots.
+When a new peer attempts a connection, a node doesn't immediately refuse it.
+Instead, it evaluates the existing inbound peers and evicts "the least useful" (which could turn out to be the new peer itself!).
+Exploring the eviction logic is beyond the scope of this work, suffice to say it's a process that eliminates peers from being eviction candidates via multiple evaluation criteria, with the final remaining peer being the one that is dropped.</p>
+<h3 id="inbound-vs-outbound-asymmetry">Inbound vs Outbound asymmetry</h3>
+<p>Since anyone can cheaply claim inbound slots, they are inherently vulnerable to <strong>Sybil attacks</strong> that manipulate the node's view of the network.
+Outbound connections, being self-selected from the address database with limited slots and randomised selection, are far harder to subvert.
+Several design decisions reinforce this asymmetry.</p>
+<p><strong>What's a Sybil attack?</strong></p>
+<p>A Sybil attack is when a single adversary creates many fake identities (in Bitcoin's case, many seemingly independent nodes) to gain disproportionate influence over a target.
+Since Bitcoin's P2P network is permissionless and there is little cost to spinning up new nodes, an attacker can flood a victim with connections that all appear to be distinct peers but are actually controlled by the same entity.
+If a node's connections are dominated by Sybil peers, those peers can collaborate to feed it a distorted view of the network: withholding blocks, censoring transactions, or manipulating relay timing.
+The outbound/inbound asymmetry described here is one of the primary structural defences against this class of attack.</p>
+<p>Transaction <code>inv</code> messages  are batched on a timer, with outbound peers receiving announcements every 2 seconds and inbound peers every 5 seconds.
+The concern is transaction origin inference: a spy opening many inbound connections could correlate <code>inv</code> timing to deduce that the node originated a transaction.
+The longer inbound interval ensures all inbound peers from the same network see the same <code>inv</code> simultaneously, eliminating differential timing signals regardless of how many connections the attacker opens.
+Outbound peers pose a much lower Sybil risk, so the faster interval trades a small amount of privacy for better propagation speed.
+That is, the batching makes the attack's effectiveness independent of how many inbound slots the adversary holds, adding more inbound (Sybil) connections yields no additional timing signal.</p>
+<p>Outbound peers are also strongly preferred as block sources.
+With inbound slots being cheap to Sybil, an attacker dominating a node's inbound connections could withhold new blocks, e.g. keeping the node on a stale chain tip, or could selectively delay block announcements to gain a timing advantage.
+To guard against this, each outbound peer is marked as a preferred peer, meaning blocks are requested from outbound peers first, with inbound peers only used as a fallback when no preferred peers are available.</p>
+<p>The same preference applies to header synchronisation: initial headers-first sync is only initiated from a preferred peer, with inbound peers as a fallback.</p>
+<p>Finally, only inbound peers are subject to the eviction process described above.
+Outbound peers are not part of the inbound eviction process, since losing a self-selected peer would weaken the node's trusted view of the network.
+They can, however, still be disconnected for other peer-management reasons, such as stalling detection, extra block-relay peer rotation, or the network-diversity rebalancing discussed in <a href="#bridge-nodes">bridge nodes</a> below.</p>
+<h3 id="address-bootstrapping">Address bootstrapping</h3>
+<p>There is a bootstrapping problem that a special class of outbound connection, <code>ConnectionType::ADDR_FETCH</code>, exists to solve: how does a node populate its address book when it doesn't yet know any peers?
+On first startup, or [[under various other circumstances||Such as after <code>peers.dat</code> has been deleted or corrupted, after being offline long enough for all cached addresses to exceed <a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>ADDRMAN_HORIZON</code></a> (30 days), or after enough connection failures to mark all addresses "terrible" (<a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>ADDRMAN_RETRIES</code>/<code>ADDRMAN_MAX_FAILURES</code></a>).]], <code>AddrMan</code> will be empty and the node will have nobody to connect to.</p>
+<p>The primary bootstrap mechanism is <strong>DNS seeds</strong>: the node queries hardcoded DNS hostnames (see below) with a service-bit filter prefix that resolve to lists of active node IP addresses.
+If the requesting node is behind a proxy where direct DNS isn't possible, or if a seed doesn't support the requested service-bit filter and returns no results, the node falls back to opening an <code>ADDR_FETCH</code> connection directly to the seed.
+This is a short-lived connection that completes a version handshake, sends a <code>getaddr</code> message, receives an <code>addr</code> response, feeds those addresses into <code>AddrMan</code>, and disconnects.
+Note that the same mechanism serves <code>-seednode</code> peers: operator-specified peers that the node tries as a trusted bootstrapping source before falling back to the hardcoded DNS seeds.</p>
+<p><strong>Mainnet DNS seeds (Bitcoin Core v31)</strong></p>
+<p>As of v31, Bitcoin Core's mainnet configuration includes eight hardcoded DNS seeds in <a href="https://github.com/bitcoin/bitcoin/blob/v31.0rc2/src/kernel/chainparams.cpp#L144-L151"><code>src/kernel/chainparams.cpp</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th>Hostname</th>
+<th>Operator</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seed.bitcoin.sipa.be</code></td>
+<td>Pieter Wuille</td>
+<td>Supports x1, x5, x9, xd</td>
+</tr>
+<tr>
+<td><code>dnsseed.bluematt.me</code></td>
+<td>Matt Corallo</td>
+<td>Only supports x9</td>
+</tr>
+<tr>
+<td><code>seed.bitcoin.jonasschnelli.ch</code></td>
+<td>Jonas Schnelli</td>
+<td>Supports x1, x5, x9, xd</td>
+</tr>
+<tr>
+<td><code>seed.btc.petertodd.net</code></td>
+<td>Peter Todd</td>
+<td>Supports x1, x5, x9, xd</td>
+</tr>
+<tr>
+<td><code>seed.bitcoin.sprovoost.nl</code></td>
+<td>Sjors Provoost</td>
+<td></td>
+</tr>
+<tr>
+<td><code>dnsseed.emzy.de</code></td>
+<td>Stephan Oeste</td>
+<td></td>
+</tr>
+<tr>
+<td><code>seed.bitcoin.wiz.biz</code></td>
+<td>Jason Maurice</td>
+<td></td>
+</tr>
+<tr>
+<td><code>seed.mainnet.achownodes.xyz</code></td>
+<td>Ava Chow</td>
+<td>Supports x1, x5, x9, x49, x809, x849, xd, x400, x404, x408, x448, xc08, xc48, x40c</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>x</code> prefixed service bit filters (e.g. x9 = <code>NODE_NETWORK | NODE_WITNESS</code>) allow seeds to return only nodes advertising specific service flags.</p>
+<p><code>ADDR_FETCH</code> connections are short-lived (they disconnect as soon as addresses are received) and use the shared automatic outbound pool on a best-effort basis, so they do not displace the node's persistent outbound peers and may simply be skipped when no outbound slot is free.</p>
+<h3 id="other-connection-types">Other connection types</h3>
+<p>Beyond the connection types discussed so far, Bitcoin Core defines two more outbound connection types: operator-specified peers (<code>ConnectionType::MANUAL</code>) and privacy-preserving transaction relay (<code>ConnectionType::PRIVATE_BROADCAST</code>).
+Each has its own slot accounting so they don't interfere with the automatic outbound budget.</p>
+<p><code>MANUAL</code> connections are created via the <code>-addnode</code> configuration option or the <code>addnode</code> RPC, and have their own separate 8-slot pool.
+That is, adding manual peers never displaces any (automatic) outbound connections, they are separately accounted for.
+Unlike automatic connections, manual peers are not subject to the same rotation and eviction logic, a node with manual peers will persistently try to maintain connections to them.</p>
+<p><code>PRIVATE_BROADCAST</code> is new in v31, enabled via the opt-in <a href="https://github.com/bitcoin/bitcoin/pull/29415"><code>-privatebroadcast</code></a> flag (off by default).
+These connections use a dedicated 64-slot budget, completely separate from the regular outbound pool.
+They open short-lived connections exclusively over privacy networks (Tor, I2P) to relay transactions submitted locally via RPC, then close (such that transaction broadcast over privacy networks never competes with regular outbound connection slots).</p>
+<p><strong>The complete set of connection types in Bitcoin Core</strong></p>
+<p>All seven connection types that have been discussed are defined in the <code>ConnectionType</code> enum in <a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/connection_types.h"><code>src/node/connection_types.h</code></a>.</p>
+<pre><code class="hljs language-cpp"><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">ConnectionType</span> {
+    INBOUND,
+    OUTBOUND_FULL_RELAY,
+    MANUAL,
+    FEELER,
+    BLOCK_RELAY,
+    ADDR_FETCH,
+    PRIVATE_BROADCAST,
+};
+</code></pre>
+<h2 id="node-operating-modes">Node operating modes</h2>
+<p>Beyond reachability and connection management, nodes also differ in what they store, what they relay, and how much of the chain they keep after validating it.
+All of the configurations discussed in this section are <strong>full nodes</strong>: they independently validate every block against the consensus rules and maintain the UTXO set needed to do so, rather than trusting proof-of-work or any peer's assessment as a proxy for validity.
+<a href="#light-clients">Light clients</a>, discussed separately below, are not nodes in this sense; they are wallet software that connects to full nodes as a client rather than participating as a peer.</p>
+<p>The first distinction among full nodes is whether they retain a complete copy of the blockchain or not, that is, whether a node is a <strong>full archival node</strong> or a <strong>pruned node</strong>.</p>
+<h3 id="archival-nodes">Archival nodes</h3>
+<p>Full archival nodes validate and retain every block from the genesis block onwards.
+This means they can serve any historical block to peers that request it, most importantly to new nodes that must download and validate the entire chain from scratch (<strong>initial block download</strong> - IBD).
+A full archival node should advertise as such by signalling <code>NODE_NETWORK</code> in the service flags in the <code>version</code> message it sends to peers during the version handshake.</p>
+<p><strong>The <code>version</code> handshake</strong></p>
+<p>When two Bitcoin nodes first connect, they exchange <code>version</code> messages before any other communication.
+The <code>version</code> message carries the node's protocol version, service flags (like <code>NODE_NETWORK</code> or <code>NODE_NETWORK_LIMITED</code>), current block height, a nonce for self-connection detection, and the <code>fRelay</code> flag indicating whether the sender wants transaction relay on this connection.
+The receiving node responds with a <code>verack</code> (version acknowledgement) message, and once both sides have sent and received <code>verack</code>, the connection is considered established.
+Only after this handshake completes will either peer process further messages.
+The service flags advertised in <code>version</code> are how peers learn each other's capabilities, though, as noted above, these are self-reported and unauthenticated.</p>
+<h3 id="pruned-nodes">Pruned nodes</h3>
+<p>Not every operator is willing or able to store the full block history - as of early 2026, the raw block data alone occupies roughly 775 GB, with the full data directory closer to 830 GB before any optional indexes.
+Pruned nodes (<code>-prune=&#x3C;N></code>) also download and fully validate every block, and maintain the full UTXO set, but discard old block data after validation.
+A pruned node relays new blocks and transactions normally, it simply can't serve historical blocks to peers performing IBD.</p>
+<p>Regardless of the pruning target, a pruned node always retains at least the most recent [[288 blocks||<code>MIN_BLOCKS_TO_KEEP</code> in <code>src/validation.h</code>, with the value proposed by <a href="https://github.com/bitcoin/bitcoin/pull/4701">Gregory Maxwell during the original pruning design discussions</a> as "a minimum number I'd consider acceptable as an absolute minimum for the purpose of reorgs."]], which is approximately two days' worth given the 10-minute block interval.
+The minimum pruning target of <code>-prune=550</code> (MiB) is derived from this requirement, accounting for the 288 blocks themselves, undo data overhead, orphan block rate, and block file granularity.
+Pruned nodes advertise <code>NODE_NETWORK_LIMITED</code> rather than <code>NODE_NETWORK</code> in their service flags, signalling to peers that they can serve recent blocks but cannot be relied upon for historical data during IBD.</p>
+<h3 id="blocks-only-mode">Blocks-only mode</h3>
+<p>Orthogonal to the archival/pruned distinction is whether a node participates in <strong>transaction relay</strong>.
+Running with <code>-blocksonly</code> disables ordinary transaction relay, so a node in this mode won't accept transactions from normal network peers.
+Because transaction relay dominates a typical node's traffic, blocks-only mode can <a href="https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md">reduce overall bandwidth consumption by as much as 88%</a>.
+The trade-off is that the node sees far less unconfirmed transaction activity, so its mempool remains sparse, fee estimation is disabled, and it cannot make full use of the mempool-assisted fast path in <strong>compact block relay</strong>.</p>
+<p><strong>Compact block relay</strong></p>
+<p><a href="https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki">BIP 152</a> compact block relay reduces block propagation bandwidth by exploiting the fact that a node's mempool already contains most of a new block's transactions.
+Instead of transmitting a full block, compact block relay uses a <code>cmpctblock</code> message containing the block header, a list of short transaction IDs, and any transactions the sender predicts the receiver won't have (the "prefilled" transactions, which always includes the coinbase).
+The receiver matches the short IDs against its mempool and, if any are missing, requests them individually via <code>getblocktxn</code>/<code>blocktxn</code> round-trips.
+A typical block compresses to a compact block message of <a href="https://bitcoincore.org/en/2016/06/07/compact-blocks-faq/">roughly 9 KB</a> (the header, short transaction IDs, and prefilled transactions); roughly two orders of magnitude smaller than the full block.</p>
+<p>BIP 152 defines two modes.
+In <strong>low-bandwidth mode</strong> (the default for most connections), the sender first announces the block via <code>headers</code> (or falls back to <code>inv</code>) and only sends the compact block after the receiver requests it with <code>getdata</code>.
+In <strong>high-bandwidth mode</strong>, which a node requests from up to three peers via <code>sendcmpct</code>, the sender pushes the <code>cmpctblock</code> immediately upon validation, without waiting for a request, potentially even before fully validating the block itself.
+This shaves off a full round-trip and is the primary mechanism by which new blocks propagate quickly across the network.</p>
+<p>The impact on propagation times has been dramatic: <a href="https://www.dsn.kastel.kit.edu/bitcoin/publications/bitcoin_network_characterization.pdf">KIT DSN measurements</a> observed block propagation drop from over 6 seconds (2015, pre-compact blocks) to under 1 second (2018) at the 50th percentile, with the 90th percentile falling from over 15 seconds to roughly 2 seconds.</p>
+<p>The effectiveness of compact blocks depends directly on mempool overlap: the more transactions a node has already seen and validated, the fewer it needs to request after receiving a compact block.
+Monitoring by <a href="https://delvingbitcoin.org/t/stats-on-compact-block-reconstructions/1052">0xB10C</a> shows that under normal mempool conditions, over 80% of compact blocks reconstruct without any additional round-trips, though this can drop below 50% during periods of high mempool congestion (such as around the April 2024 halving).
+A blocks-only node, which maintains only a small mempool (5 MB by default vs the normal 300 MB) and receives no transaction relay, rarely has the transactions it needs, reconstructs compact blocks less efficiently, and often needs many missing transactions via <code>getblocktxn</code>, reducing or sometimes erasing the bandwidth benefit of the protocol.</p>
+<p>A blocks-only node signals its preference during the version handshake by requesting no transaction relay.
+Peers that receive this instruction should not send <code>inv</code> messages for transactions to that connection (the same mechanism used by the block-relay-only connections discussed earlier, though there it is applied per-connection rather than node-wide).
+Note that <code>-blocksonly</code> is independent of <code>-prune</code>: a node can be archival and blocks-only (full history, sparse mempool), or pruned and full-relay (limited history, active mempool), or any other combination.</p>
+<p><strong><code>-blocksonly</code> vs block-relay-only connections</strong></p>
+<p>These two mechanisms are easy to confuse because they sound similar and both set <code>fRelay=false</code> in the version handshake, but they operate at different scopes and serve different purposes.</p>
+<p><code>-blocksonly</code> is a <strong>node-wide configuration</strong>.
+When enabled, the node disables transaction relay across <em>all</em> of its connections: it does not announce transactions via <code>inv</code>, and it will ignore (and may disconnect peers that persist in sending) unsolicited transaction messages.
+The motivation is bandwidth reduction; on a typical node, transaction relay dominates traffic, so disabling it can cut bandwidth consumption dramatically (e.g. 88%).
+A <code>-blocksonly</code> node still participates in address relay on its connections.</p>
+<p>Block-relay-only connections (<code>ConnectionType::BLOCK_RELAY</code>) are a <strong>per-connection policy</strong>.
+A node in a default configuration opens exactly 2 of these outbound connections alongside its 8 full-relay outbound connections.
+These connections exchange block headers and blocks but never relay transactions or participate in address gossip (<code>addr</code>/<code>getaddr</code>).
+As aforementioned, the motivation is to help obfuscate the topology of the network.</p>
+<p>Both advertise <code>fRelay=false</code>, but they are still distinguishable: block-relay-only connections do not participate in address gossip, whereas <code>-blocksonly</code> connections still can.</p>
+<h3 id="light-clients">Light clients</h3>
+<p>Not every user needs or is able to bear the storage, bandwidth, and processing costs of full validation.
+<strong>Light clients</strong> are wallet software that connects to full nodes as a client rather than participating in the P2P network as a peer.
+Light clients do not validate blocks or enforce consensus rules.
+Instead, they only download block headers (and potentially full blocks) and use various protocols to learn about transactions relevant to them, trusting that the longest proof-of-work chain contains only valid transactions.</p>
+<p>The two main protocols for light client data retrieval illustrate different trade-offs in how this trust model is implemented.
+The original approach, <strong>bloom filters</strong> (<a href="https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki">BIP 37</a>), had the client send a filter describing its addresses of interest to a full node, which would then return only matching transactions with Merkle proofs of inclusion.
+This had well-documented privacy and DoS problems: the filter inherently leaked which addresses the client cared about (<a href="https://eprint.iacr.org/2014/763">Gervais et al., 2014</a>), and serving filter requests was computationally expensive for the full node with no way for the client to compensate.
+Bloom filter serving is now largely deprecated in Bitcoin Core and disabled by default since <a href="https://bitcoincore.org/en/releases/0.19.0.1/">v0.19.0.1</a>.</p>
+<p><strong>Compact block filters</strong> (<a href="https://github.com/bitcoin/bips/blob/master/bip-0157.mediawiki">BIP 157</a> / <a href="https://github.com/bitcoin/bips/blob/master/bip-0158.mediawiki">BIP 158</a>, not to be confused with <a href="#compact-block-relay">compact block <em>relay</em></a>) invert the model: the full node pre-computes a compact filter for each block, and the client downloads these filters and evaluates them locally.
+Since every client downloads the same filters, the downloads reveal nothing about which addresses the client cares about.
+When a filter matches, the client downloads the full block to check (with <a href="https://github.com/bitcoin/bips/blob/master/bip-0157.mediawiki">BIP 157</a> recommending that matched blocks be fetched from random peers to limit the information leaked by those requests).
+This is the approach used by Neutrino-compatible wallets (such as those in the Lightning ecosystem) and supported by the <a href="https://github.com/bitcoindevkit/bdk">Bitcoin Dev Kit</a>.</p>
+<p><strong>What about Electrum?</strong></p>
+<p>Not all light wallets use the P2P layer via direct connections to Bitcoin Core nodes.
+Electrum connects to dedicated indexing servers (<a href="https://github.com/spesmilo/electrumx">ElectrumX</a>, <a href="https://github.com/cculianu/Fulcrum">Fulcrum</a>, etc.) over the <a href="https://electrumx.readthedocs.io/en/latest/protocol.html">Electrum protocol</a> rather than speaking to Bitcoin Core peers directly.
+The server sits on top of a fully-validated node, maintains a full transaction index, and handles address lookups on the client's behalf.
+This shifts the trust model from "trust proof-of-work" to "trust the server" (unless the user runs their own).</p>
+<h2 id="network-topology">Network topology</h2>
+<p>The various node types and operating modes described above produce a network that is far from homogeneous.
+The Bitcoin P2P network has a structure shaped by the asymmetry between reachable and unreachable nodes, the different capabilities advertised by each node, and the deliberate connection management strategies implemented in Bitcoin Core.</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/2026/bitcoin-p2p-network-topology.png" alt="Figure 2: Bitcoin P2P network topology showing the densely interconnected reachable core and the unreachable periphery, with connection directionality and slot budget detail."></p>
+<h3 id="the-reachable-core">The reachable core</h3>
+<p>Reachable nodes form a densely connected core that serves as <a href="https://arxiv.org/abs/1905.10518">"the backbone of the Bitcoin network"</a>.
+Every node on the network makes outbound connections, and those connections necessarily target reachable nodes.
+As a result, this <strong>reachable core</strong> collectively absorbs all outbound connection attempts from the entire network.
+A reachable node with 114 inbound slots might serve as a connection point for dozens of unreachable nodes simultaneously, while maintaining its own 10 outbound connections to other reachable peers.</p>
+<p>This creates a hub-and-spoke dynamic (Figure 2) where the ~23,000 reachable nodes form the backbone through which up to ~47,000 unreachable nodes access the network.
+The unreachable nodes are on the periphery, consuming connectivity from the reachable core but unable to provide it to others.
+This is not a design flaw; it is an inevitable consequence of many node operators being unable to configure inbound access (e.g., NAT, CGNAT, firewalls).</p>
+<h3 id="block-and-transaction-propagation">Block and transaction propagation</h3>
+<p>The heterogeneous mix of relay policies and connection types, e.g., full-relay connections, block-relay-only connections, and connections involving blocks-only nodes, creates distinct overlay networks layered on top of the same physical topology.
+Blocks propagate across all connection types, giving them a rich, redundant set of paths through the network.
+Transactions, by contrast, only flow over full-relay connections, meaning the transaction relay graph is a subset of the block relay graph (Figure 3).</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/2026/bitcoin-block-tx-propagation-overlays.png" alt="Figure 3: Block and transaction propagation overlays showing that full-relay connections carry both block relay (solid blue) and transaction relay (dashed yellow), while block-relay-only connections and connections to blocks-only nodes carry only block relay, making the transaction relay graph a strict subset of the block relay graph."></p>
+<p>This layering is intentional.
+The block-relay-only connections provide additional paths for blocks to propagate without revealing the node's full connection topology through address and transaction relay side-channels.
+An attacker who probes or analyses transaction relay behaviour may be able to infer parts of a node's connection topology, including some outbound peers; the block-relay-only connections are invisible to this kind of analysis, providing a hidden set of paths that make eclipse attacks meaningfully harder to execute.</p>
+<h3 id="bridge-nodes">Bridge nodes</h3>
+<p>The Bitcoin network spans multiple overlay networks: IPv4, IPv6, Tor, I2P, and CJDNS (Figure 4).
+Most nodes are only reachable on one or two of these, meaning peers within one overlay can become isolated from peers on another if there aren't enough nodes straddling both.
+Nodes that maintain connections across multiple network types act as <strong>bridge nodes</strong>, forwarding blocks and transactions between overlay networks that would otherwise have limited or no connectivity to each other.</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/2026/bitcoin-bridge-nodes-overlay-networks.png" alt="Figure 4: Simplified illustration of Bitcoin P2P overlay networks (IPv4, IPv6, Tor, I2P, CJDNS) with bridge nodes in zone overlaps connecting across network boundaries. Actual network topology is far denser and more interconnected."></p>
+<p>Bridge nodes are critical for preventing <strong>network partitioning</strong> along transport boundaries.
+If, for example, the Tor-only segment of the network lost all connections to IPv4 peers, those Tor nodes would effectively be on a separate network, unable to see new blocks or transactions from the IPv4 majority, and vulnerable to eclipse attacks within their isolated segment.
+Bridge nodes prevent this by ensuring that block and transaction propagation can cross network boundaries.</p>
+<p>Since <a href="https://bitcoincore.org/en/releases/26.0/">Bitcoin Core v26.0</a> (<a href="https://github.com/bitcoin/bitcoin/pull/27213">PR #27213</a>), Bitcoin Core actively tries to improve outbound network-type diversity.
+Once all 8 outbound full-relay slots are filled, the node periodically invokes <code>MaybePickPreferredNetwork()</code> to check whether any reachable network has zero current outbound connections despite having known addresses in <code>AddrMan</code>.
+If such a network is found, the node briefly opens a 9th outbound full-relay connection targeting that network, then evicts a peer from an over-represented network to bring the count back to 8 with improved diversity.
+For example, a node reachable on both IPv4 and Tor, whose 8 initial slots all landed on IPv4 addresses, will open a 9th connection to a Tor peer and drop one of the IPv4 peers to rebalance.</p>
+<h3 id="resilience-through-diversity">Resilience through diversity</h3>
+<p>The Bitcoin network's resilience emerges from the combination of all roles working together.
+Archival nodes ensure that new nodes can always bootstrap from their blank slate.
+Pruned nodes reduce the barrier to running a validating node, thus expanding the set of participants who independently enforce the consensus rules.
+Blocks-only nodes further lower the resource floor while still contributing to block propagation, and because they do not relay third-party transactions by default, they reduce one avenue by which transaction-origin information can leak, though transactions submitted locally via RPC can still be broadcast by the node.
+Bridge nodes knit the overlay networks together, preventing partitioning along transport boundaries.</p>
+<p>The design philosophy throughout is one of graceful degradation: each operating mode sacrifices some capability in exchange for reduced resource requirements, but every full node still independently enforces the consensus rules on every block it processes.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Bitcoin P2P network is a collection of heterogeneous nodes with different capabilities and configurations that collectively maintain the properties the network needs: censorship-resistant transaction relay, fast block propagation, the ability for new nodes to join and sync, and independent consensus validation by every full node operator.</p>
+<p>Understanding these roles and how they interact is a prerequisite for reasoning about the network's behaviour under adversarial conditions, resource requirements as the chain grows, and the design decisions behind protocol improvements.
+In a future post, we'll look more closely at <code>AddrMan</code>, the address manager that determines <em>which</em> peers a node connects to in the first place, and the design choices that make peer selection both supportive of efficient P2P network operations and resilient to adversarial conditions.</p>
+<h2 id="reference">Reference</h2>
+<p><strong>Configuration options, code references, service flags, connection types, permissions, P2P messages, RPC commands, and source files referenced in this post (not exhaustive).</strong></p>
+<h3 id="configuration-options">Configuration options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-listen</code></td>
+<td><code>1</code></td>
+<td>Accept inbound connections from peers. Required for a node to be reachable.</td>
+</tr>
+<tr>
+<td><code>-prune=&#x3C;N></code></td>
+<td>Off</td>
+<td>Discard old block data after validation, retaining the most recent blocks. Minimum value is <code>550</code> MiB.</td>
+</tr>
+<tr>
+<td><code>-blocksonly</code></td>
+<td>Off</td>
+<td>Disable transaction relay entirely. Blocks are still relayed normally. Reduces bandwidth by up to ~88%.</td>
+</tr>
+<tr>
+<td><code>-peerbloomfilters</code></td>
+<td><code>0</code></td>
+<td>Serve BIP 37 bloom-filtered data to peers. Disabled by default since v0.19.0.1 due to privacy and DoS concerns.</td>
+</tr>
+<tr>
+<td><code>-blockfilterindex</code></td>
+<td><code>0</code></td>
+<td>Build and maintain BIP 158 compact block filter indexes locally.</td>
+</tr>
+<tr>
+<td><code>-peerblockfilters</code></td>
+<td><code>0</code></td>
+<td>Serve BIP 157/158 compact block filters to peers. Requires <code>-blockfilterindex=1</code>.</td>
+</tr>
+<tr>
+<td><code>-addnode</code></td>
+<td>-</td>
+<td>Manually specify a peer to persistently connect to. Uses a separate 8-slot pool that doesn't compete with automatic outbound connections. Also available as an RPC.</td>
+</tr>
+<tr>
+<td><code>-seednode</code></td>
+<td>-</td>
+<td>Specify a peer to connect to for address bootstrapping on first startup, tried before hardcoded DNS seeds.</td>
+</tr>
+<tr>
+<td><code>-privatebroadcast</code></td>
+<td>Off</td>
+<td>Opt-in (v31+). Relay locally-submitted transactions over short-lived Tor/I2P connections using a dedicated 64-slot budget, separate from regular outbound slots.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="code-references">Code references</h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEFAULT_MAX_PEER_CONNECTIONS</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.h"><code>src/net.h</code></a></td>
+<td>Maximum total peer connections (default 125).</td>
+</tr>
+<tr>
+<td><code>FEELER_INTERVAL</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.h"><code>src/net.h</code></a></td>
+<td>Interval between feeler connection attempts (~2 minutes).</td>
+</tr>
+<tr>
+<td><code>OUTBOUND_INVENTORY_BROADCAST_INTERVAL</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>Transaction <code>inv</code> batching interval for outbound peers (2 seconds).</td>
+</tr>
+<tr>
+<td><code>INBOUND_INVENTORY_BROADCAST_INTERVAL</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>Transaction <code>inv</code> batching interval for inbound peers (5 seconds). Longer to prevent timing-based transaction origin inference from Sybil inbound connections.</td>
+</tr>
+<tr>
+<td><code>MIN_BLOCKS_TO_KEEP</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/validation.h"><code>src/validation.h</code></a></td>
+<td>Minimum number of recent blocks a pruned node retains (288, ~2 days).</td>
+</tr>
+<tr>
+<td><code>MAX_BLOCKFILE_SIZE</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/blockstorage.h"><code>src/node/blockstorage.h</code></a></td>
+<td>Maximum size of a single block file on disk (128 MiB). Factors into the minimum prune target calculation.</td>
+</tr>
+<tr>
+<td><code>BLOCK_STALLING_TIMEOUT_DEFAULT</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>Default time a peer must stall block download progress before being disconnected (2 seconds). Doubles on each stalling disconnection up to <code>BLOCK_STALLING_TIMEOUT_MAX</code> (64 seconds).</td>
+</tr>
+<tr>
+<td><code>EXTRA_BLOCK_RELAY_ONLY_PEER_INTERVAL</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.h"><code>src/net.h</code></a></td>
+<td>Interval for the extra block-relay-only peer rotation loop (5 minutes). After IBD, the node periodically connects to a new block-relay-only peer and evicts the least useful existing one.</td>
+</tr>
+<tr>
+<td><code>fPreferredDownload</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>Per-peer flag marking outbound peers (and <code>NoBan</code> inbound peers) as preferred sources for block downloads and header sync.</td>
+</tr>
+<tr>
+<td><code>fRelay</code></td>
+<td><code>version</code> message</td>
+<td>Field in the <code>version</code> handshake message. When <code>false</code>, signals the sender does not want transaction relay on this connection (used by <code>-blocksonly</code> nodes and block-relay-only connections).</td>
+</tr>
+<tr>
+<td><code>ADDRMAN_HORIZON</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>src/addrman.h</code></a></td>
+<td>Maximum age (30 days) before an address in <code>AddrMan</code> is considered too old. One trigger for DNS seed bootstrapping.</td>
+</tr>
+<tr>
+<td><code>ADDRMAN_RETRIES</code> / <code>ADDRMAN_MAX_FAILURES</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>src/addrman.h</code></a></td>
+<td>Thresholds for marking an address as "terrible" after repeated connection failures. When all addresses are terrible, bootstrapping is triggered.</td>
+</tr>
+<tr>
+<td><code>MaybePickPreferredNetwork()</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.cpp"><code>src/net.cpp</code></a></td>
+<td>Checks whether any reachable network has zero outbound connections despite having known addresses, and if so, sets it as the preferred network for the next outbound attempt. Drives bridge node diversity rebalancing.</td>
+</tr>
+<tr>
+<td><code>EvictExtraOutboundPeers()</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>Evicts an outbound peer from an over-represented network after a 9th diversity connection is established. Selects the peer that least recently announced a new block, but protects sole connections on any network type.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="service-flags">Service flags</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NODE_NETWORK</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/protocol.h"><code>src/protocol.h</code></a></td>
+<td>Advertises that the node stores the full block history and can serve any historical block to peers.</td>
+</tr>
+<tr>
+<td><code>NODE_NETWORK_LIMITED</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/protocol.h"><code>src/protocol.h</code></a></td>
+<td>Advertises that the node is pruned: it can serve recent blocks (at least the last 288) but not the full history.</td>
+</tr>
+<tr>
+<td><code>NODE_WITNESS</code></td>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/protocol.h"><code>src/protocol.h</code></a></td>
+<td>Advertises that the node supports segregated witness (SegWit). Used in DNS seed service-bit filter prefixes (e.g. <code>x9</code> = <code>NODE_NETWORK</code> | <code>NODE_WITNESS</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="connection-types">Connection types</h3>
+<p>Defined in <a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/connection_types.h"><code>src/node/connection_types.h</code></a>, with string representations in <a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/connection_types.cpp"><code>src/node/connection_types.cpp</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Direction</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OUTBOUND_FULL_RELAY</code></td>
+<td>Outbound</td>
+<td>Full-relay outbound connection (8 by default). Exchanges addresses, transactions, and blocks.</td>
+</tr>
+<tr>
+<td><code>BLOCK_RELAY</code></td>
+<td>Outbound</td>
+<td>Block-relay-only outbound connection (2 by default). Exchanges only block headers and blocks, hiding the connection from transaction and address relay side-channels.</td>
+</tr>
+<tr>
+<td><code>FEELER</code></td>
+<td>Outbound</td>
+<td>Short-lived connection (~every 2 min) to test whether addresses in the peer database are reachable. Promotes peers from the <code>new</code> to <code>tried</code> table.</td>
+</tr>
+<tr>
+<td><code>INBOUND</code></td>
+<td>Inbound</td>
+<td>Connection initiated by a remote peer. Up to 114 slots by default. Subject to eviction.</td>
+</tr>
+<tr>
+<td><code>MANUAL</code></td>
+<td>Outbound</td>
+<td>Manually added peer via <code>-addnode</code> or <code>addnode</code> RPC. Not subject to automatic eviction.</td>
+</tr>
+<tr>
+<td><code>ADDR_FETCH</code></td>
+<td>Outbound</td>
+<td>Short-lived connection opened solely to solicit addresses from a peer.</td>
+</tr>
+<tr>
+<td><code>PRIVATE_BROADCAST</code></td>
+<td>Outbound</td>
+<td>Connection used to broadcast a specific transaction privately, without entering the normal relay pipeline.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="net-permissions">Net permissions</h3>
+<p>Defined in <a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_permissions.h"><code>src/net_permissions.h</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Relay</code></td>
+<td>Peer is allowed to send transactions to a <code>-blocksonly</code> node, overriding the global relay disable for incoming transaction acceptance.</td>
+</tr>
+<tr>
+<td><code>ForceRelay</code></td>
+<td>Peer can force automatic broadcast/rebroadcast of transactions, distinct from merely accepting them via <code>Relay</code>. Granted via <code>whitelistforcerelay</code>.</td>
+</tr>
+<tr>
+<td><code>NoBan</code></td>
+<td>Peer is exempt from being banned or discouraged. Also grants <code>fPreferredDownload</code> status (treated as preferred for block downloads, like an outbound peer).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="p2p-messages">P2P messages</h3>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>version</code></td>
+<td>Sent during the version handshake. Carries protocol version, service flags, block height, nonce, and <code>fRelay</code> flag.</td>
+</tr>
+<tr>
+<td><code>verack</code></td>
+<td>Version acknowledgement. Sent in response to <code>version</code>; connection is established once both sides have exchanged <code>version</code>/<code>verack</code>.</td>
+</tr>
+<tr>
+<td><code>inv</code></td>
+<td>Inventory announcement. Advertises that the sender has new transactions or blocks available for download.</td>
+</tr>
+<tr>
+<td><code>getdata</code></td>
+<td>Requests full data (transaction or block) for items previously announced via <code>inv</code>.</td>
+</tr>
+<tr>
+<td><code>addr</code> / <code>addrv2</code></td>
+<td>Address gossip. Propagates known peer addresses across the network. <code>addrv2</code> (<a href="https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki">BIP 155</a>) extends support to Tor v3, I2P, and CJDNS addresses.</td>
+</tr>
+<tr>
+<td><code>filterload</code></td>
+<td>BIP 37 bloom filter loading. A light client sends this to a full node to request filtered transaction delivery. Largely deprecated.</td>
+</tr>
+<tr>
+<td><code>getaddr</code></td>
+<td>Requests a list of known peer addresses from a connected peer. Used by <code>ADDR_FETCH</code> connections during address bootstrapping.</td>
+</tr>
+<tr>
+<td><code>cmpctblock</code></td>
+<td>BIP 152 compact block message. Contains the block header, short transaction IDs, and prefilled transactions, allowing the receiver to reconstruct the block from its mempool.</td>
+</tr>
+<tr>
+<td><code>getblocktxn</code> / <code>blocktxn</code></td>
+<td>BIP 152 compact block round-trip. <code>getblocktxn</code> requests specific transactions missing after a <code>cmpctblock</code>; <code>blocktxn</code> delivers them.</td>
+</tr>
+<tr>
+<td><code>sendcmpct</code></td>
+<td>BIP 152 compact block preference message. <code>sendcmpct(1)</code> asks a peer to announce new blocks with unsolicited <code>cmpctblock</code> messages; <code>sendcmpct(0)</code> indicates low-bandwidth mode, where compact blocks are served on request.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="source-files-referenced">Source files referenced</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.h"><code>src/net.h</code></a></td>
+<td>Core networking constants and connection management.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_processing.cpp"><code>src/net_processing.cpp</code></a></td>
+<td>P2P message processing logic, inventory broadcast intervals, preferred download.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/protocol.h"><code>src/protocol.h</code></a></td>
+<td>Protocol constants including service flags (<code>NODE_NETWORK</code>, <code>NODE_NETWORK_LIMITED</code>).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/validation.h"><code>src/validation.h</code></a></td>
+<td>Validation constants including <code>MIN_BLOCKS_TO_KEEP</code>.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/blockstorage.h"><code>src/node/blockstorage.h</code></a></td>
+<td>Block storage constants including <code>MAX_BLOCKFILE_SIZE</code>.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/connection_types.h"><code>src/node/connection_types.h</code></a> / <a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/connection_types.cpp"><code>.cpp</code></a></td>
+<td><code>ConnectionType</code> enum definition and string representation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/eviction.h"><code>src/node/eviction.h</code></a> / <a href="https://github.com/bitcoin/bitcoin/blob/master/src/node/eviction.cpp"><code>.cpp</code></a></td>
+<td>Inbound peer eviction logic (<code>SelectNodeToEvict</code>, protection heuristics).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net_permissions.h"><code>src/net_permissions.h</code></a></td>
+<td>Net permission flags (<code>Relay</code>, <code>NoBan</code>, etc.).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/net.cpp"><code>src/net.cpp</code></a></td>
+<td>Connection management implementation, including <code>MaybePickPreferredNetwork()</code> for bridge node diversity.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>src/addrman.h</code></a> / <a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.cpp"><code>.cpp</code></a></td>
+<td>Address manager constants (<code>ADDRMAN_HORIZON</code>, <code>ADDRMAN_RETRIES</code>, <code>ADDRMAN_MAX_FAILURES</code> in <code>.h</code>) and implementation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bitcoin/bitcoin/blob/master/src/kernel/chainparams.cpp"><code>src/kernel/chainparams.cpp</code></a></td>
+<td>Chain parameters including hardcoded DNS seed hostnames.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rpc-commands">RPC commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addnode</code></td>
+<td>Manually add or remove a peer connection. Creates a <code>MANUAL</code> connection type with its own separate 8-slot pool.</td>
+</tr>
+<tr>
+<td><code>sendrawtransaction</code></td>
+<td>Submit a raw transaction to the network. When <code>-privatebroadcast</code> is enabled, these transactions are relayed over dedicated Tor/I2P connections.</td>
+</tr>
+<tr>
+<td><code>getblockchaininfo</code></td>
+<td>Returns information about the blockchain, including current chain height and disk usage.</td>
+</tr>
+</tbody>
+</table>]]></content>
+        <author>
+            <name>deadmanoz</name>
+            <uri>https://deadmanoz.xyz</uri>
+        </author>
+        <category label="bitcoin"/>
+        <category label="p2p"/>
+        <category label="network-topology"/>
+        <category label="explainer"/>
+        <published>2026-04-02T00:00:00.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[NixOS & Peer Observer on a VPS]]></title>
+        <id>https://deadmanoz.xyz/posts/2026/nixos-peer-observer-vps</id>
+        <link href="https://deadmanoz.xyz/posts/2026/nixos-peer-observer-vps"/>
+        <updated>2026-01-13T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[My experience setting up NixOS and Peer Observer on a VPS for Bitcoin monitoring]]></summary>
+        <content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>I've recently started contributing to the <a href="https://github.com/peer-observer/peer-observer">peer-observer</a> ecosystem.
+peer-observer is a set of tooling developed by <a href="https://b10c.me/">B10C</a> for monitoring the Bitcoin network "<em>for P2P anomalies and attacks using well-behaving, passive Bitcoin Core honeynodes (honeypot nodes).</em>"
+This was, in part, motivated by the "call to action" put out by B10C in <a href="https://b10c.me/projects/024-peer-observer/">his post from July 2025</a>, and the idea of forming a "Bitcoin Network Operations Collective" (BNOC):</p>
+<blockquote>
+<p>"<em>A loose, decentralized group of people who share the interest of monitoring the Bitcoin Network. A collective to enable sharing of ideas, discussion, data, tools, insights, and more... A place where a Bitcoin network incident could be analyzed, discussed, and ideally resolved...</em>"</p>
+</blockquote>
+<p>For a month or two I had been tinkering with a bit of a Frankenstein's monster peer-observer setup running on my home server, cobbled together with a pre-existing Bitcoin Core node and <a href="https://github.com/ClubeBitcoinUnB/peer-observer-docker">some Docker containers for the peer-observer stack</a>, but had a number of issues.</p>
+<p>Firstly, this was fragile and it was difficult to develop and test against.
+Secondly, my home server is on a residential CGNAT connection to the internet.
+As such, the Bitcoin Core node was "unreachable" and could not accept inbound connections, severely limiting the usefulness of such a peer-observer setup.</p>
+<p>So it was obvious that I needed a more robust and production-like setup.
+I needed to set up an instance of peer-observer with a reachable Bitcoin Core node.
+And I wanted to do this on a NixOS foundation, given the pervasive use of Nix across all of B10C's projects (as well as across many other Bitcoin infrastructure projects).
+After asking B10C and some other members of the fledgling BNOC for recommendations, I settled on setting up a VPS on <a href="https://www.ovhcloud.com/en-au/">OVHcloud</a>.</p>
+<p>I was initially hoping to find a VPS provider that would support NixOS "out-of-the-box" but I found that this was likely to be a fool's errand <a href="https://www.youtube.com/live/bKTbis4elR8?si=5p4tLUu77Pw1PiYK&#x26;t=5780">as highlighted by Carl Dong in his presentation at bitcoin++ 2023 (nix-edition)</a>:</p>
+<blockquote>
+<p>"nobody supports NixOS... VPS providers don't have first class support for NixOS".</p>
+</blockquote>
+<p>Edouard Paris's post (<a href="https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/">Install NixOS on an OVH VPS with nixos-anywhere</a>), which is where I found the link to the above talk, helped me understand that I could install NixOS on a VPS that initially came with another distro installed (e.g. Debian).
+So I provisioned an Ubuntu 25.04 VPS with the following specs:</p>
+<ul>
+<li>6 vCores</li>
+<li>12GB RAM</li>
+<li>100GB SSD NVMe</li>
+</ul>
+<p>This cost around US$7.32/month (~AU$11.00/month at time of writing) for 6 months prepaid.
+Note that 100GB is sufficient with pruning enabled and only storing a few days of logs (default is 4); if you want a full archival node you'll need significantly more storage (I'm aiming to cover this in a future post).</p>
+<h2 id="installing-nixos">Installing NixOS</h2>
+<p>With my Ubuntu VPS provisioned and accessible, I began the work to set up NixOS.
+I more or less followed along with the earlier post (<a href="https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/">Install NixOS on an OVH VPS with nixos-anywhere</a>).</p>
+<p>To perform some of the operations required for <code>nixos-anywhere</code>, you'll need root SSH access to your VPS.
+And don't make the same mistake I did in trying to prematurely lock down the VPS before you've got NixOS installed!
+That is, I initially:</p>
+<ol>
+<li>Disabled password login</li>
+<li>Enabled SSH key-only authentication</li>
+<li>Changed the SSH port</li>
+</ol>
+<p>But doing these things caused problems during installation - fortunately I had multiple open SSH sessions to the VPS so could intervene when necessary.</p>
+<blockquote>
+<p><strong>Lock down the VPS <em><em>after</em></em> you've installed NixOS</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>Establish a few SSH sessions so you can intervene if things don't go smoothly</strong></p>
+</blockquote>
+<h2 id="customising-nixos-configuration">Customising NixOS Configuration</h2>
+<p>With the barebones NixOS installed, I then set about customising the setup:</p>
+<ul>
+<li>Set up SSH key authentication</li>
+<li>Changed the SSH port</li>
+<li>Configured firewall rules to allow only necessary ports</li>
+<li>Set up a non-root user with sudo privileges</li>
+<li>Set up fail2ban - I managed to ban my IP during this process, again, multiple SSH sessions helped!</li>
+<li>Added Home Manager for clean separation of user-level configuration</li>
+</ul>
+<p>Of course, all of this is easily done via <code>.nix</code> configuration files, which is one of the great strengths of NixOS.
+Note that in using the flake-based remote deployment approach of <code>nixos-anywhere</code>, the configuration files are stored locally and pushed to the VPS when commands like the following are run from your local machine:</p>
+<pre><code class="hljs language-bash">nix run github:nix-community/nixos-anywhere -- --flake .#&#x3C;flake-ref> &#x3C;root@vps-host>
+
+nixos-rebuild switch --flake .#&#x3C;flake-ref> --target-host <span class="hljs-string">"root@&#x3C;vps-host>"</span>
+</code></pre>
+<p>That is, you won't have <code>.nix</code> files where you might expect them on the VPS (e.g. <code>/etc/nixos/configuration.nix</code>), but rather on your local machine.
+This might be a problem if you need auto-upgrades or have issues with the process (like I did!), in which case you might want to consider copying your configuration files to the VPS itself (and keep them updated as necessary).</p>
+<blockquote>
+<p><strong>With <code>nixos-anywhere</code>, the target machine (VPS) has no source configuration, it only has the built system derivation</strong></p>
+</blockquote>
+<h2 id="spinning-up-peer-observer-et-al">Spinning up Peer Observer <em>et al.</em></h2>
+<p>B10C has done an excellent job of providing a <a href="https://github.com/peer-observer/infra-library">NixOS flake for running peer-observer instances</a>, so much of the heavy lifting was already done for me.
+Specifically, the <code>infra-library</code> provisions:</p>
+<ul>
+<li>A Bitcoin Core node with appropriate configuration for monitoring, e.g. built with USDT/tracepoints enabled, pruning enabled (~4GB of recent blocks retained),</li>
+<li>peer-observer extractors, including <a href="https://github.com/peer-observer/peer-observer/tree/master/extractors/ebpf">eBPF</a>, <a href="https://github.com/peer-observer/peer-observer/tree/master/extractors/rpc">RPC</a>, <a href="https://github.com/peer-observer/peer-observer/tree/master/extractors/p2p">P2P</a> and <a href="https://github.com/peer-observer/peer-observer/tree/master/extractors/log">log</a> extractors,</li>
+<li>peer-observer tools such as <a href="https://github.com/peer-observer/peer-observer/tree/master/tools/logger">logger</a>, <a href="https://github.com/peer-observer/peer-observer/blob/master/tools/metrics">metrics</a> and <a href="https://github.com/peer-observer/peer-observer/tree/master/tools/websocket">websocket</a>,</li>
+<li>NATS Server for extractors to publish their data to, and for tools to subscribe to the data from,</li>
+<li>WireGuard VPN for connectivity between peer-observer instances and a central data collector (which is where Prometheus/Grafana would live in a multi-instance setup),</li>
+<li>age and agenix for secrets management, covered further in <a href="#keys-and-secrets-management">keys and secrets management</a>.</li>
+</ul>
+<p>The main customisations I made involved:</p>
+<ul>
+<li>Host name and user account,</li>
+<li>All of the secrets and key setup,</li>
+<li>Light vim customisation, bash aliases, etc. via Home Manager,</li>
+<li>Bumping Bitcoin Core to the v30.2 tag commit.</li>
+</ul>
+<p>Once everything is installed and customised, we can start all of the services.
+The <code>infra-library</code> orchestrates quite a few systemd services:</p>
+<ul>
+<li><code>bitcoind-mainnet.service</code> - the Bitcoin Core node, compiled with USDT/tracepoints enabled</li>
+<li><code>peer-observer-ebpf-extractor.service</code> - attaches to Bitcoin Core's USDT tracepoints via eBPF</li>
+<li><code>peer-observer-rpc-extractor.service</code> - polls Bitcoin Core's RPC for chain/mempool state</li>
+<li><code>peer-observer-p2p-extractor.service</code> - monitors P2P message traffic</li>
+<li><code>peer-observer-tool-metrics.service</code> - exposes metrics for prometheus scraping</li>
+<li><code>peer-observer-tool-websocket.service</code> - provides real-time event streaming</li>
+<li><code>fork-observer.service</code> - monitors chain tip and detects forks</li>
+<li><code>addrman-observer-proxy.service</code> - exposes address manager data</li>
+<li><code>nats.service</code> - message broker connecting extractors to tools</li>
+<li><code>nginx.service</code> - reverse proxy for metrics endpoints</li>
+<li><code>tor.service</code> - Tor proxy for anonymous peer connections (I enabled this)</li>
+<li><code>prometheus-node-exporter.service</code> - system metrics (CPU, memory, disk)</li>
+<li><code>prometheus-wireguard-exporter.service</code> - VPN tunnel metrics</li>
+<li><code>prometheus-process-exporter.service</code> - per-process resource usage</li>
+</ul>
+<p>I use <a href="https://github.com/casey/just"><code>just</code></a> as a command runner, so I have a <code>justfile</code> with commands to start, stop, restart and check the status and logs of all of the above services.</p>
+<p>Be prepared for IBD to take a day or two, even with pruning enabled!</p>
+<p>For more instructive details on how to set up peer-observer with NixOS in the manner I did, I'll be contributing to the <a href="https://github.com/peer-observer/infra-library/issues/1">peer-observer/infra-library documentation</a>.</p>
+<h2 id="keys-and-secrets-management">Keys and Secrets Management</h2>
+<p><a href="https://github.com/FiloSottile/age">Age</a> was completely unfamiliar to me, so I wrote the following explanation of what it is and how it's used in the context of peer-observer deployment.</p>
+<p>age is a simple, modern, and secure encryption tool designed to be a simpler alternative to GPG.
+It is used in the peer-observer deployment with agenix to manage secrets such as WireGuard keys.</p>
+<p>More specifically, we generate a WireGuard private key on our administration/deployment coordinator machine, and then encrypt it with the SSH public keys of all deploy targets.
+This generates a single <code>.age</code> file containing the secret encrypted for all recipients.
+When deployed via agenix, each target uses its own SSH private key to decrypt and access the WireGuard private key.</p>
+<p>This is basically the same as PGP, that is, hybrid encryption and multiple "recipients", just with different algorithms (X25519/ChaCha20 vs PGP's RSA/AES) and without all of the extra complexity of PGP (key servers, web of trust, etc.).</p>
+<h2 id="multi-instance-deployment-architecture">Multi-Instance Deployment Architecture</h2>
+<p>Although my setup currently consists of a single peer-observer node (with no central web-server yet), it's instructive to consider what a complete multi-node deployment might look like.
+Figure 1 shows a setup with two peer-observer nodes and a central web-server.
+Each node runs its own Bitcoin Core instance and peer-observer extractors/tools, with all nodes connected via WireGuard VPN.</p>
+<p>Note that the extractors use protobuf to serialise and publish data to the NATS Server they are co-located with.
+The tools then subscribe to this data from the NATS Server.
+This means that in a multi-node setup, each peer-observer node is self-contained with its own NATS Server instance, and the tools on each node only see data from their local extractors.
+Prometheus/Grafana on the central web-server scrape metrics from each peer-observer node, and if one peer-observer node goes down or is unreachable, the rest of the setup continues to operate normally.</p>
+<p><img src="https://deadmanoz.xyz/assets/blog/2026/multi-node-deployment-illustration.png" alt="Figure 1: Peer Observer multi-node architecture"></p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://bnoc.xyz/">Bitcoin Network Operations Collective (BNOC)</a></li>
+<li><a href="https://github.com/peer-observer">Peer Observer GitHub Organisation</a></li>
+<li><a href="https://github.com/ClubeBitcoinUnB/peer-observer-docker">Peer Observer Docker</a></li>
+<li><a href="https://b10c.me/projects/024-peer-observer/">B10C - peer-observer: A tool and infrastructure for monitoring the Bitcoin P2P network for attacks and anomalies</a></li>
+<li><a href="https://nixos.wiki/wiki/NixOS_friendly_hosters">NixOS Wiki - NixOS friendly hosters</a></li>
+<li><a href="https://edouard.paris/blog/install-nixos-on-an-ovh-vps-with-nixos-anywhere">Edouard Paris - Install NixOS on an OVH VPS with nixos-anywhere</a></li>
+<li><a href="https://www.youtube.com/watch?v=bKTbis4elR8&#x26;t=5519s">Carl Dong at bitcoin++ 2023 nix-edition - The Dark Arts of NixOS Deployments</a></li>
+<li><a href="https://nix-community.github.io/nixos-anywhere/quickstart.html">Quickstart Guide: nixos-anywhere</a></li>
+</ul>]]></content>
+        <author>
+            <name>deadmanoz</name>
+            <uri>https://deadmanoz.xyz</uri>
+        </author>
+        <category label="bitcoin"/>
+        <category label="peer-observer"/>
+        <category label="nixos"/>
+        <category label="guide"/>
+        <published>2026-01-13T00:00:00.000Z</published>
+    </entry>
     <entry>
         <title type="html"><![CDATA[P2MS Data Carry Part 2: UTXO set analysis]]></title>
         <id>https://deadmanoz.xyz/posts/p2ms-data-carry-2</id>
@@ -2376,6 +3181,11 @@ Whether the Bitcoin community chooses to deprecate P2MS, maintain the status quo
             <name>deadmanoz</name>
             <uri>https://deadmanoz.xyz</uri>
         </author>
+        <category label="bitcoin"/>
+        <category label="p2ms"/>
+        <category label="data-carry"/>
+        <category label="utxo-set"/>
+        <category label="research"/>
         <published>2025-12-04T00:00:00.000Z</published>
     </entry>
     <entry>
@@ -3439,6 +4249,11 @@ But understanding the mechanics is only part of the story - the critical questio
             <name>deadmanoz</name>
             <uri>https://deadmanoz.xyz</uri>
         </author>
+        <category label="bitcoin"/>
+        <category label="p2ms"/>
+        <category label="data-carry"/>
+        <category label="explainer"/>
+        <category label="research"/>
         <published>2025-10-16T00:00:00.000Z</published>
     </entry>
 </feed>

@@ -33,6 +33,7 @@ const SITE_DESCRIPTION = "deadmanoz's website";
 const AUTHOR_NAME = "deadmanoz";
 const AUTHOR_EMAIL = ""; // Optional
 const AUTHOR_LINK = SITE_URL;
+const FEED_ITEM_LIMIT = 10;
 
 function normalizeTags(tags: unknown): string[] {
   if (!Array.isArray(tags)) {
@@ -174,7 +175,7 @@ async function markdownToHtml(markdown: string): Promise<string> {
 async function generateFeeds(): Promise<void> {
   console.log("Generating RSS and Atom feeds...");
 
-  const allPosts = getAllPosts([
+  const publishedPosts = getAllPosts([
     "title",
     "date",
     "slug",
@@ -183,14 +184,10 @@ async function generateFeeds(): Promise<void> {
     "status",
     "tags",
   ]);
-  const posts = allPosts.filter((p) => {
-    const valid = p.date && !isNaN(new Date(p.date).getTime());
-    if (!valid) {
-      console.warn(`  skipping ${p.slug}: no valid date in frontmatter`);
-    }
-    return valid;
-  });
-  console.log(`Found ${posts.length} published posts`);
+  const posts = publishedPosts.slice(0, FEED_ITEM_LIMIT);
+  console.log(
+    `Found ${publishedPosts.length} published posts; writing latest ${posts.length} to feeds`
+  );
 
   const feed = new Feed({
     title: SITE_TITLE,
