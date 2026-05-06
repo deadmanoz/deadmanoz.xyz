@@ -2,9 +2,39 @@ import fs from "fs";
 import { join, relative } from "path";
 import matter from "gray-matter";
 import { getGitMetadata, shouldFetchGitMetadata, GitMetadata } from "./git-metadata";
-import { type PostType } from "@/interfaces/post";
+import { type PostStatus, type PostType } from "@/interfaces/post";
 
 const postsDirectory = join(process.cwd(), "_posts");
+
+type PostFieldValue = string | boolean | string[] | object | undefined;
+
+export type PostItems = Record<string, PostFieldValue> & {
+  slug?: string;
+  title?: string;
+  date?: string;
+  content?: string;
+  coverImage?: string;
+  excerpt?: string;
+  type?: PostType;
+  status?: PostStatus;
+  tags?: string[];
+  hidden?: boolean;
+  coming_soon?: boolean;
+  ogImage?: {
+    url: string;
+  };
+  gitMetadata?: GitMetadata;
+};
+
+type PublishedPostItems = PostItems & {
+  title: string;
+  date: string;
+};
+
+type RoutablePostItems = PostItems & {
+  slug: string;
+  title: string;
+};
 
 /**
  * Recursively find all markdown files in a directory
@@ -37,13 +67,7 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
-  type Items = {
-    [key: string]: string;
-  } & {
-    gitMetadata?: GitMetadata;
-  };
-
-  const items: Items = {};
+  const items: PostItems = {};
 
   fields.forEach((field) => {
     if (field === "slug") {
@@ -59,6 +83,51 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
   });
 
   return items;
+}
+
+const VALID_POST_STATUSES: PostStatus[] = ["published", "draft", "placeholder", "canary"];
+
+export function getPostStatus(post: Record<string, unknown>): PostStatus {
+  const status = post.status;
+  if (typeof status === "string") {
+    return VALID_POST_STATUSES.includes(status as PostStatus) ? (status as PostStatus) : "draft";
+  }
+
+  if (post.slug === "hello-world") {
+    return "canary";
+  }
+
+  if (post.coming_soon === true) {
+    return "placeholder";
+  }
+
+  if (post.hidden === true) {
+    return "draft";
+  }
+
+  return "published";
+}
+
+export function isPublishedPost(post: PostItems): post is PublishedPostItems {
+  return Boolean(
+    typeof post.title === "string" &&
+      typeof post.date === "string" &&
+      !Number.isNaN(Date.parse(post.date)) &&
+      getPostStatus(post) === "published"
+  );
+}
+
+export function isRoutablePost(post: PostItems): post is RoutablePostItems {
+  const status = getPostStatus(post);
+  return Boolean(
+    typeof post.slug === "string" &&
+      typeof post.title === "string" &&
+      (status === "published" || status === "canary")
+  );
+}
+
+function withListFilterFields(fields: string[]) {
+  return Array.from(new Set([...fields, "title", "date", "status", "hidden", "coming_soon"]));
 }
 
 export async function getPostBySlugWithGitData(slug: string, fields: string[] = []) {
@@ -79,33 +148,25 @@ export async function getPostBySlugWithGitData(slug: string, fields: string[] = 
 
 export function getAllPosts(fields: string[] = []) {
   const slugs = getPostSlugs();
+  const postFields = withListFilterFields(fields);
   const posts = slugs
-    .map((slug) => getPostBySlug(slug, fields))
-    .filter((post) => !post.hidden)
+    .map((slug) => getPostBySlug(slug, postFields))
+    .filter(isPublishedPost)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
   return posts;
 }
 
 export async function getAllPostsWithGitData(fields: string[] = []) {
   const slugs = getPostSlugs();
+  const postFields = withListFilterFields(fields);
   const posts = await Promise.all(
     slugs.map(async (slug) => {
-      const post = await getPostBySlugWithGitData(slug, fields);
+      const post = await getPostBySlugWithGitData(slug, postFields);
       return post;
     })
   );
 
   return posts
-    .filter((post) => !post.hidden)
+    .filter(isPublishedPost)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-}
-
-export function getPostsByType(type: PostType, fields: string[] = []) {
-  const allPosts = getAllPosts([...fields, 'type']);
-  return allPosts.filter((post) => post.type === type);
-}
-
-export async function getPostsByTypeWithGitData(type: PostType, fields: string[] = []) {
-  const allPosts = await getAllPostsWithGitData([...fields, 'type']);
-  return allPosts.filter((post) => post.type === type);
 }

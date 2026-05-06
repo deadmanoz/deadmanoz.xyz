@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug, getPostBySlugWithGitData } from "@/lib/api";
+import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, isRoutablePost } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
-import { Header } from "@/app/_components/header";
 import { TableOfContents } from "@/app/_components/table-of-contents";
+
+export const dynamicParams = false;
 
 export default async function Post({
   params,
@@ -23,10 +25,16 @@ export default async function Post({
     "content",
     "ogImage",
     "coverImage",
-    "type",
+    "status",
+    "hidden",
+    "coming_soon",
   ]);
 
-  if (!post.slug) {
+  if (!post.slug || !isRoutablePost(post)) {
+    return notFound();
+  }
+
+  if (!post.date) {
     return notFound();
   }
 
@@ -36,14 +44,18 @@ export default async function Post({
     <div className="min-h-screen flex flex-col relative">
       <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
         <main className="flex-1 w-full flex flex-col items-center">
-          {/* Header nav aligned with content */}
-          <div className="max-w-7xl w-full flex gap-12 items-start">
+          {/* Back link aligned with content */}
+          <div className="max-w-7xl w-full flex gap-12 items-start pt-10 mb-8">
             {/* TOC space - Desktop only, to match content layout */}
             <div className="hidden xl:block w-64 shrink-0" />
 
-            {/* Header centered with content */}
             <div className="flex-1 min-w-0">
-              <Header showTitle={false} activePage={post.type as "research" | "blog"} />
+              <Link
+                href="/"
+                className="inline-flex items-center text-synthwave-neon-cyan hover:text-synthwave-neon-orange text-lg transition-all duration-300"
+              >
+                <span className="mr-2">←</span> Back to all posts
+              </Link>
             </div>
           </div>
 
@@ -152,9 +164,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const slugPath = slug.join("/");
-  const post = getPostBySlug(slugPath, ["title", "excerpt", "ogImage", "slug"]);
+  const post = getPostBySlug(slugPath, ["title", "excerpt", "ogImage", "slug", "status", "hidden", "coming_soon"]);
 
-  if (!post.slug) {
+  if (!post.slug || !isRoutablePost(post)) {
     return notFound();
   }
 
@@ -170,9 +182,8 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts(["slug"]);
-
-  return posts.map((post) => ({
-    slug: post.slug.split("/"),
-  }));
+  return getPostSlugs()
+    .map((slug) => getPostBySlug(slug, ["slug", "title", "status", "hidden", "coming_soon"]))
+    .filter(isRoutablePost)
+    .map((post) => ({ slug: post.slug.split("/") }));
 }

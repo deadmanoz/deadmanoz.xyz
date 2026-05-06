@@ -34,6 +34,14 @@ const AUTHOR_NAME = "deadmanoz";
 const AUTHOR_EMAIL = ""; // Optional
 const AUTHOR_LINK = SITE_URL;
 
+function normalizeTags(tags: unknown): string[] {
+  if (!Array.isArray(tags)) {
+    return [];
+  }
+
+  return tags.filter((tag): tag is string => typeof tag === "string" && tag.trim().length > 0);
+}
+
 /**
  * Convert markdown to HTML (simplified version for RSS).
  * Note: Interactive elements like Plotly plots won't render in feed readers.
@@ -172,8 +180,8 @@ async function generateFeeds(): Promise<void> {
     "slug",
     "excerpt",
     "content",
-    "hidden",
-    "coming_soon",
+    "status",
+    "tags",
   ]);
   const posts = allPosts.filter((p) => {
     const valid = p.date && !isNaN(new Date(p.date).getTime());
@@ -209,9 +217,10 @@ async function generateFeeds(): Promise<void> {
   for (const post of posts) {
     const postUrl = `${SITE_URL}/posts/${post.slug}`;
     const postDate = new Date(post.date);
+    const tags = normalizeTags(post.tags);
 
     // Convert markdown content to HTML
-    const htmlContent = await markdownToHtml(post.content);
+    const htmlContent = await markdownToHtml(post.content || "");
 
     feed.addItem({
       title: post.title,
@@ -228,6 +237,7 @@ async function generateFeeds(): Promise<void> {
       ],
       date: postDate,
       published: postDate,
+      category: tags.map((name) => ({ name })),
     });
   }
 

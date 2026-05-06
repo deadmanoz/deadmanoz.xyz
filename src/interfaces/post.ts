@@ -1,12 +1,15 @@
 import { type Author } from "./author";
 
-export type PostType = 'research' | 'blog';
+export type PostType = "research" | "blog";
+export type PostStatus = "published" | "draft" | "placeholder" | "canary";
 
 export type Post = {
   slug: string;
   title: string;
   date: string;
-  type: PostType;
+  type?: PostType;
+  status?: PostStatus;
+  tags?: string[];
   coverImage: string;
   author: Author;
   excerpt: string;
@@ -15,4 +18,5 @@ export type Post = {
   };
   content: string;
   hidden?: boolean;
+  coming_soon?: boolean;
 };
