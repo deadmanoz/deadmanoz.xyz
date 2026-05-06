@@ -39,6 +39,9 @@ const colorMap: Record<string, string> = {
   'pink': '#FF006E',
   'cyan': '#00D9FF',
   'purple': '#8B5CF6',
+  'grey': '#888899',
+  'gray': '#888899',
+  'gold': '#F0C040',
   'orange': '#FFA500',
   'lightblue': '#42D4F4',
   'green': '#10B981',
@@ -283,15 +286,17 @@ async function postProcessAnnotations(htmlString: string): Promise<string> {
 }
 
 // Process collapsible sections with syntax :::collapse{Title} content :::
+// Optional custom anchor id via :::collapse{Title}{#anchor-id} content :::
 function processCollapsibleSections(htmlString: string): string {
   let collapsibleCounter = 0;
 
   // Pattern matches how remark processes the markdown: <p>:::collapse{Title} followed by content until :::
-  const pattern = /<p>:::collapse\{([^}]+)\}([^]*?):::<\/p>/g;
+  // The optional {#anchor-id} immediately after {Title} sets a stable anchor; otherwise the auto-generated collapse-N id is used.
+  const pattern = /<p>:::collapse\{([^}]+)\}(?:\{#([^}]+)\})?([^]*?):::<\/p>/g;
 
-  return htmlString.replace(pattern, (_match, title, content) => {
+  return htmlString.replace(pattern, (_match, title, customId, content) => {
     collapsibleCounter++;
-    const id = `collapse-${collapsibleCounter}`;
+    const id = customId || `collapse-${collapsibleCounter}`;
 
     // Process the content to convert paragraph breaks properly
     const processedContent = content.trim()
