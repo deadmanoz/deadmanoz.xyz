@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
 @import "highlight.js/styles/atom-one-dark.css";
 
 /* Synthwave Theme Variables - Easy to swap */
