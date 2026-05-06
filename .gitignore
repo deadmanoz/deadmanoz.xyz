@@ -42,3 +42,10 @@ next-env.d.ts
 
 .deadmanoz/
 .claude/
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
+
+# Playwright MCP scratchpad (snapshots, console logs)
+.playwright-mcp/
