@@ -3,12 +3,16 @@ title: 'Bitcoin node roles and network topology'
 excerpt: 'An examination of the roles, configuration, and connection management of Bitcoin nodes, and the resultant topology of the network'
 coverImage: '/assets/blog/2026/bitcoin-node-roles-p2p-cover.png'
 date: '2026-04-02T00:00:00.000Z'
-type: 'blog'
+tags:
+  - bitcoin
+  - p2p
+  - network-topology
+  - explainer
 author:
   name: deadmanoz
 ogImage:
   url: '/assets/blog/2026/bitcoin-node-roles-p2p-cover.png'
-hidden: false
+status: published
 ---
 
 ## Introduction

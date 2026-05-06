@@ -3,12 +3,16 @@ title: 'NixOS & Peer Observer on a VPS'
 excerpt: 'My experience setting up NixOS and Peer Observer on a VPS for Bitcoin monitoring'
 coverImage: '/assets/blog/2026/nixos-peer-observer-vps-cover.png'
 date: '2026-01-13T00:00:00.000Z'
-type: 'blog'
+tags:
+  - bitcoin
+  - peer-observer
+  - nixos
+  - guide
 author:
   name: deadmanoz
 ogImage:
   url: '/assets/blog/2026/nixos-peer-observer-vps-cover.png'
-hidden: false
+status: published
 ---
 
 ## Introduction

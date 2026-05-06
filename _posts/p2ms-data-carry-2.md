@@ -3,12 +3,17 @@ title: 'P2MS Data Carry Part 2: UTXO set analysis'
 excerpt: 'Exploring P2MS for data carriage in a snapshot of the UTXO set'
 coverImage: '/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-2.png'
 date: '2025-12-04T00:00:00.000Z'
-type: 'research'
+tags:
+  - bitcoin
+  - p2ms
+  - data-carry
+  - utxo-set
+  - research
 author:
   name: deadmanoz
 ogImage:
-  url: '//assets/blog/p2ms-data-carry/p2ms-data-carry-cover-2.png'
-hidden: false
+  url: '/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-2.png'
+status: published
 ---
 
 ## tl;dr
