@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getPostBySlugWithGitData } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
@@ -102,9 +103,11 @@ export default async function Post({
 
               {/* Cover image centered with content */}
               <div className="flex-1 min-w-0">
-                <img
+                <Image
                   src={post.coverImage}
                   alt={`Cover image for ${post.title}`}
+                  width={1200}
+                  height={630}
                   className="w-full h-auto rounded-lg shadow-lg shadow-synthwave-neon-cyan/20"
                 />
               </div>
