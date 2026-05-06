@@ -14,13 +14,13 @@ import { Feed } from "feed";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import matter from "gray-matter";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
+import { getAllPosts } from "../src/lib/api";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,15 +33,6 @@ const SITE_DESCRIPTION = "deadmanoz's website";
 const AUTHOR_NAME = "deadmanoz";
 const AUTHOR_EMAIL = ""; // Optional
 const AUTHOR_LINK = SITE_URL;
-
-interface Post {
-  slug: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  hidden?: boolean;
-}
 
 /**
  * Convert markdown to HTML (simplified version for RSS).
@@ -170,49 +161,27 @@ async function markdownToHtml(markdown: string): Promise<string> {
 }
 
 /**
- * Load all posts from the _posts directory.
- * Uses frontmatter date field for publication dates.
- */
-function getAllPosts(): Post[] {
-  const postsDir = path.join(projectRoot, "_posts");
-  const slugs = fs.readdirSync(postsDir).filter((f) => f.endsWith(".md"));
-
-  const posts: Post[] = [];
-
-  for (const filename of slugs) {
-    const slug = filename.replace(/\.md$/, "");
-    const fullPath = path.join(postsDir, filename);
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data, content } = matter(fileContents);
-
-    // Skip hidden posts
-    if (data.hidden) {
-      continue;
-    }
-
-    posts.push({
-      slug,
-      title: data.title || slug,
-      date: data.date || new Date().toISOString(),
-      excerpt: data.excerpt || "",
-      content,
-      hidden: data.hidden,
-    });
-  }
-
-  // Sort by date (newest first)
-  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  return posts;
-}
-
-/**
  * Generate RSS and Atom feeds.
  */
 async function generateFeeds(): Promise<void> {
   console.log("Generating RSS and Atom feeds...");
 
-  const posts = getAllPosts();
+  const allPosts = getAllPosts([
+    "title",
+    "date",
+    "slug",
+    "excerpt",
+    "content",
+    "hidden",
+    "coming_soon",
+  ]);
+  const posts = allPosts.filter((p) => {
+    const valid = p.date && !isNaN(new Date(p.date).getTime());
+    if (!valid) {
+      console.warn(`  skipping ${p.slug}: no valid date in frontmatter`);
+    }
+    return valid;
+  });
   console.log(`Found ${posts.length} published posts`);
 
   const feed = new Feed({
