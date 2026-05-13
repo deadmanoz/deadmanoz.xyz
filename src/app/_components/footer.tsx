@@ -2,6 +2,8 @@ import { FaXTwitter, FaGithub, FaBolt, FaRss } from "react-icons/fa6";
 import { PrimalIcon } from "./primal-icon";
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+  const yearLabel = currentYear > 2025 ? `2025-${currentYear}` : "2025";
   return (
     <footer className="border-t border-synthwave-neon-orange/30 py-10 mt-auto relative">
       <div className="w-full px-5 text-center flex flex-col items-center gap-0">
@@ -43,7 +45,7 @@ export function Footer() {
         </div>
         <a
           href="lightning:fewvest88@phoenixwallet.me"
-          className="inline-flex items-center gap-2 text-sm text-synthwave-neon-green hover:text-synthwave-neon-orange transition-all duration-300"
+          className="inline-flex items-center gap-2 text-sm text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300"
         >
           <FaBolt size={16} />
           <span>Donate via Lightning</span>
@@ -53,18 +55,18 @@ export function Footer() {
             href="https://pq-bitcoin.org"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-synthwave-neon-green hover:text-synthwave-neon-orange transition-all duration-300"
+            className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300"
           >
             pq-bitcoin.org
           </a>
           <a
             href="/disclosures"
-            className="text-synthwave-neon-green hover:text-synthwave-neon-orange transition-all duration-300"
+            className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300"
           >
             Disclosures
           </a>
         </div>
-        <p className="text-lg text-synthwave-peach">© 2025 deadmanoz</p>
+        <p className="text-lg text-synthwave-peach">© {yearLabel} deadmanoz</p>
       </div>
     </footer>
   );

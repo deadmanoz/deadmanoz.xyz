@@ -32,8 +32,9 @@
   --theme-danger-red: #E6194B;  /* Used for danger alerts */
 
   /* Interactive Elements */
-  --theme-link: #00A0D0;
-  --theme-link-hover: #FF6C11;
+  --theme-link: #00A0D0;          /* Neon Cyan — internal links (cross-refs, in-site nav, heading anchors). Matches site nav and post-card links. */
+  --theme-link-external: #20E516; /* Neon Green — external links (anything matching href^="http"). Different hue from internal for at-a-glance distinction. */
+  --theme-link-hover: #FF6C11;    /* Neon Orange — high-contrast hover against either cyan or green */
   --theme-button-primary: #FF6C11;
   --theme-button-secondary: #006DD0;
 
@@ -109,6 +110,11 @@ a:hover {
   color: var(--theme-link-hover);
   text-shadow: 0 0 10px currentColor;
 }
+
+/* The internal/external split (--theme-link vs --theme-link-external) is
+   intentionally scoped to .markdown post content via markdown-styles.module.css.
+   Site chrome (nav, footer, header) uses the brand --theme-link by default and
+   lets per-element Tailwind utility classes override that as needed. */
 
 /* Buttons */
 .btn-primary {

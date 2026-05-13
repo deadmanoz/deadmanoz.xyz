@@ -69,6 +69,25 @@
   white-space: nowrap;
 }
 
+/* Code inside a link inherits the link colour (and its hover state) so
+   code-links like `<a><code>AuxPow.Check</code></a>` are visually distinct
+   from plain code spans. */
+.markdown a code {
+  color: inherit;
+}
+
+.markdown h1 code,
+.markdown h2 code,
+.markdown h3 code,
+.markdown h4 code,
+.markdown h5 code,
+.markdown h6 code {
+  font-size: 0.85em;
+  line-height: 1.15;
+  padding: 0.08em 0.28em;
+  vertical-align: 0.04em;
+}
+
 .markdown pre code {
   @apply bg-transparent p-0;
   color: var(--theme-text-primary);
@@ -133,6 +152,12 @@
   text-decoration: none;
   transition: all 0.3s ease;
   position: relative;
+}
+
+/* External links (anything matching href starting with http) use a softer
+   green so they can be told apart from internal links at a glance. */
+.markdown a[href^="http"] {
+  color: var(--theme-link-external);
 }
 
 .markdown a:hover {
