@@ -76,6 +76,10 @@ function processCaptionLinks(caption: string): string {
     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
   );
 
+  // Convert inline code backticks to <code> tags. Image alt text passes through
+  // remark as a literal string, so backticks aren't converted upstream.
+  processed = processed.replace(/`([^`]+)`/g, '<code>$1</code>');
+
   return processed;
 }
 
@@ -92,11 +96,17 @@ function processColoredText(htmlString: string): string {
 
 // Store for preserving links in image alt text
 const imageAltLinkStore = new Map<string, { text: string; url: string }>();
+// Store for preserving inline code in image alt text. Remark stringifies
+// alt-text inline content to plain text, which strips backticks, so we shield
+// them with placeholders and restore them before caption post-processing.
+const imageAltCodeStore = new Map<string, string>();
 
 // Preserve markdown links in image alt text before remark processes them
 function preserveImageAltLinks(markdownString: string): string {
   imageAltLinkStore.clear();
-  let counter = 0;
+  imageAltCodeStore.clear();
+  let linkCounter = 0;
+  let codeCounter = 0;
   let result = '';
   let i = 0;
 
@@ -134,9 +144,17 @@ function preserveImageAltLinks(markdownString: string): string {
 
           // Replace markdown links in alt text with placeholders
           alt = alt.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_linkMatch: string, linkText: string, linkUrl: string) => {
-            counter++;
-            const placeholder = `IMGALT_LINK_${counter}`;
+            linkCounter++;
+            const placeholder = `IMGALT_LINK_${linkCounter}`;
             imageAltLinkStore.set(placeholder, { text: linkText, url: linkUrl });
+            return placeholder;
+          });
+
+          // Replace inline code in alt text with placeholders
+          alt = alt.replace(/`([^`]+)`/g, (_codeMatch: string, codeText: string) => {
+            codeCounter++;
+            const placeholder = `IMGALT_CODE_${codeCounter}`;
+            imageAltCodeStore.set(placeholder, codeText);
             return placeholder;
           });
 
@@ -158,9 +176,17 @@ function preserveImageAltLinks(markdownString: string): string {
 function restoreImageAltLinks(htmlString: string): string {
   let processed = htmlString;
 
+  // Use a negative-lookahead on digits (not a word boundary) on the right
+  // side: prevents IMGALT_LINK_1 / IMGALT_CODE_1 from matching the prefix of
+  // their *_10/_11/_12 siblings, while still allowing the placeholder to be
+  // followed by letters or punctuation (e.g. `IMGALT_CODE_47s` for a plural
+  // form like `` `scriptPubKey`s ``).
   for (const [placeholder, { text, url }] of imageAltLinkStore.entries()) {
-    // Replace placeholder with markdown link syntax (will be processed by processCaptionLinks later)
-    processed = processed.replace(new RegExp(placeholder, 'g'), `[${text}](${url})`);
+    processed = processed.replace(new RegExp(`${placeholder}(?!\\d)`, "g"), `[${text}](${url})`);
+  }
+
+  for (const [placeholder, codeText] of imageAltCodeStore.entries()) {
+    processed = processed.replace(new RegExp(`${placeholder}(?!\\d)`, "g"), `\`${codeText}\``);
   }
 
   return processed;
@@ -186,16 +212,19 @@ function preserveMathDelimiters(markdownString: string): string {
 
 // Restore math placeholders back to proper HTML after remark processing
 function restoreMathDelimiters(htmlString: string): string {
-  // Helper to decode HTML entities in math expressions
+  // Helper to decode HTML entities in math expressions. rehype-stringify emits
+  // hex numeric entities (e.g. &#x3C;) for special chars; named entities show
+  // up via other paths. Decode numeric first, then named, so MathJax sees raw
+  // characters.
   const decodeHtmlEntities = (text: string): string => {
     return text
+      .replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+      .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&percnt;/g, '%')
-      .replace(/&#37;/g, '%');
+      .replace(/&percnt;/g, '%');
   };
 
   // Restore display math placeholders - use non-greedy match until END marker
@@ -272,8 +301,24 @@ async function postProcessAnnotations(htmlString: string): Promise<string> {
       // We need to preserve HTML tags like <span> for styled content
       const escapedTooltip = tooltipHtml.replace(/"/g, '&quot;');
 
-      // Process inline code backticks in annotation display text
-      const displayText = data.text.replace(/`([^`]+)`/g, '<code>$1</code>');
+      // Render a small inline subset of markdown in the annotation display
+      // text: backticks, bold, italics. Splits on backticks first so formatting
+      // markers inside code (e.g. `*foo*`) stay literal. Bold is processed
+      // before italics so **x** isn't mis-matched as two italics.
+      const renderInline = (s: string): string =>
+        s
+          .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+          .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+          .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+          .replace(/_([^_]+)_/g, "<em>$1</em>");
+      const displayText = data.text
+        .split(/(`[^`]+`)/g)
+        .map((part) =>
+          part.startsWith("`") && part.endsWith("`") && part.length >= 2
+            ? `<code>${part.slice(1, -1)}</code>`
+            : renderInline(part),
+        )
+        .join("");
 
       // Replace placeholder with annotation span
       const annotationSpan = `<span class="annotation" data-tooltip="${escapedTooltip}" id="${id}" tabindex="0" role="button" aria-describedby="tooltip-${id}">${displayText}</span>`;
@@ -571,30 +616,21 @@ function processTables(markdown: string, htmlString: string): string {
     }
   }
 
-  // Handle tables with captions (table followed by caption text and ID) - do this first
+  // Wrap a table followed by an optional caption and {#tab:id} in a numbered
+  // container. The caption capture may be empty; if so, omit the trailing
+  // colon and render just the table label.
   htmlString = htmlString.replace(
     /(<table>[\s\S]*?<\/table>)\s*<p>([^{]*?)\s*\{#tab:([^}]+)\}<\/p>/g,
     (_match, tableHtml, caption, id) => {
       const tableNum = tableRefs.get(id) || ++tableCounter;
       const cleanCaption = caption.trim();
+      const label = cleanCaption
+        ? `<strong>Table ${tableNum}:</strong> ${cleanCaption}`
+        : `<strong>Table ${tableNum}</strong>`;
       return `<div class="table-container" id="tab-${id}">
         ${tableHtml}
         <div class="table-caption">
-          <strong>Table ${tableNum}:</strong> ${cleanCaption}
-        </div>
-      </div>`;
-    }
-  );
-
-  // Process tables with just ID syntax - wrap in container like figures
-  htmlString = htmlString.replace(
-    /(<table>[\s\S]*?<\/table>)\s*<p>\{#tab:([^}]+)\}<\/p>/g,
-    (_match, tableHtml, id) => {
-      const tableNum = tableRefs.get(id) || ++tableCounter;
-      return `<div class="table-container" id="tab-${id}">
-        ${tableHtml}
-        <div class="table-caption">
-          <strong>Table ${tableNum}</strong>
+          ${label}
         </div>
       </div>`;
     }
