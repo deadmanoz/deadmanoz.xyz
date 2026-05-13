@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/lib/api";
+import { formatPostDate } from "@/lib/format-date";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "@/app/_components/footer";
@@ -108,7 +109,7 @@ export default function Home() {
                         ))}
                         <span className="text-sm text-synthwave-peach/60">
                           <time dateTime={post.date}>
-                            {new Date(post.date).toLocaleDateString()}
+                            {formatPostDate(post.date)}
                           </time>
                         </span>
                       </div>

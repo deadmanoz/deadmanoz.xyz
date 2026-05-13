@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, getPostStatus, isRoutablePost } from "@/lib/api";
+import { formatPostDate } from "@/lib/format-date";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { CitationBlock } from "@/app/_components/citation-block";
@@ -105,14 +106,14 @@ export default async function Post({
                   <div className="space-y-1">
                     <div className="text-lg text-synthwave-peach">
                       <time dateTime={post.gitMetadata.publishedAt}>
-                        Published: {new Date(post.gitMetadata.publishedAt).toLocaleDateString()}
+                        Published: {formatPostDate(post.gitMetadata.publishedAt)}
                       </time>
                     </div>
                     {post.gitMetadata.updateCount > 0 && (
                       <div className="text-sm text-synthwave-neon-cyan space-y-1">
                         <div>
                           <time dateTime={post.gitMetadata.updatedAt}>
-                            Last updated: {new Date(post.gitMetadata.updatedAt).toLocaleDateString()}
+                            Last updated: {formatPostDate(post.gitMetadata.updatedAt)}
                           </time>
                         </div>
                         <div className="text-xs text-synthwave-peach/70">
@@ -126,7 +127,7 @@ export default async function Post({
                 ) : (
                   <div className="text-lg text-synthwave-peach">
                     <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString()}
+                      {formatPostDate(post.date)}
                     </time>
                   </div>
                 )}
