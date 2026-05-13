@@ -119,7 +119,18 @@ We do not assert text content because MathJax replaces the original delimiter te
 - `div.interactive-plot-container[data-plot-id="plot-annotated"]` is attached (existence check only — the bare container can have zero height until Plotly hydrates it client-side).
 - Its `data-plot-data` attribute contains the substring `"annotationsSrc":"/assets/blog/hello-world/sample-annotations.json"`.
 
-### 12. Internal vs external link styling
+### 12. Image modal renders the figcaption (not raw alt text)
+
+**Objective:** verify clicking a figure image opens the image modal, that the modal renders the figure's `<figcaption>` HTML (with `Figure N:` prefix, anchor tags for links, and `<code>` for inline code) rather than the raw `<img alt>` attribute, and that Escape closes it.
+
+**Assertions:**
+- After clicking `figure#fig-sample img`, an element with class `modal-figcaption` is visible.
+- The caption contains the text `Figure 1:`.
+- The caption contains `a[href="https://example.com/home"]` (a real anchor element, not literal markdown).
+- The caption contains a `code` element with text `aux_target`.
+- Pressing Escape removes the caption from the DOM.
+
+### 13. Internal vs external link styling
 
 **Objective:** verify the palette distinguishes internal links (in-site nav, cross-refs, heading anchors) from external links via the `--theme-link` vs `--theme-link-external` CSS variables, and that code wrapped in a link inherits the parent's hue. The split is by hue (cyan vs green).
 

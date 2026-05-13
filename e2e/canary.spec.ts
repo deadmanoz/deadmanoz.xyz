@@ -58,6 +58,22 @@ test.describe("canary — image figure with rich caption", () => {
   });
 });
 
+test.describe("canary — image modal", () => {
+  test("clicking a figure image opens a modal with the rendered figcaption (not raw alt text)", async ({ page }) => {
+    await page.locator('figure#fig-sample img').click();
+    const caption = page.locator(".modal-figcaption");
+    await expect(caption).toBeVisible();
+    await expect(caption).toContainText("Figure 1:");
+    // Modal renders the figcaption HTML, so a markdown link is a real <a>, not '[...]' text:
+    await expect(
+      caption.locator('a[href="https://example.com/home"]'),
+    ).toHaveCount(1);
+    await expect(caption.locator("code", { hasText: "aux_target" })).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(caption).toHaveCount(0);
+  });
+});
+
 test.describe("canary — internal vs external link styling", () => {
   test("internal anchor links resolve to neon cyan --theme-link", async ({ page }) => {
     const internal = page.locator('a.figure-ref[href="#fig-sample"]').first();

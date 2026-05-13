@@ -17,7 +17,7 @@ const plotRoots = new WeakMap<HTMLElement, Root>();
 
 function PostBodyContent({ content }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState({ src: "", alt: "" });
+  const [modalImage, setModalImage] = useState({ src: "", alt: "", captionHtml: "" });
   const [isWideContent, setIsWideContent] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -102,9 +102,15 @@ function PostBodyContent({ content }: Props) {
       const target = event.target as HTMLImageElement;
       if (target.tagName === "IMG" && target.src) {
         event.preventDefault();
+        // If the image is inside a <figure>, use the sibling <figcaption>'s
+        // rendered HTML (already carries 'Figure N:', anchor tags, <code>);
+        // otherwise fall back to the alt attribute as plain text.
+        const figure = target.closest("figure");
+        const figcaption = figure?.querySelector("figcaption");
         setModalImage({
           src: target.src,
-          alt: target.alt || "Image"
+          alt: target.alt || "Image",
+          captionHtml: figcaption?.innerHTML ?? "",
         });
         setModalOpen(true);
       }
@@ -684,6 +690,7 @@ function PostBodyContent({ content }: Props) {
           isOpen={modalOpen}
           imageSrc={modalImage.src}
           imageAlt={modalImage.alt}
+          captionHtml={modalImage.captionHtml}
           onClose={() => setModalOpen(false)}
         />
       </div>
