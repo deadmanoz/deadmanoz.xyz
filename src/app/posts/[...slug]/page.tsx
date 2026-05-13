@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, getPostStatus, isRoutablePost } from "@/lib/api";
 import markdownToHtml from "@/lib/markdownToHtml";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { CitationBlock } from "@/app/_components/citation-block";
 import { ComingSoonContent } from "@/app/_components/coming-soon-content";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
@@ -44,6 +46,26 @@ export default async function Post({
   }
 
   const content = await markdownToHtml(post.content || "");
+
+  const citationProps = (() => {
+    if (getPostStatus(post) !== "published") return null;
+    const publishedSource = post.gitMetadata?.publishedAt ?? post.date;
+    const year = new Date(publishedSource).getUTCFullYear().toString();
+    const authorName =
+      (post.author as { name?: string } | undefined)?.name ?? "deadmanoz";
+    const lastUpdated =
+      post.gitMetadata && post.gitMetadata.updateCount > 0
+        ? new Date(post.gitMetadata.updatedAt).toISOString().slice(0, 10)
+        : undefined;
+    return {
+      author: authorName,
+      title: post.title as string,
+      year,
+      url: `${SITE_URL}/posts/${post.slug}`,
+      siteName: SITE_NAME,
+      lastUpdated,
+    };
+  })();
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -141,6 +163,7 @@ export default async function Post({
             {/* Main Content */}
             <div className="flex-1 prose-synthwave min-w-0">
               <EnhancedPostBody content={content} />
+              {citationProps && <CitationBlock {...citationProps} />}
             </div>
           </div>
         </main>
