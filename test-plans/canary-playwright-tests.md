@@ -130,6 +130,12 @@ We do not assert text content because MathJax replaces the original delimiter te
 - The caption contains a `code` element with text `aux_target`.
 - Pressing Escape removes the caption from the DOM.
 
+**A11y assertions (separate test cases):**
+- The modal exposes `[role="dialog"][aria-modal="true"]` with a non-empty `aria-label`.
+- Focus moves to the close button (`button[aria-label="Close image preview"]`) when the modal opens.
+- Tab is trapped inside the modal: cycling through every focusable descendant returns focus to the close button.
+- On Escape, focus returns to the originating `<img>` element that opened the modal.
+
 ### 13. Internal vs external link styling
 
 **Objective:** verify the palette distinguishes internal links (in-site nav, cross-refs, heading anchors) from external links via the `--theme-link` vs `--theme-link-external` CSS variables, and that code wrapped in a link inherits the parent's hue. The split is by hue (cyan vs green).

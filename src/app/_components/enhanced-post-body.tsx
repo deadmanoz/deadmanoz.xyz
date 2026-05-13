@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import markdownStyles from "./markdown-styles.module.css";
 import { ImageModal } from "./image-modal";
 import { InteractivePlot } from "./interactive-plot";
@@ -20,6 +20,29 @@ function PostBodyContent({ content }: Props) {
   const [modalImage, setModalImage] = useState({ src: "", alt: "", captionHtml: "" });
   const [isWideContent, setIsWideContent] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  // Selector for the trigger image, captured at click time. We re-query the
+  // live DOM on close (rather than holding a node reference) because
+  // dangerouslySetInnerHTML + post-mount DOM mutations can detach the original
+  // node we captured, leaving a stale reference whose .focus() does nothing.
+  const modalTriggerSelectorRef = useRef<string | null>(null);
+
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+    requestAnimationFrame(() => {
+      const selector = modalTriggerSelectorRef.current;
+      if (!selector) return;
+      const trigger = document.querySelector<HTMLElement>(selector);
+      if (!trigger) return;
+      // The image may have been swapped out (React reconciliation around the
+      // markdown div re-mounts <img> children for reasons that aren't worth
+      // tracing here) — so the replacement won't have tabindex. Set it here
+      // unconditionally before focusing.
+      if (trigger.tabIndex < 0) {
+        trigger.setAttribute("tabindex", "0");
+      }
+      trigger.focus();
+    });
+  }, []);
 
   // Set mounted state after hydration to prevent hydration mismatch
   useEffect(() => {
@@ -98,21 +121,39 @@ function PostBodyContent({ content }: Props) {
   }, [content, modalOpen]);
 
   useEffect(() => {
+    const openModalFor = (target: HTMLImageElement) => {
+      // If the image is inside a <figure>, use the sibling <figcaption>'s
+      // rendered HTML (already carries 'Figure N:', anchor tags, <code>);
+      // otherwise fall back to the alt attribute as plain text.
+      const figure = target.closest("figure");
+      const figcaption = figure?.querySelector("figcaption");
+      // Remember how to find the trigger again on close. Prefer the stable
+      // figure id; fall back to src-based lookup for plain images.
+      modalTriggerSelectorRef.current = figure?.id
+        ? `figure#${CSS.escape(figure.id)} img`
+        : `img[src="${target.getAttribute("src")}"]`;
+      setModalImage({
+        src: target.src,
+        alt: target.alt || "Image",
+        captionHtml: figcaption?.innerHTML ?? "",
+      });
+      setModalOpen(true);
+    };
+
     const handleImageClick = (event: Event) => {
       const target = event.target as HTMLImageElement;
       if (target.tagName === "IMG" && target.src) {
         event.preventDefault();
-        // If the image is inside a <figure>, use the sibling <figcaption>'s
-        // rendered HTML (already carries 'Figure N:', anchor tags, <code>);
-        // otherwise fall back to the alt attribute as plain text.
-        const figure = target.closest("figure");
-        const figcaption = figure?.querySelector("figcaption");
-        setModalImage({
-          src: target.src,
-          alt: target.alt || "Image",
-          captionHtml: figcaption?.innerHTML ?? "",
-        });
-        setModalOpen(true);
+        openModalFor(target);
+      }
+    };
+
+    const handleImageKey = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const target = event.target as HTMLImageElement;
+      if (target.tagName === "IMG" && target.src) {
+        event.preventDefault();
+        openModalFor(target);
       }
     };
 
@@ -122,8 +163,20 @@ function PostBodyContent({ content }: Props) {
         const images = markdownContainer.querySelectorAll("img");
         images.forEach(img => {
           img.style.cursor = "pointer";
+          // Make the image keyboard-accessible: in tab order, announced as a
+          // button by AT, and activatable by Enter/Space.
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("role", "button");
+          if (!img.hasAttribute("aria-label")) {
+            img.setAttribute(
+              "aria-label",
+              `Open preview: ${img.alt || "image"}`,
+            );
+          }
           img.removeEventListener("click", handleImageClick);
           img.addEventListener("click", handleImageClick);
+          img.removeEventListener("keydown", handleImageKey);
+          img.addEventListener("keydown", handleImageKey);
         });
       }
     }, 100);
@@ -691,7 +744,7 @@ function PostBodyContent({ content }: Props) {
           imageSrc={modalImage.src}
           imageAlt={modalImage.alt}
           captionHtml={modalImage.captionHtml}
-          onClose={() => setModalOpen(false)}
+          onClose={closeModal}
         />
       </div>
     </>

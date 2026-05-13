@@ -72,6 +72,50 @@ test.describe("canary — image modal", () => {
     await page.keyboard.press("Escape");
     await expect(caption).toHaveCount(0);
   });
+
+  test("modal exposes a dialog role with an accessible name for screen readers", async ({ page }) => {
+    await page.locator('figure#fig-sample img').click();
+    const dialog = page.locator('[role="dialog"][aria-modal="true"]');
+    await expect(dialog).toBeVisible();
+    const name = await dialog.getAttribute("aria-label");
+    expect(name && name.length).toBeGreaterThan(0);
+    await page.keyboard.press("Escape");
+  });
+
+  test("focus moves to the close button when the modal opens", async ({ page }) => {
+    await page.locator('figure#fig-sample img').click();
+    const close = page.locator('button[aria-label="Close image preview"]');
+    await expect(close).toBeFocused();
+    await page.keyboard.press("Escape");
+  });
+
+  test("Tab is trapped inside the modal (cycles back to close button after the last link)", async ({ page }) => {
+    await page.locator('figure#fig-sample img').click();
+    const close = page.locator('button[aria-label="Close image preview"]');
+    await expect(close).toBeFocused();
+
+    // Tab through every focusable descendant; the last Tab should wrap back
+    // to the close button rather than escape into the page below.
+    const focusableCount = await page
+      .locator('[role="dialog"] a, [role="dialog"] button')
+      .count();
+    for (let i = 0; i < focusableCount; i++) {
+      await page.keyboard.press("Tab");
+    }
+    await expect(close).toBeFocused();
+    await page.keyboard.press("Escape");
+  });
+
+  test("focus returns to the originating image when the modal closes", async ({ page }) => {
+    const img = page.locator('figure#fig-sample img');
+    // Wait for the deferred useEffect to set tabindex on the image.
+    await expect(img).toHaveAttribute("tabindex", "0");
+    await img.click();
+    // Confirm the modal actually opened before pressing Escape.
+    await expect(page.locator(".modal-figcaption")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(img).toBeFocused();
+  });
 });
 
 test.describe("canary — internal vs external link styling", () => {
