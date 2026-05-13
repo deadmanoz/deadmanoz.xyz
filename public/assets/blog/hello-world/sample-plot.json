@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "x": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01"],
+      "y": [10, 22, 18, 35, 28, 42],
+      "type": "scatter",
+      "mode": "lines+markers",
+      "name": "External series",
+      "line": { "color": "#FF006E", "width": 2 },
+      "marker": { "color": "#FF8664", "size": 6 }
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "Plot loaded from external JSON",
+      "font": { "color": "#FF8664", "size": 18 }
+    },
+    "xaxis": { "title": "Date" },
+    "yaxis": { "title": "Value" }
+  }
+}

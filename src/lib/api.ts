@@ -4,7 +4,7 @@ import matter from "gray-matter";
 import { getGitMetadata, shouldFetchGitMetadata, GitMetadata } from "./git-metadata";
 import { type PostStatus, type PostType } from "@/interfaces/post";
 
-const postsDirectory = join(process.cwd(), "_posts");
+const defaultPostsDirectory = join(process.cwd(), "_posts");
 
 type PostFieldValue = string | boolean | string[] | object | undefined;
 
@@ -55,15 +55,19 @@ function findMarkdownFiles(dir: string): string[] {
   return files;
 }
 
-export function getPostSlugs() {
-  const files = findMarkdownFiles(postsDirectory);
-  // Return paths relative to postsDirectory (e.g., "2026/2026-01.md" or "hello-world.md")
-  return files.map((file) => relative(postsDirectory, file));
+export function getPostSlugs(postsDir: string = defaultPostsDirectory) {
+  const files = findMarkdownFiles(postsDir);
+  // Return paths relative to postsDir (e.g., "2026/2026-01.md" or "hello-world.md")
+  return files.map((file) => relative(postsDir, file));
 }
 
-export function getPostBySlug(slug: string, fields: string[] = []) {
+export function getPostBySlug(
+  slug: string,
+  fields: string[] = [],
+  postsDir: string = defaultPostsDirectory,
+) {
   const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = join(postsDirectory, `${realSlug}.md`);
+  const fullPath = join(postsDir, `${realSlug}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
@@ -130,8 +134,12 @@ function withListFilterFields(fields: string[]) {
   return Array.from(new Set([...fields, "title", "date", "status", "hidden", "coming_soon"]));
 }
 
-export async function getPostBySlugWithGitData(slug: string, fields: string[] = []) {
-  const post = getPostBySlug(slug, fields);
+export async function getPostBySlugWithGitData(
+  slug: string,
+  fields: string[] = [],
+  postsDir: string = defaultPostsDirectory,
+) {
+  const post = getPostBySlug(slug, fields, postsDir);
 
   // Fetch git metadata if we're in production or explicitly enabled
   if (shouldFetchGitMetadata()) {
@@ -146,22 +154,28 @@ export async function getPostBySlugWithGitData(slug: string, fields: string[] = 
   return post;
 }
 
-export function getAllPosts(fields: string[] = []) {
-  const slugs = getPostSlugs();
+export function getAllPosts(
+  fields: string[] = [],
+  postsDir: string = defaultPostsDirectory,
+) {
+  const slugs = getPostSlugs(postsDir);
   const postFields = withListFilterFields(fields);
   const posts = slugs
-    .map((slug) => getPostBySlug(slug, postFields))
+    .map((slug) => getPostBySlug(slug, postFields, postsDir))
     .filter(isPublishedPost)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
   return posts;
 }
 
-export async function getAllPostsWithGitData(fields: string[] = []) {
-  const slugs = getPostSlugs();
+export async function getAllPostsWithGitData(
+  fields: string[] = [],
+  postsDir: string = defaultPostsDirectory,
+) {
+  const slugs = getPostSlugs(postsDir);
   const postFields = withListFilterFields(fields);
   const posts = await Promise.all(
     slugs.map(async (slug) => {
-      const post = await getPostBySlugWithGitData(slug, postFields);
+      const post = await getPostBySlugWithGitData(slug, postFields, postsDir);
       return post;
     })
   );

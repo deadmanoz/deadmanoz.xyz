@@ -49,8 +49,24 @@ typecheck:
 lint:
     npm run lint
 
-# Run both lint and typecheck
-check: lint typecheck
+# Run unit tests
+test:
+    npx vitest run
+
+# Run unit tests in watch mode
+test-watch:
+    npx vitest
+
+# Run Playwright E2E tests against the canary post (boots dev server)
+e2e:
+    npx playwright test
+
+# Run Playwright in UI mode (interactive)
+e2e-ui:
+    npx playwright test --ui
+
+# Run lint, typecheck, and unit tests
+check: lint typecheck test
 
 # Open in browser
 open:

@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "name": "Canary timeline annotations",
+    "description": "Sample annotations used by the hello-world canary post",
+    "version": "1.0"
+  },
+  "annotations": [
+    {
+      "id": "etf-launch",
+      "date": "2024-01-11",
+      "label": "Spot BTC ETFs launch",
+      "color": "#00A0D0",
+      "description": "US-listed spot Bitcoin ETFs begin trading."
+    },
+    {
+      "id": "halving-2024",
+      "date": "2024-04-20",
+      "label": "Fourth halving",
+      "color": "#FF00FF",
+      "description": "Block subsidy drops from 6.25 to 3.125 BTC."
+    }
+  ]
+}
