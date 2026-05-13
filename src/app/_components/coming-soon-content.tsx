@@ -33,7 +33,7 @@ export function ComingSoonContent({ title }: ComingSoonContentProps) {
             className="post-pending-copy max-w-xl text-base md:text-lg leading-relaxed"
             style={{ color: 'var(--theme-text-primary)', opacity: 0.85 }}
           >
-            Currently in the author&apos;s mempool: content yet to propagate to the page.
+            Currently in the author&apos;s thoughtpool, content yet to propagate to the page.
           </p>
 
           <div className="post-pending-actions flex justify-center">
