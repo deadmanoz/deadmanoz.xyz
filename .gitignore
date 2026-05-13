@@ -49,3 +49,6 @@ next-env.d.ts
 
 # Playwright MCP scratchpad (snapshots, console logs)
 .playwright-mcp/
+
+# Draft sibling posts (kept locally, not published)
+*.draft.md

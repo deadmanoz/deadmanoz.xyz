@@ -47,7 +47,7 @@ function findMarkdownFiles(dir: string): string[] {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...findMarkdownFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+    } else if (entry.isFile() && entry.name.endsWith(".md") && !entry.name.endsWith(".draft.md")) {
       files.push(fullPath);
     }
   }
