@@ -1,7 +1,7 @@
 ---
 title: 'NixOS & Peer Observer on a VPS'
 excerpt: 'My experience setting up NixOS and Peer Observer on a VPS for Bitcoin monitoring'
-coverImage: '/assets/blog/2026/nixos-peer-observer-vps-cover.png'
+coverImage: '/assets/blog/2026/nixos-peer-observer-vps/nixos-peer-observer-vps-cover.png'
 date: '2026-01-13T00:00:00.000Z'
 tags:
   - bitcoin
@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/nixos-peer-observer-vps-cover.png'
+  url: '/assets/blog/2026/nixos-peer-observer-vps/nixos-peer-observer-vps-cover.png'
 status: published
 ---
 
@@ -153,7 +153,7 @@ The tools then subscribe to this data from the NATS Server.
 This means that in a multi-node setup, each peer-observer node is self-contained with its own NATS Server instance, and the tools on each node only see data from their local extractors.
 Prometheus/Grafana on the central web-server scrape metrics from each peer-observer node, and if one peer-observer node goes down or is unreachable, the rest of the setup continues to operate normally.
 
-![Figure: Peer Observer multi-node architecture](/assets/blog/2026/multi-node-deployment-illustration.png) {#fig:multi-node-deployment-illustration}
+![Figure: Peer Observer multi-node architecture](/assets/blog/2026/nixos-peer-observer-vps/multi-node-deployment-illustration.png) {#fig:multi-node-deployment-illustration}
 
 ## Resources
 - [Bitcoin Network Operations Collective (BNOC)](https://bnoc.xyz/)

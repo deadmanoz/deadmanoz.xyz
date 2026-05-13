@@ -1,7 +1,7 @@
 ---
 title: 'Bitcoin node roles and network topology'
 excerpt: 'An examination of the roles, configuration, and connection management of Bitcoin nodes, and the resultant topology of the network'
-coverImage: '/assets/blog/2026/bitcoin-node-roles-p2p-cover.png'
+coverImage: '/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-node-roles-p2p-cover.png'
 date: '2026-04-02T00:00:00.000Z'
 tags:
   - bitcoin
@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/bitcoin-node-roles-p2p-cover.png'
+  url: '/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-node-roles-p2p-cover.png'
 status: published
 ---
 
@@ -62,7 +62,7 @@ In total, under a default configuration, a node has a maximum of [125 automatic 
 The way these connection slots are budgeted, and the distinct roles assigned to different connection types, are deliberate design decisions that balance node resource constraints against the network's need for robust connectivity between nodes.
 Note that, as explored in [other connection types](#other-connection-types), some special connection types have their own separate slot budgets and are not counted against this limit.
 
-![Bitcoin Core connection slot budget showing the 125-slot breakdown: 8 full-relay outbound, 2 block-relay-only outbound, 1 feeler, and 114 inbound slots, with the trust asymmetry between outbound and inbound connections.](/assets/blog/2026/bitcoin-connection-budget.png){#fig:connection-budget}
+![Bitcoin Core connection slot budget showing the 125-slot breakdown: 8 full-relay outbound, 2 block-relay-only outbound, 1 feeler, and 114 inbound slots, with the trust asymmetry between outbound and inbound connections.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-connection-budget.png){#fig:connection-budget}
 
 ### Outbound connections
 
@@ -281,7 +281,7 @@ This shifts the trust model from "trust proof-of-work" to "trust the server" (un
 The various node types and operating modes described above produce a network that is far from homogeneous. 
 The Bitcoin P2P network has a structure shaped by the asymmetry between reachable and unreachable nodes, the different capabilities advertised by each node, and the deliberate connection management strategies implemented in Bitcoin Core.
 
-![Bitcoin P2P network topology showing the densely interconnected reachable core and the unreachable periphery, with connection directionality and slot budget detail.](/assets/blog/2026/bitcoin-p2p-network-topology.png){#fig:network-topology}
+![Bitcoin P2P network topology showing the densely interconnected reachable core and the unreachable periphery, with connection directionality and slot budget detail.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-p2p-network-topology.png){#fig:network-topology}
 
 ### The reachable core
 
@@ -300,7 +300,7 @@ The heterogeneous mix of relay policies and connection types, e.g., full-relay c
 Blocks propagate across all connection types, giving them a rich, redundant set of paths through the network. 
 Transactions, by contrast, only flow over full-relay connections, meaning the transaction relay graph is a subset of the block relay graph ({@fig:propagation-overlays}).
 
-![Block and transaction propagation overlays showing that full-relay connections carry both block relay (solid blue) and transaction relay (dashed yellow), while block-relay-only connections and connections to blocks-only nodes carry only block relay, making the transaction relay graph a strict subset of the block relay graph.](/assets/blog/2026/bitcoin-block-tx-propagation-overlays.png){#fig:propagation-overlays}
+![Block and transaction propagation overlays showing that full-relay connections carry both block relay (solid blue) and transaction relay (dashed yellow), while block-relay-only connections and connections to blocks-only nodes carry only block relay, making the transaction relay graph a strict subset of the block relay graph.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-block-tx-propagation-overlays.png){#fig:propagation-overlays}
 
 This layering is intentional.
 The block-relay-only connections provide additional paths for blocks to propagate without revealing the node's full connection topology through address and transaction relay side-channels.
@@ -312,7 +312,7 @@ The Bitcoin network spans multiple overlay networks: IPv4, IPv6, Tor, I2P, and C
 Most nodes are only reachable on one or two of these, meaning peers within one overlay can become isolated from peers on another if there aren't enough nodes straddling both.
 Nodes that maintain connections across multiple network types act as **bridge nodes**, forwarding blocks and transactions between overlay networks that would otherwise have limited or no connectivity to each other.
 
-![Simplified illustration of Bitcoin P2P overlay networks (IPv4, IPv6, Tor, I2P, CJDNS) with bridge nodes in zone overlaps connecting across network boundaries. Actual network topology is far denser and more interconnected.](/assets/blog/2026/bitcoin-bridge-nodes-overlay-networks.png){#fig:bridge-nodes}
+![Simplified illustration of Bitcoin P2P overlay networks (IPv4, IPv6, Tor, I2P, CJDNS) with bridge nodes in zone overlaps connecting across network boundaries. Actual network topology is far denser and more interconnected.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-bridge-nodes-overlay-networks.png){#fig:bridge-nodes}
 
 Bridge nodes are critical for preventing **network partitioning** along transport boundaries.
 If, for example, the Tor-only segment of the network lost all connections to IPv4 peers, those Tor nodes would effectively be on a separate network, unable to see new blocks or transactions from the IPv4 majority, and vulnerable to eclipse attacks within their isolated segment.
