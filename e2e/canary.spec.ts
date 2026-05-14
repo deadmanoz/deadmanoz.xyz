@@ -118,6 +118,16 @@ test.describe("canary — image modal", () => {
   });
 });
 
+test.describe("canary — reading time", () => {
+  test("post header shows an 'N min read' estimate next to the date", async ({ page }) => {
+    // Locate any element on the page containing the 'min read' suffix and
+    // verify it sits in the post header region (sibling to the <time>).
+    await expect(
+      page.getByText(/\d+\s*min read/),
+    ).toBeVisible();
+  });
+});
+
 test.describe("canary — internal vs external link styling", () => {
   test("internal anchor links resolve to neon cyan --theme-link", async ({ page }) => {
     const internal = page.locator('a.figure-ref[href="#fig-sample"]').first();

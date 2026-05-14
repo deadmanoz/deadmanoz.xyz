@@ -1,5 +1,6 @@
 import { getAllPosts } from "@/lib/api";
 import { formatPostDate } from "@/lib/format-date";
+import { formatReadingTime } from "@/lib/reading-time";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "@/app/_components/footer";
@@ -79,6 +80,7 @@ export default function Home() {
     "coverImage",
     "excerpt",
     "tags",
+    "content",
   ]);
 
   return (
@@ -112,6 +114,11 @@ export default function Home() {
                             {formatPostDate(post.date)}
                           </time>
                         </span>
+                        {typeof post.content === "string" && (
+                          <span className="text-sm text-synthwave-peach/60">
+                            · {formatReadingTime(post.content)}
+                          </span>
+                        )}
                       </div>
                       {post.coverImage && (
                         <div className="mb-4">

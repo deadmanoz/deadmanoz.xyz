@@ -136,7 +136,14 @@ We do not assert text content because MathJax replaces the original delimiter te
 - Tab is trapped inside the modal: cycling through every focusable descendant returns focus to the close button.
 - On Escape, focus returns to the originating `<img>` element that opened the modal.
 
-### 13. Internal vs external link styling
+### 13. Reading-time estimate
+
+**Objective:** verify the post header surfaces an `N min read` reading-time estimate derived from the post body via `src/lib/reading-time.ts`.
+
+**Assertions:**
+- Some element on the page is visible whose text matches `/\d+\s*min read/`.
+
+### 14. Internal vs external link styling
 
 **Objective:** verify the palette distinguishes internal links (in-site nav, cross-refs, heading anchors) from external links via the `--theme-link` vs `--theme-link-external` CSS variables, and that code wrapped in a link inherits the parent's hue. The split is by hue (cyan vs green).
 

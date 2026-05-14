@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPostBySlugWithGitData, getPostSlugs, getPostStatus, isRoutablePost } from "@/lib/api";
 import { formatPostDate } from "@/lib/format-date";
+import { formatReadingTime } from "@/lib/reading-time";
 import markdownToHtml from "@/lib/markdownToHtml";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { CitationBlock } from "@/app/_components/citation-block";
@@ -108,6 +109,11 @@ export default async function Post({
                       <time dateTime={post.gitMetadata.publishedAt}>
                         Published: {formatPostDate(post.gitMetadata.publishedAt)}
                       </time>
+                      {typeof post.content === "string" && (
+                        <span className="text-synthwave-peach/70">
+                          {" · "}{formatReadingTime(post.content)}
+                        </span>
+                      )}
                     </div>
                     {post.gitMetadata.updateCount > 0 && (
                       <div className="text-sm text-synthwave-neon-cyan space-y-1">
@@ -129,6 +135,11 @@ export default async function Post({
                     <time dateTime={post.date}>
                       {formatPostDate(post.date)}
                     </time>
+                    {typeof post.content === "string" && (
+                      <span className="text-synthwave-peach/70">
+                        {" · "}{formatReadingTime(post.content)}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
