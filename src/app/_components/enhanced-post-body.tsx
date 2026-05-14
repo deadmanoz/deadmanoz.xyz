@@ -463,11 +463,16 @@ function PostBodyContent({ content }: Props) {
           text-decoration: none;
         }
 
-        .annotation:hover {
+        .annotation:hover,
+        .annotation:focus {
           color: var(--theme-neon-pink);
           background: linear-gradient(90deg, rgba(245, 18, 119, 0.2) 0%, rgba(0, 217, 255, 0.2) 100%);
           border-bottom-color: var(--theme-neon-pink);
-          transform: translateY(-1px);
+          /* No transform here: transform creates a stacking context and a
+             containing block for position:fixed descendants, which both
+             traps the tooltip's z-index below sibling links/code and
+             breaks the mobile fixed-centred tooltip positioning. */
+          z-index: 10;
         }
 
         .annotation-tooltip {
