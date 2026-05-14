@@ -20,6 +20,10 @@ dev-fast:
 generate-rss:
     npx tsx scripts/generate-rss.ts
 
+# Optimise PNGs in-place with optipng (lossless, strips metadata). Pass a file or directory path.
+optimize-pngs path:
+    find {{path}} -name '*.png' -print0 | xargs -0 -n1 optipng -o7 -strip all -quiet
+
 # Build for production (with git metadata by default)
 build:
     npm run build
