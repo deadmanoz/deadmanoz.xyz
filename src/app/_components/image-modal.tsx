@@ -100,10 +100,23 @@ export function ImageModal({ isOpen, imageSrc, imageAlt, captionHtml, onClose }:
         <button
           ref={closeButtonRef}
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-synthwave-dark-purple border-2 border-synthwave-neon-orange hover:border-synthwave-neon-cyan transition-all duration-300 flex items-center justify-center text-synthwave-neon-orange hover:text-synthwave-neon-cyan text-xl font-bold hover:shadow-neon-cyan focus:outline-none focus:ring-2 focus:ring-synthwave-neon-cyan focus:ring-offset-2 focus:ring-offset-synthwave-dark-purple"
+          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-synthwave-dark-purple border-2 border-synthwave-neon-orange hover:border-synthwave-neon-cyan transition-all duration-300 flex items-center justify-center text-synthwave-neon-orange hover:text-synthwave-neon-cyan hover:shadow-neon-cyan focus:outline-none focus:ring-2 focus:ring-synthwave-neon-cyan focus:ring-offset-2 focus:ring-offset-synthwave-dark-purple"
           aria-label="Close image preview"
         >
-          ×
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-3.5 h-3.5"
+            aria-hidden="true"
+          >
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
         </button>
 
         <Image
