@@ -53,6 +53,14 @@ const PROJECTS = [
     railClassName: "project-card-rail-green",
   },
   {
+    kind: "Live tool",
+    name: "Bitcoin Forks",
+    description: "BIP-110 signalling and both chains after the split.",
+    href: "https://bitcoin-forks.org/",
+    kindClassName: "text-synthwave-neon-cyan",
+    railClassName: "project-card-rail-cyan",
+  },
+  {
     kind: "Research",
     name: "Post-Quantum Bitcoin",
     description: "Bitcoin's quantum risks and pathways to resistance.",

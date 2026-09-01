@@ -194,7 +194,7 @@ a:hover {
 
 .project-bar-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0.55rem;
 }
 
@@ -217,6 +217,10 @@ a:hover {
 
 .project-card-rail-purple {
   border-left-color: rgba(192, 132, 252, 0.7);
+}
+
+.project-card-rail-cyan {
+  border-left-color: rgba(0, 160, 208, 0.7);
 }
 
 .project-card:hover {
@@ -263,7 +267,7 @@ a:hover {
   color: rgba(255, 134, 100, 0.58);
 }
 
-@media (max-width: 520px) {
+@media (max-width: 720px) {
   .project-bar-cards {
     grid-template-columns: 1fr;
   }
