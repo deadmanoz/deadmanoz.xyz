@@ -1,24 +1,26 @@
 # deadmanoz.xyz Website Commands
 
+node-run := "bash scripts/with-project-node.sh"
+
 # Default command - show available commands
 default:
     @just --list
 
 # Install dependencies
 install:
-    npm install
+    {{node-run}} npm install
 
 # Run development server (with git metadata by default)
 dev:
-    npm run dev
+    {{node-run}} npm run dev
 
 # Run development server without git metadata (faster builds)
 dev-fast:
-    DISABLE_GIT_METADATA=true npm run dev
+    DISABLE_GIT_METADATA=true {{node-run}} npm run dev
 
 # Generate RSS and Atom feeds
 generate-rss:
-    npx tsx scripts/generate-rss.ts
+    {{node-run}} npx tsx scripts/generate-rss.ts
 
 # Optimise PNGs in-place with optipng (lossless, strips metadata). Pass a file or directory path.
 optimize-pngs path:
@@ -26,15 +28,15 @@ optimize-pngs path:
 
 # Build for production (with git metadata by default)
 build:
-    npm run build
+    {{node-run}} npm run build
 
 # Build without git metadata (faster builds)
 build-fast:
-    DISABLE_GIT_METADATA=true npm run build
+    DISABLE_GIT_METADATA=true {{node-run}} npm run build
 
 # Start production server
 start:
-    npm start
+    {{node-run}} npm start
 
 # Clean build artifacts
 clean:
@@ -47,27 +49,27 @@ fresh: clean install
 
 # Run type checking
 typecheck:
-    npx tsc --noEmit
+    {{node-run}} npx tsc --noEmit
 
 # Run linter
 lint:
-    npm run lint
+    {{node-run}} npm run lint
 
 # Run unit tests
 test:
-    npx vitest run
+    {{node-run}} npx vitest run
 
 # Run unit tests in watch mode
 test-watch:
-    npx vitest
+    {{node-run}} npx vitest
 
 # Run Playwright E2E tests against the canary post (boots dev server)
 e2e:
-    npx playwright test
+    {{node-run}} npx playwright test
 
 # Run Playwright in UI mode (interactive)
 e2e-ui:
-    npx playwright test --ui
+    {{node-run}} npx playwright test --ui
 
 # Run lint, typecheck, and unit tests
 check: lint typecheck test
@@ -97,13 +99,13 @@ restart: kill-port dev
 
 # Deploy to CloudFlare Workers (usually done via CI/CD)
 deploy:
-    npm run build
-    npx wrangler pages deploy out
+    {{node-run}} npm run build
+    {{node-run}} npx wrangler pages deploy out
 
 # Preview deployment locally
 preview:
-    npm run build
-    npx wrangler pages dev out
+    {{node-run}} npm run build
+    {{node-run}} npx wrangler pages dev out
 
 # Generate plot data from data-carry-research
 generate-plots:
@@ -111,4 +113,4 @@ generate-plots:
 
 # Generate cumulative P2MS plot from CSV data (mainnet.observer)
 generate-cumulative-plot:
-    node scripts/generate-p2ms-plot.js
+    {{node-run}} node scripts/generate-p2ms-plot.js

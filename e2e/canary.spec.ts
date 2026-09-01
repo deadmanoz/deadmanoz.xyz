@@ -185,16 +185,11 @@ test.describe("canary — annotations", () => {
   });
 
   test("a tooltip contains an embedded markdown link", async ({ page }) => {
-    const annotations = page.locator("span.annotation");
-    const tooltips = await annotations.evaluateAll((els) =>
-      els.map((el) => el.getAttribute("data-tooltip") ?? ""),
-    );
-    // Match flexibly — the raw attribute encodes quotes as &quot;; the
-    // browser decodes them on parse but we only need to confirm an anchor
-    // pointing at the expected URL is embedded.
-    expect(
-      tooltips.some((t) => /<a [^>]*github\.com\/bitcoin\/bips/.test(t)),
-    ).toBe(true);
+    await expect(
+      page.locator(
+        '.annotation-tooltip a[href="https://github.com/bitcoin/bips/blob/master/bip-0022.mediawiki"]',
+      ),
+    ).toHaveCount(1);
   });
 
   test("a tooltip link remains interactive for pointer and keyboard users", async ({ page }) => {
@@ -225,13 +220,9 @@ test.describe("canary — annotations", () => {
   });
 
   test("a tooltip contains embedded math markup", async ({ page }) => {
-    const annotations = page.locator("span.annotation");
-    const tooltips = await annotations.evaluateAll((els) =>
-      els.map((el) => el.getAttribute("data-tooltip") ?? ""),
-    );
-    expect(
-      tooltips.some((t) => /<span [^>]*math-inline/.test(t)),
-    ).toBe(true);
+    await expect(
+      page.locator("span.annotation .annotation-tooltip span.math-inline"),
+    ).toHaveCount(2);
   });
 
   test("an annotation display text renders inline code", async ({ page }) => {

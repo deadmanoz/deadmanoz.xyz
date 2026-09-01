@@ -49,6 +49,7 @@ next-env.d.ts
 
 # Playwright MCP scratchpad (snapshots, console logs)
 .playwright-mcp/
+.playwright-cli/
 
 # Playwright test runner artifacts
 test-results/
