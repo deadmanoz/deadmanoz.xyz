@@ -21,6 +21,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
 import { getAllPosts } from "../src/lib/api";
+import {
+  prependCoverImageForFeed,
+  stripAnnotationsForFeed,
+} from "../src/lib/rss-markdown";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,8 +105,8 @@ async function markdownToHtml(markdown: string): Promise<string> {
   // Strip colored text syntax: {{color:text}} -> text
   processed = processed.replace(/\{\{[^:]+:([^}]+)\}\}/g, '$1');
 
-  // Remove annotation syntax [[text||tooltip]] -> just text
-  processed = processed.replace(/\[\[([^\|]+)\|\|[^\]]+\]\]/g, '$1');
+  // Feed readers cannot reproduce hover tooltips, so retain their visible text.
+  processed = stripAnnotationsForFeed(processed);
 
   // Convert image figures with captions: ![caption](src){#fig:id} -> ![Figure N: caption](src)
   // Also strip existing "Figure:" prefix from caption to avoid duplication
@@ -181,6 +185,7 @@ async function generateFeeds(): Promise<void> {
     "slug",
     "excerpt",
     "content",
+    "coverImage",
     "status",
     "tags",
   ]);
@@ -217,7 +222,13 @@ async function generateFeeds(): Promise<void> {
     const tags = normalizeTags(post.tags);
 
     // Convert markdown content to HTML
-    const htmlContent = await markdownToHtml(post.content || "");
+    const bodyHtml = await markdownToHtml(post.content || "");
+    const htmlContent = prependCoverImageForFeed(
+      bodyHtml,
+      post.coverImage,
+      post.title,
+      SITE_URL,
+    );
 
     feed.addItem({
       title: post.title,

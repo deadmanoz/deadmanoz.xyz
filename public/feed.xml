@@ -4,7 +4,7 @@
         <title>deadmanoz.xyz</title>
         <link>https://deadmanoz.xyz</link>
         <description>deadmanoz's website</description>
-        <lastBuildDate>Wed, 13 May 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 31 Aug 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -15,21 +15,65 @@
         </image>
         <copyright>© 2026 deadmanoz</copyright>
         <item>
+            <title><![CDATA[Closing the observability loop: Bitcoin P2P case study]]></title>
+            <link>https://deadmanoz.xyz/posts/2026/closing-observability-loop</link>
+            <guid isPermaLink="false">https://deadmanoz.xyz/posts/2026/closing-observability-loop</guid>
+            <pubDate>Mon, 31 Aug 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Exploring how far a general-purpose agent can get investigating Bitcoin's P2P network with existing telemetry, analytical tools and source code]]></description>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/2026/closing-observability-loop/closing-observability-loop-cover.png" alt="Closing the observability loop: Bitcoin P2P case study cover image"></p>
+<h2 id="introduction">Introduction</h2>
+<p>Most observability systems are built as pipelines. Engineers decide what to instrument, collect a predetermined set of telemetry, and feed it through dashboards, alerts and detectors. Machine intelligence has been used within these pipelines, but typically in a narrow role. The pipeline may flag a problem, but a human still has to work out why, decide what to measure next and, when the existing telemetry is not enough, change the instrumentation and continue the investigation.</p>
+<p>Over the last few years, however, longer context windows, more reliable tool use, stronger coding models and better agent harnesses have made it plausible for an LLM-based agent using a general-purpose model to direct more of an investigation, rather than assist with isolated parts of it. With access to the same telemetry, analytical tools and source code as a human investigator, it could test explanations and recognise when the available evidence is not enough. If it could also change the instrumentation on a system under its control, it could add the measurement it needs and continue the investigation.</p>
+<p>I plan to explore this through Bitcoin P2P network monitoring, beginning with problem detection and investigation using existing telemetry. If those capabilities prove useful, agent-directed instrumentation and "closing the loop" will follow.</p>
+<h2 id="not-a-better-anomaly-detector">Not a better anomaly detector</h2>
+<p>I do not think the answer is to replace existing anomaly-detection techniques with an LLM or point one directly at raw telemetry. Indeed, recent benchmarks caution against this.</p>
+<p><a href="https://arxiv.org/abs/2506.21550">mTSBench</a>, published in TMLR in February 2026, evaluated 24 multivariate time-series anomaly detectors, including "the only two publicly
+available large language model-based methods for multivariate time series", across 344 time series from 19 datasets. No detector performed consistently well across datasets, perhaps unsurprisingly. More notable was that existing methods for selecting which detector to use also remained substantially below an optimal selector, leading the authors to call for "more adaptive selection strategies".</p>
+<p>A <a href="https://arxiv.org/abs/2601.12448">January 2026 benchmark of LLMs applied directly to aerospace telemetry</a> provides more direct evidence against using LLMs as multivariate anomaly detectors. ATSADBench evaluated two open-source LLMs across univariate and multivariate anomaly-detection tasks. While the models performed well on univariate tasks, they struggled with multivariate telemetry, where alarm accuracy approached random guessing and alarms were scattered rather than contiguous.</p>
+<p>Anomaly detection still has a role, but I think the stronger case for agents using general-purpose models sits further up the analytical stack. Statistical methods and anomaly detectors become components in a broader toolkit. The agent can choose among them and interpret their results alongside other evidence. This does not require an LLM to process every packet, log line or time-series sample; model inference remains too slow and expensive for the raw data stream.</p>
+<p>A <a href="https://www.nature.com/articles/s41591-026-04431-5">June 2026 <em>Nature Medicine</em> study</a> offers indirect support for putting a general-purpose model at the coordinating layer: generally available frontier models outperformed specialised clinical AI systems across medical knowledge, clinician alignment and real clinical queries. Although the study says nothing about observability, it suggests that the system directing the overall task need not itself be specialised. That is, generality rather than speciality may be more useful when the work involves crossing boundaries between specialised components and evaluating different kinds of evidence.</p>
+<h2 id="fixed-telemetry-investigation">Fixed-telemetry investigation</h2>
+<p><a href="https://arxiv.org/abs/2607.28545">ORCA-bench</a>, published in July 2026, evaluates general-purpose coding agents performing root-cause analysis (RCA) in a live, OpenTelemetry-instrumented microservice environment. Rather than presenting a model with a neatly packaged time series, agents investigate incidents using six days of metrics, logs, and traces exposed through real observability infrastructure, with the success criterion being a "defensible diagnosis". In the main benchmark configuration, the agents also have access to the system's source code. Starting with an incident report, the agent must decide how to move between those sources of evidence until it can diagnose the cause.</p>
+<p>The results reveal that the agent's capabilities are still some way from being "production-ready". Across 1,079 RCA tasks, the best-performing frontier agent achieved only 25.3% accuracy on the benchmark's medium-difficulty tasks and 10.0% on hard tasks (and removing source-code access degraded every reported metric). The authors conclude that substantial engineering remains before frontier coding agents can reliably investigate production incidents.</p>
+<p>ORCA-bench begins with a reported incident, so it does not test whether the agent can recognise a problem. It tests what happens next: whether the agent can diagnose the cause using the telemetry, analytical tools and source code already available. The low accuracy shows that even this narrower task is not yet solvable with current capabilities. But the source-code result is encouraging: the agents did better when they could relate the telemetry to the system's implementation.</p>
+<h2 id="closing-the-loop">Closing the loop</h2>
+<p>Despite those results, fixed telemetry need not define the limit of an agent's investigation. If problem detection and fixed-telemetry investigation become useful, instrumentation might become another tool available to the agent. When the available telemetry is insufficient for whatever reason, the agent could add a measurement on a system under its control and continue the investigation.</p>
+<p>In the longer term, these capabilities could form a loop that allows an investigation to continue when the existing telemetry is not enough:</p>
+<p><strong>detect → investigate → hypothesise → identify missing evidence → change instrumentation → observe again → test → repeat</strong></p>
+<p>Building that loop means testing each capability on its own, then testing how they work together. Even if the agent recognises what evidence is missing, it may not be able to recover it: new instrumentation takes time to implement and deploy, the event may not recur, and some evidence may already be lost.</p>
+<p>Even still, when it can collect another measurement the result may not be trustworthy. The agent must distinguish a genuine change in the system's behaviour from sampling bias, broken instrumentation or an artefact of its own measurement methodology. Giving it control of the instrumentation creates another way for these errors to enter the investigation.</p>
+<h2 id="why-bitcoins-p2p-network">Why Bitcoin's P2P network</h2>
+<p>I plan to begin on Bitcoin's P2P network by testing whether an agent can detect and investigate problems using existing telemetry. Tens of thousands of independently operated nodes are distributed around the world, with no central operator or Network Operations Centre tracking how the network behaves as a whole (though b10c proposed a <a href="https://b10c.me/projects/024-peer-observer/#a-bitcoin-network-operations-collective">Bitcoin Network Operations Collective</a>, which is now <a href="https://bnoc.xyz">alive and growing</a>). Software versions, relay policies, application-layer usage and the population of nodes all change over time, while detailed observation of even a handful of nodes can produce a large volume of telemetry. Because Bitcoin Core is open source, anyone can inspect its behaviour and run an instrumented node.</p>
+<p>Projects such as <a href="https://github.com/peer-observer/peer-observer">peer-observer</a> provide that instrumentation, collecting P2P messages, RPC-polled node state and parsed <code>debug.log</code> lines from Bitcoin Core nodes. That still leaves a harder problem: deciding what those observations mean and what else to collect when they cannot answer the question.</p>
+<p>The May 2023 <a href="https://b10c.me/observations/15-inv-to-send-queue/"><code>inv-to-send</code> queue incident</a> shows what that harder problem looks like in practice. Monitoring revealed block-propagation delays increasing from under one second to more than five seconds during the BRC-20 transaction surge, alongside an approximately ten-fold increase in the stale-block rate. That established that block propagation was slowing, but not why. Explaining the cause required correlating different signals, forming hypotheses and investigating the underlying Bitcoin Core behaviour.</p>
+<h2 id="towards-adaptive-autonomous-observability">Towards adaptive, autonomous observability</h2>
+<p>ORCA-bench shows that we are still a long way from agents capable of investigating harder problems like the <code>inv-to-send</code> queue incident. Its agents began with a reported incident and fixed telemetry, and still struggled to determine the cause. On Bitcoin's P2P network, there may be no incident report to start from. The agent would first have to recognise that something has changed, then test possible explanations against P2P messages, node state, logs and Bitcoin Core's source.</p>
+<p>For now, progress will be gradual. Problem detection and fixed-telemetry investigation need to become useful before agent-directed instrumentation makes sense. The sudden part could come when these capabilities work well enough together to cross a practical delegation threshold: working with the agent takes less effort than conducting the investigation directly. Once that threshold is crossed, the agent can become the first investigator rather than another tool a human has to operate.</p>
+<p>I will start with whether an agent can notice a problem on Bitcoin's P2P network and investigate it with the telemetry, tools and source already available. And then, if that works, perhaps we can extend the agent's remit to modifying instrumentation, and begin closing the loop, freeing up humans to work higher up the value chain where their expertise is needed most.</p>
+<h2 id="forecasting-postscript">Forecasting postscript</h2>
+<p>Forecasting may be another useful tool inside the loop. Time-series foundation models such as Google's recently updated <a href="https://research.google/blog/timesfm-3-a-zero-shot-foundation-model-for-multivariate-forecasting">TimesFM-3</a> produce zero-shot point and quantile forecasts for multiple related series, without task-specific fine-tuning. Those forecasts could give an agent a range of likely near-term behaviour against which to compare observations. With a separately calibrated scoring rule, a sufficiently large miss could become one reason to investigate (though predicting what is likely to happen is not the same as deciding whether that behaviour is normal or healthy). Forecasting may strengthen detection but it cannot tell the agent whether a departure matters or why it occurred.</p>]]></content:encoded>
+            <category>observability</category>
+            <category>ai</category>
+            <category>bitcoin</category>
+            <category>p2p</category>
+        </item>
+        <item>
             <title><![CDATA[Merge mining and AuxPoW: how it works]]></title>
             <link>https://deadmanoz.xyz/posts/2026/merge-mining</link>
             <guid isPermaLink="false">https://deadmanoz.xyz/posts/2026/merge-mining</guid>
             <pubDate>Wed, 13 May 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[A walkthrough of the AuxPoW mechanism: how auxiliary chains like Namecoin reuse Bitcoin's proof-of-work as their own]]></description>
-            <content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/2026/merge-mining/merge-mining-cover.png" alt="Merge mining and AuxPoW: how it works cover image"></p>
+<h2 id="introduction">Introduction</h2>
 <p>Merge mining is a technique that lets a chain other than Bitcoin reuse Bitcoin's <em>proof-of-work</em> as its own.
 It lets Bitcoin miners use the same hashing effort to mine one or more <em>auxiliary chains</em> (Namecoin being the original and most well-known example), with no reduction in Bitcoin hashrate and only the additional requirement that miners or pools run auxiliary-chain software (e.g., a Namecoin node).
 The arrangement is one-sided: an auxiliary chain's nodes carry the code to recognise and validate the shared work, while Bitcoin itself is unchanged and unaware any of it is happening.</p>
 <p>Beginning with a brief history of where the idea came from, this post walks through how Bitcoin and auxiliary-chain blocks are linked.
 It covers the merkle structure that lets multiple auxiliary chains piggyback on individual Bitcoin blocks, the <em>Auxiliary Proof-of-Work (AuxPoW)</em> record carried by each auxiliary block, and the cryptographic checks an auxiliary node performs to validate a merge-mined auxiliary block.
 A <a href="./merge-mining-chains-and-pools">companion post</a> catalogues the chains that have adopted AuxPoW with Bitcoin as their parent and examines which mining pools embed merge-mining commitments in their coinbases.
-Not every Bitcoin-merge-mined chain, however, uses AuxPoW; some commit through a different mechanism that lives in a coinbase output rather than the coinbase <code>scriptSig</code> (<em><code>OP_RETURN</code> tag-based merge mining</em>).
-We touch on that alternative approach in <a href="#op_return-tag-based-merge-mining">a later section</a>, though the bulk of this post focuses on AuxPoW merge mining.</p>
-<p>This piece is a bit of a detour from my planned treatment of Bitcoin network monitoring topics, such as a continued examination of the <a href="https://github.com/peer-observer">peer observer ecosystem</a> and a grounding in the network's important properties, but there is good reason for it.
+Not every Bitcoin-merge-mined chain uses AuxPoW, however; some embed the commitment in a coinbase output instead (<em><code>OP_RETURN</code> tag-based merge mining</em>, <a href="#op_return-tag-based-merge-mining">covered later</a>).
+The bulk of this post focuses on AuxPoW.</p>
+<p>This piece is a bit of a detour from my planned treatment of Bitcoin network monitoring topics, such as the <a href="https://github.com/peer-observer">peer observer ecosystem</a> and the network's important properties, but there is good reason for it.
 Each AuxPoW chain that has merge-mined with Bitcoin holds, in its own permanent record, a copy of the Bitcoin block header whose proof-of-work was reused for each of its merge-mined blocks, including headers that Bitcoin's own canonical chain discarded.
 More specifically, those AuxPoW chains are a side-channel into block propagation (one of those important network properties) and the stale blocks those propagation delays help create.
 A follow-up post uses that side-channel to put numbers on a long-standing theoretical claim: that smaller mining pools produce more stale blocks, relative to their hashrate, than larger ones.
@@ -82,7 +126,7 @@ Because every accepted auxiliary block stores its parent header in an AuxPoW rec
 <p>The stales are what make AuxPoW chains a side-channel into Bitcoin's PoW history.
 This is the premise of Stifter <em>et al.</em>'s 2018 paper <a href="https://eprint.iacr.org/2018/1134.pdf">Echoes of the Past: Recovering Blockchain Metrics From Merged Mining</a>, which used the AuxPoW records on merge-mined chains to reconstruct Bitcoin's historical stale block and fork rates, surfacing a non-negligible portion of stale blocks absent from the live monitoring record (this work will be revisited in detail in a future post).</p>
 <h2 id="the-coinbase-commitment">The coinbase commitment</h2>
-<p>On the Bitcoin (parent) side, the AuxPoW marker is a 44-byte blob inside the [[coinbase's <code>scriptSig</code>||Bitcoin consensus <a href="https://github.com/bitcoin/bitcoin/blob/master/src/consensus/tx_check.cpp#L49-L50">caps it at 100 bytes total.</a>]] (coinbases without merge-mining simply don't carry it).
+<p>On the Bitcoin (parent) side, the AuxPoW marker is a 44-byte blob inside the coinbase's <code>scriptSig</code> (coinbases without merge-mining simply don't carry it).
 Thus Bitcoin commits to AuxPoW data (if present) indirectly through the block header's <code>merkle_root</code>; see the <a href="#scriptsig-path">Reminder: from block header to coinbase scriptSig</a> section below for the full details.</p>
 <p><strong>Reminder: from block header to coinbase scriptSig</strong></p>
 <p>{#scriptsig-path}
@@ -146,7 +190,7 @@ And because each chain's verifier independently runs the LCG to find its expecte
 The tree collapses to a single leaf: the chain's block hash sits at the root directly, and the <code>merkle_nonce</code> is irrelevant (the LCG always returns slot 0).</p>
 <p>In practice, miners committing to multiple AuxPoW chains do so via a single shared slot tree: the same hashing effort can earn a block reward from every chain in the tree whose <code>aux_target</code> the resulting hash clears.
 A pool mining Namecoin alongside Elastos and other AuxPoW chains picks a <code>merkle_size</code> to fit the chains it commits to, with each occupying the slot its <code>chain_id</code> resolves to.</p>
-<p>Each participating chain ends up with a different proof through this one shared tree: its own slot, its own sibling hashes, its own bit-path up to the root.
+<p>Each participating chain ends up with a different proof through this one shared tree: its own slot, its own sibling hashes, its own leaf-to-root path (<em>side mask</em>, introduced in the next section) through the tree.
 The parent block, the coinbase marker, and the <code>aux_merkle_root</code> are common to all of them; the per-chain proof is what differs.
 The <a href="#worked-example">worked example</a> later in this post walks through such a tree in detail.</p>
 <h2 id="the-auxpow-record">The AuxPoW record</h2>
@@ -155,7 +199,7 @@ This AuxPoW record is a variable-sized structure with five fields, as shown in F
 <p><img src="https://deadmanoz.xyz/assets/blog/2026/merge-mining/merge-mining-auxpow-record.png" alt="Figure 6: Layout of the AuxPoW record carried by every auxiliary block. coinbase_txn and parent_block_header are copied parent-side data; parent_block_hash is a redundant derived hash. The other two fields (coinbase_branch, blockchain_branch) are merkle paths that let the auxiliary chain&#x27;s verifier reconstruct the link to the parent&#x27;s proof-of-work."></p>
 <p>Three fields are parent-side data carried into the auxiliary block.
 <code>coinbase_txn</code> is the full serialised parent coinbase transaction; the verifier scans its <code>scriptSig</code> for the <code>0xFA BE 6D 6D</code> magic and reads the <code>aux_merkle_root</code> out of the bytes that follow.
-[[<code>parent_block_hash</code>||This field is unnecessary for validation because the full parent header is already present in the same AuxPoW record; the <a href="https://en.bitcoin.it/wiki/Merged_mining_specification#Aux_proof-of-work_block">Bitcoin Wiki</a> flags it as such.]] is a 32-byte convenience value that the verifier ignores.
+<code>parent_block_hash</code> is a 32-byte convenience value that the verifier ignores.
 Early Namecoin AuxPoW blocks even shipped it in inconsistent byte order (some in standard little-endian internal byte order, some reversed) without breaking validation.
 <code>parent_block_header</code>, by contrast, is the field that actually drives validation: the verifier computes SHA-256d over its full 80 bytes and tests the result against <code>aux_target</code> to confirm the auxiliary block's proof-of-work.</p>
 <p>The remaining two fields are compact merkle proofs, not copies of the full parent transaction tree or the full auxiliary slot tree.
@@ -196,7 +240,7 @@ After the last sibling, <code>current</code> must equal the expected root.</p>
 The mask is chain-specific: every other auxiliary chain merge-mined into the same parent Bitcoin block carries its own <code>blockchain_branch</code> (own start hash, own sibling hashes, own slot index), and they all fold up to the same shared <code>aux_merkle_root</code>.</li>
 </ul>
 <p>The verifier also independently derives the expected slot index from <code>chain_id</code>, <code>merkle_nonce</code>, and <code>merkle_size</code>, and rejects the proof if it differs from the side-mask value.
-When the slot tree has only one leaf (<code>merkle_size = 1</code>), the payload reduces to 5 bytes of zeros: [[<code>0x00 00 00 00 00</code>||One byte of CompactSize length (zero siblings) followed by a 4-byte side mask of all zeros. The Bitcoin Wiki <a href="https://en.bitcoin.it/wiki/Merged_mining_specification#Example">worked example</a> shows this exact pattern.]].
+When the slot tree has only one leaf (<code>merkle_size = 1</code>), the payload reduces to 5 bytes of zeros: <code>0x00 00 00 00 00</code>.
 The fold has no siblings to process, so the start hash is already the expected root.
 A successful fold ends with <code>current</code> equal to the <code>aux_merkle_root</code> from the parent coinbase marker.</p>
 <h2 id="verification">Verification</h2>
@@ -206,7 +250,7 @@ The PoW link verification can be summarised as five checks, and the PoW link is 
 <p>The order below establishes identity first (steps 1 and 2) before walking the chain of commitments from the auxiliary block out to the parent's proof-of-work (steps 3 through 5).
 Real implementations (e.g., Elastos's <a href="https://github.com/elastos/Elastos.ELA/blob/master/auxpow/auxpow.go"><code>AuxPow.Check</code></a>, following the <a href="https://en.bitcoin.it/wiki/Merged_mining_specification">Bitcoin Wiki specification</a>) sequence the same checks differently and also perform additional structural validation of the AuxPoW record.</p>
 <ol>
-<li><strong>Locate the AuxPoW marker inside the parent coinbase</strong>: [[scan||When the magic is present it must appear only once in the <code>scriptSig</code>, blocking an "equivocation attack" where a miner embeds different markers for different chains. The <a href="#the-coinbase-commitment">legacy no-magic form</a> (aux merkle root in the first 20 bytes) is also permitted but rarely seen.]] <code>coinbase_txn</code>'s <code>scriptSig</code> for the <code>0xFA BE 6D 6D</code> magic, and read the embedded <code>aux_merkle_root</code>, <code>merkle_size</code>, and <code>merkle_nonce</code> from the bytes that follow.</li>
+<li><strong>Locate the AuxPoW marker inside the parent coinbase</strong>: scan <code>coinbase_txn</code>'s <code>scriptSig</code> for the <code>0xFA BE 6D 6D</code> magic, and read the embedded <code>aux_merkle_root</code>, <code>merkle_size</code>, and <code>merkle_nonce</code> from the bytes that follow.</li>
 <li><strong>Cross-check the slot index</strong>: independently derive the expected slot by running the <a href="#slot-mapping-details">LCG</a> over <code>chain_id</code> and the marker's <code>merkle_nonce</code> and <code>merkle_size</code>, and confirm it matches the slot encoded in <code>blockchain_branch</code>'s side mask.</li>
 <li><strong>Reconstruct <code>aux_merkle_root</code></strong>: starting from this auxiliary block's hash (SHA-256d of its 80-byte header), fold the hash up through <code>blockchain_branch</code> (using the side-mask bits validated in step 2 to position <code>current</code> left or right at each level), and confirm the resulting root matches the <code>aux_merkle_root</code> extracted from the marker in step 1.</li>
 <li><strong>Reconstruct the parent block's transaction <code>merkle_root</code></strong>: compute the coinbase txid (SHA-256d of <code>coinbase_txn</code>) and fold it up through <code>coinbase_branch</code>, and confirm the resulting root matches the <code>merkle_root</code> field inside <code>parent_block_header</code>.</li>
@@ -303,7 +347,7 @@ The <a href="https://research.mempool.space/merge-mining-report/">Mempool Resear
 A bare tag only marks the parent block as co-mined; it is only when the tag is followed by a payload (a hash of the aux chain's block, or similar) that the aux chain can verify Bitcoin's PoW for that specific block.</p>
 <p>This should not be confused with <em>blind merge mining</em> (BMM), the Drivechain (<a href="https://github.com/bitcoin/bips/blob/master/bip-0300.mediawiki">BIP 300</a>, <a href="https://github.com/bitcoin/bips/blob/master/bip-0301.mediawiki">BIP 301</a>) concept where the miner does not run the sidechain node.
 BIP 301 also uses an <code>OP_RETURN</code> commitment, so the difference is not the embedding location but the miner's relationship to the sidechain.</p>
-<p>In <code>OP_RETURN</code> tag-based merge mining, each output is a coinbase <code>txout</code> whose <code>scriptPubKey</code> is <code>OP_RETURN &#x3C;chain tag> &#x3C;payload></code>, where the tag is a short ASCII identifier and the payload's contents vary widely between chains: an aux block hash for direct PoW binding (e.g., <a href="https://ips.rootstock.io/IPs/RSKIP92.html">RSK</a>, tag <code>RSKBLOCK:</code>), accounting metadata for hashrate delegation (e.g., CoreDAO, tag <code>CORE</code>), an aux block hash and height tag for fork-aware cross-chain bridging (e.g., <a href="https://github.com/syscoin/syscoin/blob/master/doc/release-notes/release-notes-5.0.0.md#4-auxpow-tags">Syscoin</a>, tag <code>sys</code>), or other chain-specific data.</p>
+<p>In <code>OP_RETURN</code> tag-based merge mining, each output is a coinbase <code>txout</code> whose <code>scriptPubKey</code> is <code>OP_RETURN &#x3C;chain tag> &#x3C;payload></code>, where the tag is a short ASCII identifier and the payload's contents vary widely between chains: an aux block hash for direct PoW binding (e.g., RSK, tag <code>RSKBLOCK:</code>), accounting metadata for hashrate delegation (e.g., CoreDAO, tag <code>CORE</code>), an aux block hash and height tag for reorg-safe state notarisation (e.g., Syscoin, tag <code>sys</code>), or other chain-specific data.</p>
 <p>Since SegWit activated in 2017, almost every Bitcoin coinbase has already carried one <code>OP_RETURN</code> by default: per <a href="https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki#commitment-structure">BIP 141</a>, every coinbase whose block contains a witness-bearing transaction must include an <code>OP_RETURN</code> with magic prefix <code>0xaa21a9ed</code> followed by a 32-byte commitment to the witness merkle root.
 Bitcoin coinbases can carry multiple <code>OP_RETURN</code> outputs, so tag-based merge-mining commitments simply add to that mandatory one.
 The coinbase of <a href="https://mempool.space/block/00000000000000000001144d36d598ad54dc664e6387ce1aae928117c44435dc">block 948,433</a>, mined by SpiderPool, is one such case (figure):</p>
@@ -347,7 +391,7 @@ An AuxPoW record on the auxiliary chain carries the parent coinbase, the parent 
 A five-step verification rule then validates the PoW link regardless of whether Bitcoin's canonical chain ever accepts the parent block.</p>
 <p>Together the three pieces let the auxiliary chain treat any candidate hash that clears <code>aux_target</code> as proof-of-work for its block, whether or not Bitcoin accepts the parent.
 Every AuxPoW record also retains its full parent header, including headers Bitcoin's canonical chain discarded, making AuxPoW chains a side-channel into Bitcoin's PoW history.</p>
-<p><code>OP_RETURN</code> tag-based merge mining sits alongside AuxPoW as a lighter, per-chain alternative: a coinbase <code>OP_RETURN</code> output per chain rather than a shared <code>scriptSig</code> marker, with each chain free to define its own tag, payload format, and commitment semantics (e.g., PoW binding like AuxPoW, or another purpose such as delegation accounting or fork-aware bridge notarisation).
+<p><code>OP_RETURN</code> tag-based merge mining sits alongside AuxPoW as a lighter, per-chain alternative: a coinbase <code>OP_RETURN</code> output per chain rather than a shared <code>scriptSig</code> marker, with each chain free to define its own tag, payload format, and commitment semantics (e.g., PoW binding like AuxPoW, or another purpose such as delegation accounting or reorg-safe state notarisation).
 The two embedding locations coexist in the same coinbase without interfering (figure): AuxPoW commits via the input <code>scriptSig</code>, <code>OP_RETURN</code> tag-based approaches via the output <code>scriptPubKey</code>s.</p>
 <p>A <a href="./merge-mining-chains-and-pools">companion post</a> catalogues every chain that has actually deployed AuxPoW with Bitcoin as its parent, and examines which Bitcoin mining pools embed merge-mining commitments in their coinbases.</p>
 <p>A separate follow-up post will use the side-channel AuxPoW creates (auxiliary chains preserving parent headers Bitcoin discarded as stale) to put numbers on a long-standing claim about block propagation: that smaller mining pools produce more stale blocks, relative to their hashrate, than larger ones.</p>
@@ -400,7 +444,8 @@ The two embedding locations coexist in the same coinbase without interfering (fi
             <guid isPermaLink="false">https://deadmanoz.xyz/posts/2026/bitcoin-node-roles-p2p</guid>
             <pubDate>Thu, 02 Apr 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[An examination of the roles, configuration, and connection management of Bitcoin nodes, and the resultant topology of the network]]></description>
-            <content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-node-roles-p2p-cover.png" alt="Bitcoin node roles and network topology cover image"></p>
+<h2 id="introduction">Introduction</h2>
 <p>Bitcoin's peer-to-peer (P2P) network is a distributed system that allows network participants (nodes) to interact without relying on a central authority.
 For the network to operate as efficiently and as decentralised as possible, Bitcoin nodes can operate in a variety of modes, fulfilling different roles.
 This post examines the various roles and modes of Bitcoin nodes and the topology of the Bitcoin network that this differentiation has led to.</p>
@@ -474,7 +519,7 @@ Outbound peers are not part of the inbound eviction process, since losing a self
 They can, however, still be disconnected for other peer-management reasons, such as stalling detection, extra block-relay peer rotation, or the network-diversity rebalancing discussed in <a href="#bridge-nodes">bridge nodes</a> below.</p>
 <h3 id="address-bootstrapping">Address bootstrapping</h3>
 <p>There is a bootstrapping problem that a special class of outbound connection, <code>ConnectionType::ADDR_FETCH</code>, exists to solve: how does a node populate its address book when it doesn't yet know any peers?
-On first startup, or [[under various other circumstances||Such as after <code>peers.dat</code> has been deleted or corrupted, after being offline long enough for all cached addresses to exceed <a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>ADDRMAN_HORIZON</code></a> (30 days), or after enough connection failures to mark all addresses "terrible" (<a href="https://github.com/bitcoin/bitcoin/blob/master/src/addrman.h"><code>ADDRMAN_RETRIES</code>/<code>ADDRMAN_MAX_FAILURES</code></a>).]], <code>AddrMan</code> will be empty and the node will have nobody to connect to.</p>
+On first startup, or under various other circumstances, <code>AddrMan</code> will be empty and the node will have nobody to connect to.</p>
 <p>The primary bootstrap mechanism is <strong>DNS seeds</strong>: the node queries hardcoded DNS hostnames (see below) with a service-bit filter prefix that resolve to lists of active node IP addresses.
 If the requesting node is behind a proxy where direct DNS isn't possible, or if a seed doesn't support the requested service-bit filter and returns no results, the node falls back to opening an <code>ADDR_FETCH</code> connection directly to the seed.
 This is a short-lived connection that completes a version handshake, sends a <code>getaddr</code> message, receives an <code>addr</code> response, feeds those addresses into <code>AddrMan</code>, and disconnects.
@@ -574,7 +619,7 @@ The service flags advertised in <code>version</code> are how peers learn each ot
 <p>Not every operator is willing or able to store the full block history - as of early 2026, the raw block data alone occupies roughly 775 GB, with the full data directory closer to 830 GB before any optional indexes.
 Pruned nodes (<code>-prune=&#x3C;N></code>) also download and fully validate every block, and maintain the full UTXO set, but discard old block data after validation.
 A pruned node relays new blocks and transactions normally, it simply can't serve historical blocks to peers performing IBD.</p>
-<p>Regardless of the pruning target, a pruned node always retains at least the most recent [[288 blocks||<code>MIN_BLOCKS_TO_KEEP</code> in <code>src/validation.h</code>, with the value proposed by <a href="https://github.com/bitcoin/bitcoin/pull/4701">Gregory Maxwell during the original pruning design discussions</a> as "a minimum number I'd consider acceptable as an absolute minimum for the purpose of reorgs."]], which is approximately two days' worth given the 10-minute block interval.
+<p>Regardless of the pruning target, a pruned node always retains at least the most recent 288 blocks, which is approximately two days' worth given the 10-minute block interval.
 The minimum pruning target of <code>-prune=550</code> (MiB) is derived from this requirement, accounting for the 288 blocks themselves, undo data overhead, orphan block rate, and block file granularity.
 Pruned nodes advertise <code>NODE_NETWORK_LIMITED</code> rather than <code>NODE_NETWORK</code> in their service flags, signalling to peers that they can serve recent blocks but cannot be relied upon for historical data during IBD.</p>
 <h3 id="blocks-only-mode">Blocks-only mode</h3>
@@ -1050,7 +1095,8 @@ In a future post, we'll look more closely at <code>AddrMan</code>, the address m
             <guid isPermaLink="false">https://deadmanoz.xyz/posts/2026/nixos-peer-observer-vps</guid>
             <pubDate>Tue, 13 Jan 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[My experience setting up NixOS and Peer Observer on a VPS for Bitcoin monitoring]]></description>
-            <content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/2026/nixos-peer-observer-vps/nixos-peer-observer-vps-cover.png" alt="NixOS &amp; Peer Observer on a VPS cover image"></p>
+<h2 id="introduction">Introduction</h2>
 <p>I've recently started contributing to the <a href="https://github.com/peer-observer/peer-observer">peer-observer</a> ecosystem.
 peer-observer is a set of tooling developed by <a href="https://b10c.me/">B10C</a> for monitoring the Bitcoin network "<em>for P2P anomalies and attacks using well-behaving, passive Bitcoin Core honeynodes (honeypot nodes).</em>"
 This was, in part, motivated by the "call to action" put out by B10C in <a href="https://b10c.me/projects/024-peer-observer/">his post from July 2025</a>, and the idea of forming a "Bitcoin Network Operations Collective" (BNOC):</p>
@@ -1195,7 +1241,8 @@ Prometheus/Grafana on the central web-server scrape metrics from each peer-obser
             <guid isPermaLink="false">https://deadmanoz.xyz/posts/p2ms-data-carry-2</guid>
             <pubDate>Thu, 04 Dec 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[Exploring P2MS for data carriage in a snapshot of the UTXO set]]></description>
-            <content:encoded><![CDATA[<h2 id="tldr">tl;dr</h2>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-2.png" alt="P2MS Data Carry Part 2: UTXO set analysis cover image"></p>
+<h2 id="tldr">tl;dr</h2>
 <p>Analysis of 2.42 million P2MS UTXOs at block height 918,997 (October 2025) reveals that P2MS has been almost entirely co-opted for data carriage rather than its intended multisig purpose.
 Over 99.98% of P2MS outputs serve data embedding protocols, with only 0.02% (552 outputs) appearing to be legitimate multisig usage.</p>
 <p>Bitcoin Stamps dominates with 73.57% of all P2MS outputs, followed by Counterparty (22.86%) and Omni Layer (1.78%).
@@ -3559,7 +3606,8 @@ Whether the Bitcoin community chooses to deprecate P2MS, maintain the status quo
             <guid isPermaLink="false">https://deadmanoz.xyz/posts/p2ms-data-carry-1</guid>
             <pubDate>Thu, 16 Oct 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[Examining the techniques of P2MS data carriage]]></description>
-            <content:encoded><![CDATA[<h2 id="tldr">tl;dr</h2>
+            <content:encoded><![CDATA[<p><img src="https://deadmanoz.xyz/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-1.png" alt="P2MS Data Carry Part 1: Fundamentals and Examples cover image"></p>
+<h2 id="tldr">tl;dr</h2>
 <p>Pay-to-Multisig (P2MS) is Bitcoin's original multisig format, since superseded by more efficient alternatives like P2SH and P2WSH.
 Even so, it persisted - and still persists - as a vehicle for data carriage, with multiple protocols embedding payloads into fake pubkeys inside Bitcoin transactions.
 Three major protocols dominate this practice: Bitcoin Stamps, Counterparty and Omni.</p>
