@@ -47,12 +47,9 @@
   --theme-gradient-neon: linear-gradient(90deg, #FF6C11 0%, #00A0D0 50%, #20E516 100%);
 }
 
-/* Global Styles */
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+/* Tailwind preflight already resets box-sizing, margin, and padding inside
+   @layer base. An unlayered * reset here would beat every spacing utility
+   (px-5, mx-auto, py-10, …) and flush content to the viewport edges. */
 
 html {
   scroll-behavior: smooth;
