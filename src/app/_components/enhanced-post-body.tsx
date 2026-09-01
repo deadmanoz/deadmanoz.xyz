@@ -464,7 +464,8 @@ function PostBodyContent({ content }: Props) {
         }
 
         .annotation:hover,
-        .annotation:focus {
+        .annotation:focus,
+        .annotation:focus-within {
           color: var(--theme-neon-pink);
           background: linear-gradient(90deg, rgba(245, 18, 119, 0.2) 0%, rgba(0, 217, 255, 0.2) 100%);
           border-bottom-color: var(--theme-neon-pink);
@@ -498,7 +499,7 @@ function PostBodyContent({ content }: Props) {
           opacity: 0;
           visibility: hidden;
           transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
-          pointer-events: none;
+          pointer-events: auto;
           margin-bottom: 12px;
         }
 
@@ -517,14 +518,16 @@ function PostBodyContent({ content }: Props) {
         }
 
         .annotation:hover .annotation-tooltip,
-        .annotation:focus .annotation-tooltip {
+        .annotation:focus .annotation-tooltip,
+        .annotation:focus-within .annotation-tooltip {
           opacity: 1;
           visibility: visible;
           transform: translateX(-50%) translateY(0);
         }
 
         .annotation:hover .annotation-arrow,
-        .annotation:focus .annotation-arrow {
+        .annotation:focus .annotation-arrow,
+        .annotation:focus-within .annotation-arrow {
           opacity: 1;
           visibility: visible;
         }

@@ -197,6 +197,33 @@ test.describe("canary — annotations", () => {
     ).toBe(true);
   });
 
+  test("a tooltip link remains interactive for pointer and keyboard users", async ({ page }) => {
+    const annotation = page.locator("span.annotation", { hasText: "BIP 22" });
+    const tooltip = annotation.locator(".annotation-tooltip");
+    const link = tooltip.locator(
+      'a[href="https://github.com/bitcoin/bips/blob/master/bip-0022.mediawiki"]',
+    );
+
+    await annotation.hover();
+    await expect(tooltip).toBeVisible();
+    await link.hover();
+    await expect(link).toHaveCSS("pointer-events", "auto");
+
+    await annotation.focus();
+    await page.keyboard.press("Tab");
+    await expect(link).toBeFocused();
+    await expect(tooltip).toBeVisible();
+
+    await page.route(
+      "https://github.com/bitcoin/bips/blob/master/bip-0022.mediawiki",
+      (route) => route.fulfill({ contentType: "text/html", body: "linked" }),
+    );
+    await link.click();
+    await expect(page).toHaveURL(
+      "https://github.com/bitcoin/bips/blob/master/bip-0022.mediawiki",
+    );
+  });
+
   test("a tooltip contains embedded math markup", async ({ page }) => {
     const annotations = page.locator("span.annotation");
     const tooltips = await annotations.evaluateAll((els) =>
