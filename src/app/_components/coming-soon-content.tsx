@@ -9,7 +9,7 @@ interface ComingSoonContentProps {
 export function ComingSoonContent({ title }: ComingSoonContentProps) {
   return (
     <div className="post-pending-page min-h-screen flex flex-col relative">
-      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
+      <div className="w-full px-5 md:px-8 lg:px-12 relative z-10 flex-1 flex flex-col items-center">
         <Header />
 
         <main className="post-pending-main flex-1 w-full max-w-2xl flex flex-col items-center text-center">

@@ -71,10 +71,10 @@ export default async function Post({
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
+      <div className="w-full px-5 md:px-8 lg:px-12 relative z-10 flex-1 flex flex-col items-center">
         <main className="flex-1 w-full flex flex-col items-center">
           {/* Back link aligned with content */}
-          <div className="max-w-7xl w-full flex gap-12 items-start pt-10 mb-8">
+          <div className="max-w-6xl w-full flex gap-12 items-start pt-10 mb-8">
             {/* TOC space - Desktop only, to match content layout */}
             <div className="hidden xl:block w-64 shrink-0" />
 
@@ -89,7 +89,7 @@ export default async function Post({
           </div>
 
           {/* Title area with same layout as content */}
-          <div className="max-w-7xl w-full flex gap-12 items-start mb-12">
+          <div className="max-w-6xl w-full flex gap-12 items-start mb-12">
             {/* TOC space - Desktop only, to match content layout */}
             <div className="hidden xl:block">
               <TableOfContents inline={true} />
@@ -148,7 +148,7 @@ export default async function Post({
 
           {/* Cover Image */}
           {post.coverImage && (
-            <div className="max-w-7xl w-full flex gap-12 items-start mb-12">
+            <div className="max-w-6xl w-full flex gap-12 items-start mb-12">
               {/* TOC space - Desktop only, to match content layout */}
               <div className="hidden xl:block w-64 shrink-0" />
 
@@ -166,7 +166,7 @@ export default async function Post({
           )}
 
           {/* Content with TOC Layout */}
-          <div className="max-w-7xl w-full flex gap-12 items-start mb-32">
+          <div className="max-w-6xl w-full flex gap-12 items-start mb-32">
             {/* TOC - Desktop only, inline */}
             <div className="hidden xl:block">
               <TableOfContents inline={true} />
