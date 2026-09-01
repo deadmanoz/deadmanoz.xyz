@@ -43,6 +43,25 @@ const FALLBACK_TAG_COLORS = [
   "#FB7185",
 ];
 
+const PROJECTS = [
+  {
+    kind: "Live tool",
+    name: "Merge Mining Monitor",
+    description: "Pools, chains, and recovered Bitcoin stale blocks.",
+    href: "https://mmm.deadmanoz.xyz/",
+    kindClassName: "text-synthwave-neon-green",
+    railClassName: "project-card-rail-green",
+  },
+  {
+    kind: "Research",
+    name: "Post-Quantum Bitcoin",
+    description: "Bitcoin's quantum risks and pathways to resistance.",
+    href: "https://pq-bitcoin.org/",
+    kindClassName: "text-purple-400",
+    railClassName: "project-card-rail-purple",
+  },
+];
+
 function normalizeTags(tags: unknown): string[] {
   if (!Array.isArray(tags)) {
     return [];
@@ -85,11 +104,44 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div className="w-full px-5 relative z-10 flex-1 flex flex-col items-center">
-        <Header />
+      <div className="w-full px-5 md:px-8 lg:px-12 relative z-10 flex-1 flex flex-col items-center">
+        <div className="homepage-masthead w-full flex flex-col items-center">
+          <Header compact />
+          <section className="project-bar" aria-labelledby="projects-heading">
+            <h2 id="projects-heading" className="project-bar-heading">
+              Projects
+            </h2>
+            <div className="project-bar-cards">
+              {PROJECTS.map((project) => (
+                <a
+                  key={project.name}
+                  href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`project-card ${project.railClassName}`}
+                >
+                  <span className={`project-card-kind ${project.kindClassName}`}>
+                    {project.kind}
+                  </span>
+                  <span className="project-card-name">
+                    {project.name}
+                    <span aria-hidden="true"> ↗</span>
+                  </span>
+                  <span className="project-card-description">{project.description}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        </div>
 
         <main className="flex-1 w-full flex flex-col items-center">
-          <section className="mb-16 w-full max-w-6xl">
+          <section className="mb-16 w-full max-w-6xl" aria-labelledby="latest-writing-heading">
+            <h2
+              id="latest-writing-heading"
+              className="mb-5 text-3xl font-bold tracking-tight text-synthwave-neon-cyan neon-text-cyan"
+            >
+              Latest writing
+            </h2>
             <div className="flex flex-col gap-8 w-full">
               {posts.length === 0 ? (
                 <p className="text-synthwave-peach/60 text-center">No posts yet.</p>

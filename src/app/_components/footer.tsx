@@ -5,9 +5,9 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const yearLabel = currentYear > 2025 ? `2025-${currentYear}` : "2025";
   return (
-    <footer className="border-t border-synthwave-neon-orange/30 py-10 mt-auto relative">
-      <div className="w-full px-5 text-center flex flex-col items-center gap-0">
-        <div className="flex justify-center items-center gap-6">
+    <footer className="border-t border-synthwave-neon-orange/30 py-6 mt-auto relative">
+      <div className="w-full px-5 md:px-8 lg:px-12 text-center flex flex-col items-center gap-3">
+        <div className="flex justify-center items-center gap-5">
           <a
             href="https://x.com/ozdeadman"
             target="_blank"
@@ -15,7 +15,7 @@ export function Footer() {
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
             aria-label="Twitter/X"
           >
-            <FaXTwitter size={24} />
+            <FaXTwitter size={22} />
           </a>
           <a
             href="https://primal.net/deadmanoz"
@@ -24,7 +24,7 @@ export function Footer() {
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
             aria-label="Primal (Nostr)"
           >
-            <PrimalIcon size={24} />
+            <PrimalIcon size={22} />
           </a>
           <a
             href="https://github.com/deadmanoz"
@@ -33,14 +33,14 @@ export function Footer() {
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
             aria-label="GitHub"
           >
-            <FaGithub size={24} />
+            <FaGithub size={22} />
           </a>
           <a
             href="/feed.xml"
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300 transform hover:scale-110"
             aria-label="RSS Feed"
           >
-            <FaRss size={24} />
+            <FaRss size={22} />
           </a>
         </div>
         <a
@@ -50,15 +50,7 @@ export function Footer() {
           <FaBolt size={16} />
           <span>Donate via Lightning</span>
         </a>
-        <div className="flex flex-row gap-8 sm:gap-16 justify-center">
-          <a
-            href="https://pq-bitcoin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300"
-          >
-            pq-bitcoin.org
-          </a>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
           <a
             href="/disclosures"
             className="text-synthwave-neon-cyan hover:text-synthwave-neon-orange transition-all duration-300"
@@ -66,7 +58,7 @@ export function Footer() {
             Disclosures
           </a>
         </div>
-        <p className="text-lg text-synthwave-peach">© {yearLabel} deadmanoz</p>
+        <p className="text-base text-synthwave-peach">© {yearLabel} deadmanoz</p>
       </div>
     </footer>
   );
