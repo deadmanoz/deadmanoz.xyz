@@ -61,6 +61,9 @@
     ],
     "_posts/**/*.md": [
       "bash scripts/with-project-node.sh npx tsx scripts/check-sentence-per-line.ts"
+    ],
+    "package{,-lock}.json": [
+      "bash -c 'bash scripts/with-project-node.sh bash scripts/check-lockfile.sh'"
     ]
   }
 }

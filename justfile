@@ -79,8 +79,16 @@ check-prose *args:
 fix-prose *args:
     {{node-run}} npx tsx scripts/check-sentence-per-line.ts --fix {{args}}
 
-# Run lint, typecheck, unit tests, and sentence-per-line check
-check: lint typecheck test check-prose
+# Verify package-lock.json is in sync with package.json (what `npm ci` needs)
+check-deps:
+    {{node-run}} bash scripts/check-lockfile.sh
+
+# Regenerate package-lock.json from package.json (never hand-edit the lock)
+relock:
+    {{node-run}} npm install --package-lock-only --ignore-scripts
+
+# Run lint, typecheck, unit tests, sentence-per-line, and lock file checks
+check: lint typecheck test check-prose check-deps
 
 # Open in browser
 open:
