@@ -199,7 +199,8 @@ The remaining two fields are compact merkle proofs, not copies of the full paren
 They give the verifier just enough sibling hashes to fold a known starting hash up to the parent's transaction `merkle_root` (for `coinbase_branch`) and the `aux_merkle_root` (for `blockchain_branch`).
 
 For `coinbase_branch`, the start hash is `txid(coinbase_txn)` and the expected root is the Bitcoin transaction `merkle_root` from `parent_block_header`.
-This proves that the proof-of-work in `parent_block_header` was performed over a transaction merkle root consistent with a tree containing `coinbase_txn`. That coinbase carries the AuxPoW marker that commits to this auxiliary chain (and to any others sharing the same slot tree).
+This proves that the proof-of-work in `parent_block_header` was performed over a transaction merkle root consistent with a tree containing `coinbase_txn`.
+That coinbase carries the AuxPoW marker that commits to this auxiliary chain (and to any others sharing the same slot tree).
 
 For `blockchain_branch`, the start hash is this auxiliary block's hash and the expected root is the `aux_merkle_root` found in the parent coinbase's AuxPoW marker.
 This proves that the coinbase marker commits to this auxiliary block's hash (alongside any other chains' block hashes in the shared slot tree).
@@ -309,13 +310,16 @@ The parent coinbase `scriptSig`, dissected into fields:
 "0000e66cf007010000000000"                                         // trailing scriptSig bytes (pool extras)
 ```
 
-**Step 1 (locate marker in parent coinbase).** Inside the parent coinbase's `scriptSig`, the magic `fa be 6d 6d` sits at byte offset 30, after a BIP 34 height push and a 25-byte push containing the 17-byte ASCII tag `Mined by AntPool ` plus 8 bytes of pool extranonce.
+**Step 1 (locate marker in parent coinbase).**
+Inside the parent coinbase's `scriptSig`, the magic `fa be 6d 6d` sits at byte offset 30, after a BIP 34 height push and a 25-byte push containing the 17-byte ASCII tag `Mined by AntPool ` plus 8 bytes of pool extranonce.
 The 32 bytes following the magic are `5a9c0198...61d68a42`, which we'll match against the fold result in step 3.
 The trailing `10 00 00 00` and `00 00 00 00` give `merkle_size = 16` and `merkle_nonce = 0`.
 
-**Step 2 (cross-check slot index).** Running the LCG over `chain_id = 1` (Namecoin), `merkle_nonce = 0`, and `merkle_size = 16` (the latter two from the marker bytes in step 1) returns 11, matching the side mask carried in `blockchain_branch`'s `chainindex` field.
+**Step 2 (cross-check slot index).**
+Running the LCG over `chain_id = 1` (Namecoin), `merkle_nonce = 0`, and `merkle_size = 16` (the latter two from the marker bytes in step 1) returns 11, matching the side mask carried in `blockchain_branch`'s `chainindex` field.
 
-**Step 3 (reconstruct `aux_merkle_root`).** Namecoin's slot in this block is 11 (validated in step 2), carried in the AuxPoW record's `chainindex` field (the JSON-friendly form of the 4-byte side mask at the tail of `blockchain_branch`).
+**Step 3 (reconstruct `aux_merkle_root`).**
+Namecoin's slot in this block is 11 (validated in step 2), carried in the AuxPoW record's `chainindex` field (the JSON-friendly form of the 4-byte side mask at the tail of `blockchain_branch`).
 That slot index doubles as the side mask for the four-sibling replay: slot 11 in binary is `1011`, so reading bit 0 (the LSB) first, the side bits at levels 0, 1, 2, 3 are `1, 1, 0, 1`.
 
 We start `current` at the aux block header hash from the JSON's `hash` field, then apply four SHA-256d steps, each pairing `current` with the next sibling from `chainmerklebranch[]`:
@@ -342,11 +346,14 @@ level 3 (bit 1, current on the right):
 
 The final `current`, `5a9c0198...61d68a42`, is the reconstructed `aux_merkle_root`, matching the `aux_merkle_root` extracted from the marker in step 1.
 
-**Step 4 (reconstruct parent `merkle_root` and match).** The start hash is the coinbase txid, `c6cd5ec9...14e37cd5`.
+**Step 4 (reconstruct parent `merkle_root` and match).**
+The start hash is the coinbase txid, `c6cd5ec9...14e37cd5`.
 The side mask is `0x00000000`, so at every level `current` is on the left and the sibling on the right (the coinbase is always leaf 0 regardless of how many transactions sit beside it).
-The branch carries 13 siblings, consistent with a parent transaction merkle tree of 4,097 to 8,192 leaves. Folding all 13 in yields `d63208d5...3d0aa08d`, matching the `merkle_root` field of `parent_block_header`.
+The branch carries 13 siblings, consistent with a parent transaction merkle tree of 4,097 to 8,192 leaves.
+Folding all 13 in yields `d63208d5...3d0aa08d`, matching the `merkle_root` field of `parent_block_header`.
 
-**Step 5 (verify PoW).** SHA-256d of `parent_block_header` reproduces the parent block hash.
+**Step 5 (verify PoW).**
+SHA-256d of `parent_block_header` reproduces the parent block hash.
 Namecoin's `aux_target` at this height has [[compact form||Bitcoin's `nBits` encoding: 1 byte exponent followed by 3 bytes of mantissa (big-endian). The target is mantissa × 2^(8 × (exponent - 3)). Here `0x17` is the exponent and `0x03e336` the mantissa.]] `0x1703e336`, which expands to a 32-byte target with nine leading zero bytes followed by `0x03 e3 36 00 ...`.
 Lining up the hash and target as big-endian byte strings:
 
@@ -360,7 +367,8 @@ The first nine bytes are equal; at the tenth byte, the hash (`0x02`) is below th
 That same hash, however, exceeds Bitcoin's `parent_target` at this height (compact `bits = 0x17021ff0`), making this parent _aux-only_ (the third category from [Two chains, one hash](#two-chains-one-hash)).
 Bitcoin's canonical block at height 948,139 is a different hash (`000000000000000000018551...87613a79`); only Namecoin's AuxPoW record preserves the parent header here.
 
-**Aside on the slot 10 filler.** The level-0 sibling, `00000000...0000000a`, is the value occupying slot 10 in this AntPool block's slot tree.
+**Aside on the slot 10 filler.**
+The level-0 sibling, `00000000...0000000a`, is the value occupying slot 10 in this AntPool block's slot tree.
 A genuinely occupied slot would carry another auxiliary chain's 32-byte block hash (high entropy throughout); this near-zero pattern is consistent with an unused slot.
 :::
 

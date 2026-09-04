@@ -58,6 +58,9 @@
     "*.{ts,tsx}": [
       "next lint --fix --file",
       "bash -c 'tsc --noEmit'"
+    ],
+    "_posts/**/*.md": [
+      "bash scripts/with-project-node.sh npx tsx scripts/check-sentence-per-line.ts"
     ]
   }
 }

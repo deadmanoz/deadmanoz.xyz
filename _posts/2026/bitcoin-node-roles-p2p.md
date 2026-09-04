@@ -23,8 +23,8 @@ This post examines the various roles and modes of Bitcoin nodes and the topology
 
 ## Node reachability
 
-One way of categorising nodes on the Bitcoin network is whether they are **reachable** or not. 
-In essence, a node is reachable if other nodes on the network can initiate [[inbound||Terms such as **inbound** and **outbound** are from the perspective of the node under consideration. An inbound connection is one initiated by a remote peer towards your node; an outbound connection is one your node initiates towards a remote peer.]] connections to it. 
+One way of categorising nodes on the Bitcoin network is whether they are **reachable** or not.
+In essence, a node is reachable if other nodes on the network can initiate [[inbound||Terms such as **inbound** and **outbound** are from the perspective of the node under consideration. An inbound connection is one initiated by a remote peer towards your node; an outbound connection is one your node initiates towards a remote peer.]] connections to it.
 
 More concretely, a node is likely to be reachable when it is configured to accept inbound connections (`-listen=1`, the default), binds to an appropriate network interface, and its listening port (default 8333 for mainnet) is accessible from the outside, either because the machine has a public IP directly, or because NAT/firewall rules forward traffic appropriately.
 There are also other considerations such as number of available connection slots for inbound peers, and whether the necessary plumbing is in place for alternative networks (e.g., a Tor hidden service, an I2P service, or a CJDNS address).
@@ -44,20 +44,17 @@ Mobile networks use CGNAT [almost universally](https://blog.cloudflare.com/detec
 For node operators behind CGNAT, the main workarounds are overlay networks: **Tor** hidden services (.onion), **I2P** (supported since Bitcoin Core [v22.0](https://bitcoincore.org/en/releases/22.0/) with [PR #20685](https://github.com/bitcoin/bitcoin/pull/20685)), or **CJDNS** (since [v23.0](https://bitcoincore.org/en/releases/23.0/) with [PR #23077](https://github.com/bitcoin/bitcoin/pull/23077)), all of which bypass NAT entirely.
 :::
 
-So the Bitcoin network consists of reachable nodes, openly connectable and therefore straightforward to survey, and unreachable nodes, which cannot accept inbound connections (due to not satisfying one or more of the criteria outlined above) and are therefore much harder to catalogue through network observation alone. 
+So the Bitcoin network consists of reachable nodes, openly connectable and therefore straightforward to survey, and unreachable nodes, which cannot accept inbound connections (due to not satisfying one or more of the criteria outlined above) and are therefore much harder to catalogue through network observation alone.
 The primary way of learning about unreachable nodes is through `addr` messages gossiped across the network, with the caveat that an address appearing in gossip only confirms that a node _existed_ at some point, not that it is still running.
 
-As of April 2026, the long-running [Bitnodes project](https://bitnodes.io/),
-which aims to estimate "the size of the Bitcoin peer-to-peer network by finding
-all reachable and unreachable nodes", puts the total count at roughly 70,000,
-with around 23,000 (about a third) being reachable.
+As of April 2026, the long-running [Bitnodes project](https://bitnodes.io/), which aims to estimate "the size of the Bitcoin peer-to-peer network by finding all reachable and unreachable nodes", puts the total count at roughly 70,000, with around 23,000 (about a third) being reachable.
 That two-thirds are unreachable is unsurprising given the barriers facing home node operators: many sit behind NAT without port forwarding configured, and a growing share are behind CGNAT (see [above](#node-reachability)), where inbound connections are impossible regardless of router settings.
 Node-in-a-box products (Umbrel, Start9, RaspiBlitz) sidestep this by defaulting to Tor, which makes them reachable within the .onion network but not from the clearnet.
 
 ## Node connection management
 
 Every node on the network automatically maintains a small set of outbound connections to peers it has selected itself.
-Reachable nodes additionally allocate slots for inbound connections - peers that have discovered and connected to them. 
+Reachable nodes additionally allocate slots for inbound connections - peers that have discovered and connected to them.
 In total, under a default configuration, a node has a maximum of [125 automatic peer connections](https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md) ([`DEFAULT_MAX_PEER_CONNECTIONS`](https://github.com/bitcoin/bitcoin/blob/master/src/net.h)) to maintain ({@fig:connection-budget}).
 The way these connection slots are budgeted, and the distinct roles assigned to different connection types, are deliberate design decisions that balance node resource constraints against the network's need for robust connectivity between nodes.
 Note that, as explored in [other connection types](#other-connection-types), some special connection types have their own separate slot budgets and are not counted against this limit.
@@ -66,22 +63,22 @@ Note that, as explored in [other connection types](#other-connection-types), som
 
 ### Outbound connections
 
-In a default configuration, a node has 10 persistent outbound peers, and one short-lived feeler, for [11 outbound peers](https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md). 
+In a default configuration, a node has 10 persistent outbound peers, and one short-lived feeler, for [11 outbound peers](https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md).
 The 10 persistent outbound peers consist of [[8 outbound full-relay connections||`ConnectionType::OUTBOUND_FULL_RELAY`]] and [[2 block-relay-only connections||`ConnectionType::BLOCK_RELAY`]].
 The full-relay connections exchange all message types - [[addresses, transactions and blocks||Transactions and blocks are advertised to peers via `inv` (inventory) messages, which signal that the sender has new data available. The recipient can then request the full data with a `getdata` message. Address gossip uses `addr`/`addrv2` messages.]] - with a default maximum of 8 specified by [Satoshi in 2010](https://github.com/bitcoin/bitcoin/commit/c2fa70ddfd7711d514a701b3a7c8adb561acc3ff).
 The block-relay-only connections, introduced in Bitcoin Core [v0.19.0.1](https://bitcoincore.org/en/releases/0.19.0.1/) (in 2019 with [PR #15759](https://github.com/bitcoin/bitcoin/pull/15759)), [[are only for the exchange of block headers and blocks||The motivation for this was to help keep the network topology private, as "knowledge of the network graph could be used to split a target node or nodes from the honest network."]].
 
-[[Feeler connections||`ConnectionType::FEELER`]] are short-lived outbound connections opened approximately [[every 2 minutes||`FEELER_INTERVAL` in `src/net.h`]] to test whether addresses in the node's peer database are reachable, promoting them from the `new` table (learned via gossip, untested) to the `tried` table (successfully connected to at least once) on success. 
+[[Feeler connections||`ConnectionType::FEELER`]] are short-lived outbound connections opened approximately [[every 2 minutes||`FEELER_INTERVAL` in `src/net.h`]] to test whether addresses in the node's peer database are reachable, promoting them from the `new` table (learned via gossip, untested) to the `tried` table (successfully connected to at least once) on success.
 These tables are part of the node's **address manager** (`AddrMan`), which tracks known peer addresses and is complex enough that it will be covered in a future post.
 
 ### Inbound connections
 
 Unlike outbound connections, a reachable node has no say in who connects to it; any other node can claim one of its inbound slots.
-[[Inbound connections||`ConnectionType::INBOUND`]] are therefore less trusted. 
-A node relies on its outbound peers for its best approximation of the true network state. 
+[[Inbound connections||`ConnectionType::INBOUND`]] are therefore less trusted.
+A node relies on its outbound peers for its best approximation of the true network state.
 Inbound peers still contribute by relaying blocks and transactions to the wider network, and may even be the first to deliver them.
 
-With a default cap of 125 automatic connections, 11 of which are reserved for outbound, there are up to 114 inbound slots. 
+With a default cap of 125 automatic connections, 11 of which are reserved for outbound, there are up to 114 inbound slots.
 When a new peer attempts a connection, a node doesn't immediately refuse it.
 Instead, it evaluates the existing inbound peers and evicts "the least useful" (which could turn out to be the new peer itself!).
 Exploring the [[eviction logic||Carved out into its own source files in `src/node/eviction.h` and `src/node/eviction.cpp`]] is beyond the scope of this work, suffice to say it's a process that eliminates peers from being eviction candidates via [[multiple evaluation criteria||For example, network group diversity, ping latency, transaction and block relay usefulness]], with the final remaining peer being the one that is dropped.
@@ -99,14 +96,14 @@ If a node's connections are dominated by Sybil peers, those peers can collaborat
 The outbound/inbound asymmetry described here is one of the primary structural defences against this class of attack.
 :::
 
-[[Transaction `inv` messages ||Inventory announcement messages. A node sends an `inv` to advertise that it has new transactions (or blocks) available for download. The recipient can then request the full data with a `getdata` message]] are batched on a timer, with outbound peers receiving announcements every [[2 seconds||`OUTBOUND_INVENTORY_BROADCAST_INTERVAL` in `src/net_processing.cpp`]] and inbound peers every [[5 seconds||`INBOUND_INVENTORY_BROADCAST_INTERVAL` in `src/net_processing.cpp`]]. 
-The concern is transaction origin inference: a spy opening many inbound connections could correlate `inv` timing to deduce that the node originated a transaction. 
+[[Transaction `inv` messages ||Inventory announcement messages. A node sends an `inv` to advertise that it has new transactions (or blocks) available for download. The recipient can then request the full data with a `getdata` message]] are batched on a timer, with outbound peers receiving announcements every [[2 seconds||`OUTBOUND_INVENTORY_BROADCAST_INTERVAL` in `src/net_processing.cpp`]] and inbound peers every [[5 seconds||`INBOUND_INVENTORY_BROADCAST_INTERVAL` in `src/net_processing.cpp`]].
+The concern is transaction origin inference: a spy opening many inbound connections could correlate `inv` timing to deduce that the node originated a transaction.
 The longer inbound interval ensures all inbound peers from the same network see the same `inv` simultaneously, eliminating differential timing signals regardless of how many connections the attacker opens.
-Outbound peers pose a much lower Sybil risk, so the faster interval trades a small amount of privacy for better propagation speed. 
+Outbound peers pose a much lower Sybil risk, so the faster interval trades a small amount of privacy for better propagation speed.
 That is, the batching makes the attack's effectiveness independent of how many inbound slots the adversary holds, adding more inbound (Sybil) connections yields no additional timing signal.
 
-Outbound peers are also strongly preferred as block sources. 
-With inbound slots being cheap to Sybil, an attacker dominating a node's inbound connections could withhold new blocks, e.g. keeping the node on a stale chain tip, or could selectively delay block announcements to gain a timing advantage. 
+Outbound peers are also strongly preferred as block sources.
+With inbound slots being cheap to Sybil, an attacker dominating a node's inbound connections could withhold new blocks, e.g. keeping the node on a stale chain tip, or could selectively delay block announcements to gain a timing advantage.
 To guard against this, each [[outbound peer||Also any inbound peers with `NoBan` permission (`src/net_permissions.h`)]] is marked as a [[preferred peer||`fPreferredDownload` in `src/net_processing.cpp`]], meaning blocks are requested from outbound peers first, with inbound peers only used as a fallback when no preferred peers are available.
 
 The same preference applies to header synchronisation: initial [[headers-first sync||Headers-first synchronisation works by first downloading all block headers from a peer ("sync peer") and validating the chain of proof-of-work, then downloading full blocks in parallel from multiple peers. This avoids wasting bandwidth on blocks that turn out to be on an invalid or lower-work chain.]] is only initiated from a preferred peer, with inbound peers as a fallback.
@@ -149,7 +146,7 @@ The `x` prefixed service bit filters (e.g. x9 = `NODE_NETWORK | NODE_WITNESS`) a
 Beyond the connection types discussed so far, Bitcoin Core defines two more outbound connection types: operator-specified peers (`ConnectionType::MANUAL`) and privacy-preserving transaction relay (`ConnectionType::PRIVATE_BROADCAST`).
 Each has its own slot accounting so they don't interfere with the automatic outbound budget.
 
-`MANUAL` connections are created via the `-addnode` configuration option or the `addnode` RPC, and have their own separate 8-slot pool. 
+`MANUAL` connections are created via the `-addnode` configuration option or the `addnode` RPC, and have their own separate 8-slot pool.
 That is, adding manual peers never displaces any (automatic) outbound connections, they are separately accounted for.
 Unlike automatic connections, manual peers are not subject to the same rotation and eviction logic, a node with manual peers will persistently try to maintain connections to them.
 
@@ -185,8 +182,8 @@ The first distinction among full nodes is whether they retain a complete copy of
 
 ### Archival nodes
 
-Full archival nodes validate and retain every block from the genesis block onwards. 
-This means they can serve any historical block to peers that request it, most importantly to new nodes that must download and validate the entire chain from scratch (**initial block download** - IBD). 
+Full archival nodes validate and retain every block from the genesis block onwards.
+This means they can serve any historical block to peers that request it, most importantly to new nodes that must download and validate the entire chain from scratch (**initial block download** - IBD).
 A full archival node should advertise as such by [[signalling `NODE_NETWORK` in the service flags||Note that service flags are **unauthenticated self-advertisements**, peers can claim capabilities they don't actually have. A node requesting historical blocks from a peer advertising `NODE_NETWORK` may find the peer unable to deliver, the node simply tries other peers!]] in the `version` message it sends to peers during the version handshake.
 
 :::collapse{The `version` handshake}
@@ -204,12 +201,12 @@ Pruned nodes (`-prune=<N>`) also download and fully validate every block, and ma
 A pruned node relays new blocks and transactions normally, it simply can't serve historical blocks to peers performing IBD.
 
 Regardless of the pruning target, a pruned node always retains at least the most recent [[288 blocks||`MIN_BLOCKS_TO_KEEP` in `src/validation.h`, with the value proposed by [Gregory Maxwell during the original pruning design discussions](https://github.com/bitcoin/bitcoin/pull/4701) as "a minimum number I'd consider acceptable as an absolute minimum for the purpose of reorgs."]], which is approximately two days' worth given the 10-minute block interval.
-The [[minimum pruning target of `-prune=550` (MiB)||See `src/validation.h` for the back-of-the-envelope math.]] is derived from this requirement, accounting for the 288 blocks themselves, undo data overhead, orphan block rate, and [[block file granularity||Blocks are not stored individually, but instead in block files, with `MAX_BLOCKFILE_SIZE` being 128 MiB as per `src/node/blockstorage.h`]]. 
+The [[minimum pruning target of `-prune=550` (MiB)||See `src/validation.h` for the back-of-the-envelope math.]] is derived from this requirement, accounting for the 288 blocks themselves, undo data overhead, orphan block rate, and [[block file granularity||Blocks are not stored individually, but instead in block files, with `MAX_BLOCKFILE_SIZE` being 128 MiB as per `src/node/blockstorage.h`]].
 Pruned nodes advertise `NODE_NETWORK_LIMITED` rather than `NODE_NETWORK` in their service flags, signalling to peers that they can serve recent blocks but cannot be relied upon for historical data during IBD.
 
 ### Blocks-only mode
 
-Orthogonal to the archival/pruned distinction is whether a node participates in **transaction relay**. 
+Orthogonal to the archival/pruned distinction is whether a node participates in **transaction relay**.
 Running with `-blocksonly` disables ordinary transaction relay, so a node in this mode [[won't accept transactions from normal network peers||Peers with the `Relay` permission (`src/net_permissions.h`) are excepted from this and can still send transactions to the node. Separately, peers with the `ForceRelay` permission can force automatic broadcast/rebroadcast of transactions, which is a distinct capability from merely accepting them.]].
 Because transaction relay dominates a typical node's traffic, blocks-only mode can [reduce overall bandwidth consumption by as much as 88%](https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-traffic.md).
 The trade-off is that the node sees far less unconfirmed transaction activity, so its [[mempool remains sparse||Typically containing only locally submitted transactions, any transactions accepted from peers with the `Relay` permission, and transactions force-relayed by peers with `ForceRelay` permission.]], fee estimation is disabled, and it cannot make full use of the mempool-assisted fast path in **compact block relay**.
@@ -278,7 +275,7 @@ This shifts the trust model from "trust proof-of-work" to "trust the server" (un
 
 ## Network topology
 
-The various node types and operating modes described above produce a network that is far from homogeneous. 
+The various node types and operating modes described above produce a network that is far from homogeneous.
 The Bitcoin P2P network has a structure shaped by the asymmetry between reachable and unreachable nodes, the different capabilities advertised by each node, and the deliberate connection management strategies implemented in Bitcoin Core.
 
 ![Bitcoin P2P network topology showing the densely interconnected reachable core and the unreachable periphery, with connection directionality and slot budget detail.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-p2p-network-topology.png){#fig:network-topology}
@@ -290,14 +287,14 @@ Every node on the network makes outbound connections, and those connections nece
 As a result, this **reachable core** collectively absorbs all outbound connection attempts from the entire network.
 A reachable node with 114 inbound slots might serve as a connection point for dozens of unreachable nodes simultaneously, while maintaining its own 10 outbound connections to other reachable peers.
 
-This creates a hub-and-spoke dynamic ({@fig:network-topology}) where the ~23,000 reachable nodes form the backbone through which up to ~47,000 unreachable nodes access the network. 
+This creates a hub-and-spoke dynamic ({@fig:network-topology}) where the ~23,000 reachable nodes form the backbone through which up to ~47,000 unreachable nodes access the network.
 The unreachable nodes are on the periphery, consuming connectivity from the reachable core but unable to provide it to others.
 This is not a design flaw; it is an inevitable consequence of many node operators being unable to configure inbound access (e.g., NAT, CGNAT, firewalls).
 
 ### Block and transaction propagation
 
-The heterogeneous mix of relay policies and connection types, e.g., full-relay connections, block-relay-only connections, and connections involving blocks-only nodes, creates distinct overlay networks layered on top of the same physical topology. 
-Blocks propagate across all connection types, giving them a rich, redundant set of paths through the network. 
+The heterogeneous mix of relay policies and connection types, e.g., full-relay connections, block-relay-only connections, and connections involving blocks-only nodes, creates distinct overlay networks layered on top of the same physical topology.
+Blocks propagate across all connection types, giving them a rich, redundant set of paths through the network.
 Transactions, by contrast, only flow over full-relay connections, meaning the transaction relay graph is a subset of the block relay graph ({@fig:propagation-overlays}).
 
 ![Block and transaction propagation overlays showing that full-relay connections carry both block relay (solid blue) and transaction relay (dashed yellow), while block-relay-only connections and connections to blocks-only nodes carry only block relay, making the transaction relay graph a strict subset of the block relay graph.](/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-block-tx-propagation-overlays.png){#fig:propagation-overlays}

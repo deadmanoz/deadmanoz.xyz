@@ -266,8 +266,9 @@ Breakdown of multisig configurations by protocol as of block height 918,997 (14 
 In the context of P2MS, a spendable output contains at least one valid public key with a known corresponding private key, meaning the output could theoretically be spent to recover the encumbered bitcoin.
 An unspendable output either contains no valid public keys or uses keys for which no private key [[is known to exist||We say "effectively unspendable" rather than "provably unspendable" because while Key Burn addresses are derived from known text patterns (making it practically impossible to find a corresponding private key without breaking ECDSA), we cannot cryptographically *prove* that no private key exists - unlike `OP_RETURN` outputs where the script always fails.]] (such as Bitcoin Stamps' Key Burn addresses), permanently locking the bitcoin in the UTXO set.
 
-As explored in [Part 1: Fundamentals and Examples - Fake Keys](./p2ms-data-carry-1#fake-keys), we can assess pubkeys to determine if they are invalid. 
-More specifically, we can check whether a given public key is a valid point on the ECDSA secp256k1 curve. If it is not, we know it is a "fake" public key.
+As explored in [Part 1: Fundamentals and Examples - Fake Keys](./p2ms-data-carry-1#fake-keys), we can assess pubkeys to determine if they are invalid.
+More specifically, we can check whether a given public key is a valid point on the ECDSA secp256k1 curve.
+If it is not, we know it is a "fake" public key.
 However, if it is on the curve, it could be a true key or just "data" that happens to correspond to a point on the curve.
 This property is one component in the analysis of the spendability of the P2MS outputs in the UTXO set.
 
@@ -364,7 +365,7 @@ Distribution of the age (per-month) of P2MS outputs in the UTXO set, separated b
 
 There are a few interesting observations to be made from this visualisation:
 - We can see the rise and fall in the popularity of Omni (2014-2016)
-- We can see the rise, fall (2014-2016) and later muted resurgence of Counterparty (2023), with the resurgence likely relating to the launch of Bitcoin Stamps in April 2023. 
+- We can see the rise, fall (2014-2016) and later muted resurgence of Counterparty (2023), with the resurgence likely relating to the launch of Bitcoin Stamps in April 2023.
 - We can see that in April 2013 there was a peak in Data Storage P2MS outputs, due to both the "WikiLeaks Cablegate" data and the "Bitcoin Whitepaper" being embedded in P2MS outputs in this month.
 
 ### Data content type breakdown
@@ -401,11 +402,11 @@ Collectively, image formats represent approximately 3% of outputs but only 0.31%
 
 ### Data size breakdown
 
-Given the commentary that appears whenever discussing the UTXO set, another natural question to ask about the P2MS outputs is "what is the data size of the P2MS outputs"? 
+Given the commentary that appears whenever discussing the UTXO set, another natural question to ask about the P2MS outputs is "what is the data size of the P2MS outputs"?
 At the highest level, we can answer this question by simply considering the full size of each P2MS script.
-For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compressed public keys has a size of 105 bytes: 
+For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compressed public keys has a size of 105 bytes:
 
-- `OP_1` - 1 byte 
+- `OP_1` - 1 byte
 - `OP_PUSHBYTES_33 <33-byte pubkey>` - 1 + 33 bytes
 - `OP_PUSHBYTES_33 <33-byte pubkey>` - 1 + 33 bytes
 - `OP_PUSHBYTES_33 <33-byte pubkey>` - 1 + 33 bytes
@@ -434,7 +435,8 @@ For example, a "typical" {{green:1-of-3}} P2MS output script with 33-byte compre
 | {{green:2-of-3}} | CCU | 137 B | 5 | 685 B | <0.01% |
 | **Total** | | | **2,423,456** | **252.2 MB** | **100.00%** |
 
-P2MS multisig configurations in the UTXO set showing key combinations, script sizes, and total data footprint. C = compressed keys (33 bytes), U = uncompressed keys (65 bytes).{#tab:multisig-script-sizes}
+P2MS multisig configurations in the UTXO set showing key combinations, script sizes, and total data footprint.
+C = compressed keys (33 bytes), U = uncompressed keys (65 bytes).{#tab:multisig-script-sizes}
 
 {@tab:multisig-script-sizes} reveals that the total data size of all P2MS outputs in the UTXO set is 252.2 MB, with {{green:1-of-3}} multisig with compressed keys accounting for 223 MB (87.63%) of this data footprint alone.
 Note that the entire UTXO set at block height 918,997 is approximately 11.4 GB in size, meaning P2MS outputs account for ~2.2% of the total UTXO set size, despite only representing 1.46% of the total outputs.
@@ -458,7 +460,7 @@ Distribution of P2MS transaction sizes, as of block height 918,997 (14 October 2
 
 #### Value distribution
 
-{@fig:value-distribution} shows the distribution of P2MS output values across different ranges, with protocol-specific breakdowns available via the legend. 
+{@fig:value-distribution} shows the distribution of P2MS output values across different ranges, with protocol-specific breakdowns available via the legend.
 This figure reveals the following insights:
 - **A mode at 546-1K sats**: 1.82M outputs (75% of all P2MS outputs), almost entirely attributable to Bitcoin Stamps.
 This is just above the 546 sat dust threshold, obviously motivated by ensuring transaction standardness while minimising the cost of data embedding.
@@ -477,7 +479,7 @@ It might seem that the dust limit for P2MS outputs depends on the multisig confi
 The following unpacks how Bitcoin Core calculates the dust threshold for outputs; we'll find that the dust threshold to spend P2MS outputs is 546 sats when spending to a non-segwit output (e.g., P2PKH), or 294 sats when spending to a segwit output (e.g., P2WPKH), _**regardless of the multisig configuration or key types used**_.
 
 :::collapse{Bitcoin Core Policy & Dust Threshold Calculation}
-Each output is checked whether it is dust via [`IsDust`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L65), with the output value evaluated against the dust threshold ([`GetDustThreshold`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L26)). 
+Each output is checked whether it is dust via [`IsDust`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L65), with the output value evaluated against the dust threshold ([`GetDustThreshold`](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.cpp#L26)).
 Both of these methods require a value for the `dustRelayFeeIn` argument; this is `DUST_RELAY_TX_FEE` which has a current value of 3000 sat/kvB (set [here](https://github.com/bitcoin/bitcoin/blob/a14e7b9dee9145920f93eab0254ce92942bd1e5e/src/policy/policy.h#L64)).
 
 ```c++
@@ -529,9 +531,9 @@ As the comment suggests, this 148 bytes is an assumption of the size of the `scr
 - 107 bytes: typical `scriptSig` size, e.g. `OP_PUSHBYTES_72` `<72-byte-sig>` `OP_PUSHBYTES_33` `<33-byte-compressed-key>`
 - 4 bytes: `sequence`
 
-Although this fixed input size is used for all non-segwit inputs, it's worth considering what the input size would look like to spend a P2MS output. 
-We'd have the common elements of `txid` (32 bytes), `vout` (4 bytes), `scriptSig` length (1 byte), and `sequence` (4 bytes), for 41 bytes. 
-The `scriptSig` is where we'd see variation depending on the number of required signatures ({{green:m}}) in the {{green:m-of-n}} multisig configuration. 
+Although this fixed input size is used for all non-segwit inputs, it's worth considering what the input size would look like to spend a P2MS output.
+We'd have the common elements of `txid` (32 bytes), `vout` (4 bytes), `scriptSig` length (1 byte), and `sequence` (4 bytes), for 41 bytes.
+The `scriptSig` is where we'd see variation depending on the number of required signatures ({{green:m}}) in the {{green:m-of-n}} multisig configuration.
 Note that there is an `OP_0` dummy element to address the extra stack element consumed by `OP_CHECKMULTISIG` and `OP_CHECKMULTISIGVERIFY`, as per [BIP-147](https://github.com/bitcoin/bips/blob/master/bip-0147.mediawiki), and [[we assume the mid-point 72-bytes for a signature||A DER-encoded signature can be between 71 and 73-bytes]].
 
 | Multisig configuration | `scriptSig` breakdown | `scriptSig` size (bytes) | Total size (bytes) |
@@ -626,7 +628,8 @@ In the classification system, after Key Burn detection, data is extracted from t
 The decrypted payload must contain a `stamp:` (or variant) signature to confirm validity.
 
 Variant classification then proceeds in priority order: compressed data (ZLIB/GZIP) is identified first, followed by image formats (PNG, GIF, JPEG, WebP, SVG, BMP, PDF) which constitute the "Classic" variant.
-JSON payloads are parsed for protocol markers such as `"p":"src-20"` ("SRC-20" - fungible tokens), `"p":"src-721"` ("SRC-721" - non-fungible tokens) and `"p":"src-101"` ("SRC-101" - naming service). HTML documents and generic binary data fall into subsequent categories. 
+JSON payloads are parsed for protocol markers such as `"p":"src-20"` ("SRC-20" - fungible tokens), `"p":"src-721"` ("SRC-721" - non-fungible tokens) and `"p":"src-101"` ("SRC-101" - naming service).
+HTML documents and generic binary data fall into subsequent categories.
 
 The system also distinguishes between "Pure" Bitcoin Stamps (direct P2MS encoding) and those embedded within Counterparty transport, which exhibit both `CNTRPRTY` and `stamp:` signatures in the decrypted payload.
 
@@ -646,7 +649,8 @@ The system also distinguishes between "Pure" Bitcoin Stamps (direct P2MS encodin
 
 Bitcoin Stamps sub-protocol composition as of block height 918,997 (14 October 2025).{#tab:stamps-variants}
 
-"SRC-20" tokens dominate at ~90% of Bitcoin Stamps P2MS outputs, reflecting the protocol's primary use for "fungible token operations". "SRC-20" is a JSON-only protocol, so all "SRC-20" P2MS outputs contain JSON data like the following (as decoded in [Part 1](./p2ms-data-carry-1#data-carrying-in-p2ms-a-bitcoin-stamps-example)):
+"SRC-20" tokens dominate at ~90% of Bitcoin Stamps P2MS outputs, reflecting the protocol's primary use for "fungible token operations".
+"SRC-20" is a JSON-only protocol, so all "SRC-20" P2MS outputs contain JSON data like the following (as decoded in [Part 1](./p2ms-data-carry-1#data-carrying-in-p2ms-a-bitcoin-stamps-example)):
 ```json
 stamp: {
 	"p":"src-20",
@@ -681,8 +685,7 @@ The overheads of Counterparty were explored in [Part 1](./p2ms-data-carry-1#summ
 Bitcoin Stamps transport mechanism breakdown.{#tab:stamps-transport}
 
 Despite the relatively low value locked in outputs (14.19 BTC), Bitcoin Stamps users have demonstrated their willingness to pay for the "permanence guarantee".
-For example, with the protocol having emerged during the 2023 Ordinals/Inscriptions hype, the fact that 
-people chose to use Bitcoin Stamps over Ordinals/Inscriptions can perhaps be seen as a preference for permanence over lower cost.
+For example, with the protocol having emerged during the 2023 Ordinals/Inscriptions hype, the fact that people chose to use Bitcoin Stamps over Ordinals/Inscriptions can perhaps be seen as a preference for permanence over lower cost.
 
 Although the average value per Bitcoin Stamps P2MS output is just 796 sats ({@tab:stamps-economics}), with the average size of a Classic Stamp being 17.28 outputs per transaction ({@tab:stamps-variants}), the average cost per Classic Stamp transaction is ~13,760 sats just for the outputs alone, plus transaction fees.
 On the matter of fees, Bitcoin Stamps users have paid approximately 218.50 BTC in transaction fees to embed data using P2MS outputs since the protocol's inception.
@@ -726,7 +729,7 @@ Weekly distribution of Bitcoin Stamps variants by output count. {#fig:stamps-var
 
 ### Counterparty
 
-Counterparty is the second largest contributor to P2MS outputs in the UTXO set, accounting for ~23% of all such outputs. 
+Counterparty is the second largest contributor to P2MS outputs in the UTXO set, accounting for ~23% of all such outputs.
 Unlike Bitcoin Stamps' deliberately unspendable outputs, every Counterparty P2MS output contains, in theory, at least one valid public key, ensuring spendability and avoiding permanent UTXO set inclusion.
 ~35.86 BTC is currently locked in Counterparty P2MS outputs.
 
@@ -891,7 +894,9 @@ These represent various experimental or short-lived protocols that used P2MS for
 
 Breakdown of ASCII identifier protocol variants observed in P2MS UTXOs, as of block height 918,997 (14 October 2025).{#tab:ascii-identifier-variants}
 
-`TB0001` (41.9%) is the most common variant, though the protocol's purpose remains unidentified. `METROXMN` (22.2%) is associated with [Metronotes XMN](https://bitcointalk.org/index.php?topic=974486.0), which appears to be a scam. `TEST01` (21.9%) likely represents testing activity during protocol development or experimentation.
+`TB0001` (41.9%) is the most common variant, though the protocol's purpose remains unidentified.
+`METROXMN` (22.2%) is associated with [Metronotes XMN](https://bitcointalk.org/index.php?topic=974486.0), which appears to be a scam.
+`TEST01` (21.9%) likely represents testing activity during protocol development or experimentation.
 The "Other ASCII Protocol" category (14.0%) is almost entirely `NEWBCOIN` (113 of 114 outputs), an unknown protocol from late 2014.
 Approximately half of the `NEWBCOIN` transactions (11 of 20) embed gzip-compressed data across multiple P2MS outputs per transaction (9–10 outputs each), while the remainder are single-output transactions without compression.
 The single non-`NEWBCOIN` output is `PRVCY` from March 2015.
@@ -1065,14 +1070,16 @@ The continued use of P2MS specifically for JSON payloads, when `OP_RETURN` is no
 
 ### The case for deprecating P2MS
 
-Given the data presented in this analysis, there is a reasonable case for deprecating the creation of new P2MS outputs. That is, introducing a soft fork to make the creation of new P2MS outputs invalid by consensus.
+Given the data presented in this analysis, there is a reasonable case for deprecating the creation of new P2MS outputs.
+That is, introducing a soft fork to make the creation of new P2MS outputs invalid by consensus.
 
 The arguments in favour of deprecation include:
 
 1. **P2MS is not used for its intended purpose.**
 The data is unambiguous: 99.98% of P2MS UTXOs serve data embedding protocols, not multisig custody.
 Legitimate multisig users migrated to P2SH and P2WSH years ago, which offer better privacy, lower fees, and broader wallet support.
-Modern wallets largely do not support P2MS at all; as Bitcoin Core maintainer Ava Chow [noted in August 2023](https://github.com/bitcoin/bitcoin/pull/28217#issuecomment-1666620826): _"Bare multisigs are generally unusable to the vast majority of wallet software, if not all of them. They do not have an address type so the vast majority of users are completely unable to send to them."_
+Modern wallets largely do not support P2MS at all; as Bitcoin Core maintainer Ava Chow [noted in August 2023](https://github.com/bitcoin/bitcoin/pull/28217#issuecomment-1666620826): _"Bare multisigs are generally unusable to the vast majority of wallet software, if not all of them.
+They do not have an address type so the vast majority of users are completely unable to send to them."_
 
 2. **The primary user no longer needs P2MS.**
 As detailed above, Bitcoin Stamps' current usage is entirely JSON-based sub-protocols that don't require UTXO set permanence.
@@ -1086,9 +1093,11 @@ Preventing new unspendable P2MS outputs would halt the ongoing UTXO set growth f
 
 The arguments against deprecation are primarily procedural rather than technical:
 
-- **Bitcoin's conservatism regarding consensus changes.** Any change that invalidates previously valid transactions requires careful consideration, even if the affected use cases are not the intended purpose.
+- **Bitcoin's conservatism regarding consensus changes.**
+  Any change that invalidates previously valid transactions requires careful consideration, even if the affected use cases are not the intended purpose.
 
-- **Precedent concerns.** Some argue that restricting how people use Bitcoin, even for purposes such as data carrying via deliberately unspendable transaction outputs, sets a problematic precedent.
+- **Precedent concerns.**
+  Some argue that restricting how people use Bitcoin, even for purposes such as data carrying via deliberately unspendable transaction outputs, sets a problematic precedent.
 
 - **Existing outputs remain.**
 Deprecating new P2MS outputs does nothing about the 2.4M outputs already in the UTXO set.

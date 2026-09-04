@@ -71,8 +71,16 @@ e2e:
 e2e-ui:
     {{node-run}} npx playwright test --ui
 
-# Run lint, typecheck, and unit tests
-check: lint typecheck test
+# Check _posts markdown for one-sentence-per-line layout
+check-prose *args:
+    {{node-run}} npx tsx scripts/check-sentence-per-line.ts {{args}}
+
+# Rewrite _posts markdown to one-sentence-per-line layout
+fix-prose *args:
+    {{node-run}} npx tsx scripts/check-sentence-per-line.ts --fix {{args}}
+
+# Run lint, typecheck, unit tests, and sentence-per-line check
+check: lint typecheck test check-prose
 
 # Open in browser
 open:
@@ -109,8 +117,8 @@ preview:
 
 # Generate plot data from data-carry-research
 generate-plots:
-    ./scripts/generate-plot-data.sh
+    ~/dev/research/data-carry/blog-tools/generate-plot-data.sh
 
 # Generate cumulative P2MS plot from CSV data (mainnet.observer)
 generate-cumulative-plot:
-    {{node-run}} node scripts/generate-p2ms-plot.js
+    {{node-run}} node ~/dev/research/data-carry/blog-tools/generate-p2ms-plot.js

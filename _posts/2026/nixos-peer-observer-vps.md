@@ -20,7 +20,8 @@ status: published
 I've recently started contributing to the [peer-observer](https://github.com/peer-observer/peer-observer) ecosystem.
 peer-observer is a set of tooling developed by [B10C](https://b10c.me/) for monitoring the Bitcoin network "_for P2P anomalies and attacks using well-behaving, passive Bitcoin Core honeynodes (honeypot nodes)._"
 This was, in part, motivated by the "call to action" put out by B10C in [his post from July 2025](https://b10c.me/projects/024-peer-observer/), and the idea of forming a "Bitcoin Network Operations Collective" (BNOC):
-> "_A loose, decentralized group of people who share the interest of monitoring the Bitcoin Network. A collective to enable sharing of ideas, discussion, data, tools, insights, and more... A place where a Bitcoin network incident could be analyzed, discussed, and ideally resolved..._"
+> "_A loose, decentralized group of people who share the interest of monitoring the Bitcoin Network.
+> A collective to enable sharing of ideas, discussion, data, tools, insights, and more... A place where a Bitcoin network incident could be analyzed, discussed, and ideally resolved..._"
 
 For a month or two I had been tinkering with a bit of a Frankenstein's monster peer-observer setup running on my home server, cobbled together with a pre-existing Bitcoin Core node and [some Docker containers for the peer-observer stack](https://github.com/ClubeBitcoinUnB/peer-observer-docker), but had a number of issues.
 
@@ -35,7 +36,7 @@ After asking B10C and some other members of the fledgling BNOC for recommendatio
 
 I was initially hoping to find a VPS provider that would support NixOS "out-of-the-box" but I found that this was likely to be a fool's errand [as highlighted by Carl Dong in his presentation at bitcoin++ 2023 (nix-edition)](https://www.youtube.com/live/bKTbis4elR8?si=5p4tLUu77Pw1PiYK&t=5780):
 
->"nobody supports NixOS... VPS providers don't have first class support for NixOS".
+> "nobody supports NixOS... VPS providers don't have first class support for NixOS".
 
 Edouard Paris's post ([Install NixOS on an OVH VPS with nixos-anywhere](https://edouard.paris/notes/install-nixos-on-an-ovh-vps-with-nixos-anywhere/)), which is where I found the link to the above talk, helped me understand that I could install NixOS on a VPS that initially came with another distro installed (e.g. Debian).
 So I provisioned an Ubuntu 25.04 VPS with the following specs:

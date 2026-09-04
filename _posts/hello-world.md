@@ -75,13 +75,16 @@ The display text also renders italics and bold: [[4-byte _side mask_||The 4 byte
 Before Bitcoin, there were several attempts at creating digital currencies, many of which faced significant challenges:
 
 #### DigiCash (1990s)
-Created by David Chaum, DigiCash was one of the first attempts at anonymous digital currency. It used cryptographic protocols to ensure privacy, but ultimately failed due to limited adoption and the company's bankruptcy in 1998.
+Created by David Chaum, DigiCash was one of the first attempts at anonymous digital currency.
+It used cryptographic protocols to ensure privacy, but ultimately failed due to limited adoption and the company's bankruptcy in 1998.
 
 #### E-gold (1996-2009)
-E-gold was backed by gold reserves and became quite popular, processing over $2 billion in transactions at its peak. However, it was shut down by the U.S. government due to money laundering concerns and lack of proper financial controls.
+E-gold was backed by gold reserves and became quite popular, processing over $2 billion in transactions at its peak.
+However, it was shut down by the U.S. government due to money laundering concerns and lack of proper financial controls.
 
 #### HashCash (1997)
-Adam Back's HashCash was a proof-of-work (PoW) system designed to combat email spam. While not a currency itself, it introduced the PoW concept that would later become crucial to Bitcoin's mining mechanism.
+Adam Back's HashCash was a proof-of-work (PoW) system designed to combat email spam.
+While not a currency itself, it introduced the PoW concept that would later become crucial to Bitcoin's mining mechanism.
 
 #### Bit Gold (~1998-2000s)
 Proposed by Nick Szabo, Bit Gold was never implemented but contained many elements that would later appear in Bitcoin, including proof-of-work and a decentralized approach to currency creation.
@@ -111,11 +114,14 @@ function squarePlusOne(x: number): number {
 :::
 
 :::alert{warning}
-**Satoshi on Trust** (February 2009): "The root problem with conventional currency is all the trust that's required to make it work. The central bank must be trusted not to debase the currency, but the history of fiat currencies is full of breaches of that trust."
+**Satoshi on Trust** (February 2009): "The root problem with conventional currency is all the trust that's required to make it work.
+The central bank must be trusted not to debase the currency, but the history of fiat currencies is full of breaches of that trust."
 :::
 
 :::alert{success}
-**Satoshi on Lost Coins** (2010): "Lost coins only make everyone else's coins worth slightly more. Think of it as a donation to everyone." With a fixed supply of \(21 \times 10^6\) bitcoins, this [[deflationary observation||Each lost bitcoin increases scarcity for remaining holders.]] highlights an elegant economic property.
+**Satoshi on Lost Coins** (2010): "Lost coins only make everyone else's coins worth slightly more.
+Think of it as a donation to everyone."
+With a fixed supply of \(21 \times 10^6\) bitcoins, this [[deflationary observation||Each lost bitcoin increases scarcity for remaining holders.]] highlights an elegant economic property.
 :::
 
 :::alert{danger}
@@ -148,7 +154,8 @@ A plot defined with inline JSON, captioned, and assigned a figure id so it joins
 :::
 Bitcoin network hash rate over 2023-2025, drawn from inline plot JSON. {#fig:hashrate}
 
-Try scrolling the range slider at the bottom, or click and drag to zoom. See {@fig:hashrate} for the trend.
+Try scrolling the range slider at the bottom, or click and drag to zoom.
+See {@fig:hashrate} for the trend.
 
 A plot whose data lives in an external JSON file via the `src="..."` attribute:
 

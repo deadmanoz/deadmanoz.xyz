@@ -20,7 +20,7 @@ status: published
 
 Pay-to-Multisig (P2MS) is Bitcoin's original multisig format, since superseded by more efficient alternatives like P2SH and P2WSH.
 Even so, it persisted - and still persists - as a vehicle for data carriage, with multiple protocols embedding payloads into fake pubkeys inside Bitcoin transactions.
-Three major protocols dominate this practice: Bitcoin Stamps, Counterparty and Omni. 
+Three major protocols dominate this practice: Bitcoin Stamps, Counterparty and Omni.
 
 Bitcoin Stamps employs ARC4 obfuscation (TXID-keyed) and can be identified by distinctive Key Burn patterns in the original pub keys (`0x0222...`, `0x0333...`, etc).
 A protocol identifier, e.g., `stamp:`, appears only once in the deobfuscated key data.
@@ -93,10 +93,10 @@ Indeed, even [mempool.space](https://mempool.space/tx/eb96a65e4a332f2c84cb847268
 ## Fake keys
 
 The 3rd key is indeed a fake key in the sense that it's not a public key that has a known corresponding private key.
-This fake key, `020202020202020202020202020202020202020202020202020202020202020202`, is actually one of the *Key Burn* addresses that are used by Bitcoin Stamps, one of the leading data carrying protocols that use P2MS. 
+This fake key, `020202020202020202020202020202020202020202020202020202020202020202`, is actually one of the *Key Burn* addresses that are used by Bitcoin Stamps, one of the leading data carrying protocols that use P2MS.
 
 The ability to generate predetermined patterns of public keys such as Key Burn addresses in this instance, or burn addresses in general, is almost impossible because it requires generating a private key that leads to the desired public key.
-Said another way, the probability of arriving at a pre-determined pattern for an ECC-256 public key is "infinitesimally small to the point where a computer would need to grind away at keys for billions of years in order to produce a valid private key" [[Bitcoin Stamps||https://github.com/mikeinspace/stamps/blob/main/Key-Burn.md]]. 
+Said another way, the probability of arriving at a pre-determined pattern for an ECC-256 public key is "infinitesimally small to the point where a computer would need to grind away at keys for billions of years in order to produce a valid private key" [[Bitcoin Stamps||https://github.com/mikeinspace/stamps/blob/main/Key-Burn.md]].
 
 Because of the near impossibility of generating a private key that leads to a predetermined pattern in a public key, the existence of a highly improbable patterned public key is accepted as evidence that there is no corresponding private key... and that the key cannot be used to spend the output!
 
@@ -254,13 +254,13 @@ That is, these values ensure that each output and thus the overall transaction i
 
 ### Unspendable P2MS outputs
 
-In the above we established that the P2MS transaction outputs were actually purely for data carrying (or were Key Burn) and did not involve real public keys. 
+In the above we established that the P2MS transaction outputs were actually purely for data carrying (or were Key Burn) and did not involve real public keys.
 As such, these P2MS outputs are effectively unspendable outputs, and, given the current design of Bitcoin, [[they'll remain in the UTXO set of every Bitcoin node||At least until quantum computers can derive private keys for those keys that might be valid points on the ECDSA secp256k1 curve]].
 Each time there's a transaction that embeds data in P2MS outputs in the manner described above, there will be at least one, but possibly more, new unspendable P2MS UTXOs added to the UTXO set.
 
 Note that this is, perhaps obviously, intentional.
 As is noted in the [Bitcoin Stamps documentation](https://github.com/mikeinspace/stamps/blob/main/BitcoinStamps.md):
->"By doing so, the data is preserved in such a manner that is impossible to prune from a full Bitcoin Node, preserving the data immutably forever."
+> "By doing so, the data is preserved in such a manner that is impossible to prune from a full Bitcoin Node, preserving the data immutably forever."
 
 I think many would consider this wasteful - every time there is some form of individual activity on Bitcoin Stamps, such as the transfer operation from the above example, there's a one-to-one mapping to activity on Bitcoin, tracked forever, by all Bitcoin nodes!
 It's probably worth examining Bitcoin Stamps in a bit more detail to better understand the what and why.
@@ -270,9 +270,9 @@ It's probably worth examining Bitcoin Stamps in a bit more detail to better unde
 Bitcoin Stamps were developed in response to most NFTs being _"merely image pointers to centralized hosting or stored on-chain in prunable witness data"_.
 They were a means to achieve permanence in _"storing art on the blockchain"_ and indeed STAMP is an acronym for Secure, Tradeable Art Maintained Securely.
 The [original spec](https://github.com/mikeinspace/stamps/blob/main/BitcoinStamps.md) also stated that Bitcoin Stamps encode:
->_"an image's binary content to a base64 string, placing this string as a suffix to `STAMP:` in a transaction's description key, and then broadcasting it using the Counterparty protocol onto the Bitcoin ledger._
->_The length of the string means that Counterparty defaults to bare multisig, thereby chunking the data into outputs rather than using the limited (and prunable) `OP_RETURN`._
->_By doing so, the data is preserved in such a manner that is impossible to prune from a full Bitcoin Node, preserving the data immutably forever."_
+> _"an image's binary content to a base64 string, placing this string as a suffix to `STAMP:` in a transaction's description key, and then broadcasting it using the Counterparty protocol onto the Bitcoin ledger._
+> _The length of the string means that Counterparty defaults to bare multisig, thereby chunking the data into outputs rather than using the limited (and prunable) `OP_RETURN`._
+> _By doing so, the data is preserved in such a manner that is impossible to prune from a full Bitcoin Node, preserving the data immutably forever."_
 
 The above examination of the [`eb96a65e...`](https://mempool.space/tx/eb96a65e4a332f2c84cb847268f614c037e038d2c386eb08d49271966c1b0000) transaction is but just one example of Bitcoin Stamps embedding arbitrary data in P2MS outputs.
 In fact, Bitcoin Stamps has used a variety of techniques since the first transactions, [`17686488...`](https://jpja.github.io/Electrum-Counterparty/decode_tx.html?tx=17686488353b65b128d19031240478ba50f1387d0ea7e5f188ea7fda78ea06f4) and [`eb3da814...`](https://jpja.github.io/Electrum-Counterparty/decode_tx.html?tx=eb3da8146e626b5783f4359fb1510729f4aad923dfac45b6f1f3a2063907147c), were included in Block [779,652](https://mempool.space/block/00000000000000000002ea8eb5df114c3f198c7ef5851435e8a4d8e7bd33121c).
@@ -416,9 +416,7 @@ These random characters are actually [base64 encoded data of an image](https://g
 > _"encoding an image's binary content to a base64 string, placing this string as a suffix to `STAMP:` in a transaction's description key, and then broadcasting it using the Counterparty protocol onto the Bitcoin ledger... `STAMP:<base64 data>`"_
 
 Typically, there would be some "magic bytes" or MIME-type and encoding for image data, but the rationale for the absence of this data in Bitcoin Stamps payloads was [given as](https://github.com/mikeinspace/stamps/blob/main/BitcoinStamps.md#absence-of-mime-type-and-encoding):
-> - _"The fewer the bytes the better."_
-> - _"Given the limited scope of acceptable file formats, we are confident that decoding them accurately based on the base64 string alone is trivial."_
-> - _"We are only interested in decoding base64, so if the string does not conform to valid base64 it is rejected._
+> - _"The fewer the bytes the better."_ - _"Given the limited scope of acceptable file formats, we are confident that decoding them accurately based on the base64 string alone is trivial."_ - _"We are only interested in decoding base64, so if the string does not conform to valid base64 it is rejected._
 > _Therefore, specification of the encoding is unnecessary."_
 
 Anyway, before we deal with the base64 we need to handle the other P2MS outputs.
@@ -437,8 +435,8 @@ This example has shown how Bitcoin Stamps created 77 P2MS unspendable outputs in
 :::
 
 ## Counterparty
-We began our exploration of data carrying in P2MS with Bitcoin Stamps because this protocol is both the most prolific user of P2MS for data carrying purposes, and is largely the only protocol still in active use today. 
-It started, however, with Classic Stamps leveraging Counterparty, which was the first protocol to start using P2MS for data carrying purposes in a significant way back in 2014. 
+We began our exploration of data carrying in P2MS with Bitcoin Stamps because this protocol is both the most prolific user of P2MS for data carrying purposes, and is largely the only protocol still in active use today.
+It started, however, with Classic Stamps leveraging Counterparty, which was the first protocol to start using P2MS for data carrying purposes in a significant way back in 2014.
 
 We won't dwell much on the history of Counterparty here, it's incredibly well documented elsewhere, including:
 - [BitMEX Research - Battle of the Dexes (September 2020)](https://blog.bitmex.com/battle-of-the-dexes/)
@@ -457,8 +455,7 @@ By encoding its protocol messages in Bitcoin transactions, Counterparty leverage
 The protocol initially used P2MS outputs for data embedding before transitioning to `OP_RETURN` outputs once they became _**standard**_, though P2MS continued to be used for larger transactions that exceeded `OP_RETURN`'s (standardness) size limits.
 Counterparty's approach was influential in demonstrating both the potential and controversy of using Bitcoin for purposes beyond simple value transfer.
 
-Counterparty is also of some importance in being the [[single largest example of proof-of-burn in Bitcoin||According to the 2025 paper titled "Bitcoin Burn Addresses: Unveiling the Permanent Losses and
-Their Underlying Causes", Counterparty accounts for 66.6% of the total bitcoins lost in burn addresses]].
+Counterparty is also of some importance in being the [[single largest example of proof-of-burn in Bitcoin||According to the 2025 paper titled "Bitcoin Burn Addresses: Unveiling the Permanent Losses and Their Underlying Causes", Counterparty accounts for 66.6% of the total bitcoins lost in burn addresses]].
 Proof-of-burn was seen as a way to bootstrap the Counterparty ecosystem without requiring an ICO or pre-mining, which were common practices at the time.
 Proof-of-burn involves sending Bitcoin to an unspendable address, effectively "burning" the Bitcoin, and, in the Counterparty case, receiving Counterparty (XCP) tokens in return.
 During January 2014, Counterparty distributed XCP tokens to those who sent Bitcoin to the provably unspendable [`1CounterpartyXXXXXXXXXXXXXXXUWLpVr`](https://mempool.space/address/1CounterpartyXXXXXXXXXXXXXXXUWLpVr) address.
@@ -573,7 +570,7 @@ The Bitcoin sent to the address were used to fund the project]].
 
 Mastercoin had a somewhat rocky history, check out the June 2014 Forbes article [The First 'Bitcoin 2.0' Crowd Sale Was A Wildly Successful $7 Million Disaster](https://www.forbes.com/sites/kashmirhill/2014/06/03/mastercoin-maidsafe-crowdsale/) for some early context, but despite this, it has had a lasting impact on Bitcoin.
 Most prominently Tether (USDT) [launched on the Mastercoin protocol as "Realcoin"](https://en.wikipedia.org/wiki/Tether_(cryptocurrency)) and, for years, billions of dollars worth of USDT transactions were embedded in Bitcoin's blockchain via Mastercoin/Omni transactions.
-Mastercoin was re-branded to Omni in 2015, likely to [cast off some of the negative connotations associated with the Mastercoin project](https://en.cryptonomist.ch/2024/04/17/mastercoin-crypto-the-story-of-the-communication-protocol-based-on-bitcoin-which-later-became-omni/).  
+Mastercoin was re-branded to Omni in 2015, likely to [cast off some of the negative connotations associated with the Mastercoin project](https://en.cryptonomist.ch/2024/04/17/mastercoin-crypto-the-story-of-the-communication-protocol-based-on-bitcoin-which-later-became-omni/).
 
 ### Embedding Omni transactions in Bitcoin
 The Omni protocol specifies three different ways to embed data in the Bitcoin blockchain:
@@ -595,8 +592,8 @@ This can range between 1 and 255, which implies:
 To encode data in each packet, the sender's address is used, where the sender's address is the address that contributed the most input value.
 The sender's address must be a P2PKH address, and:
 
->_"Obfuscation is performed by SHA256 hashing the sender's address S times (where S is the sequence number) and taking the first 31 bytes of the resulting hash and XORing with the 31-byte Omni packet._
->_Multiple SHA256 passes are performed against an uppercase hex representation of the previous hash."_
+> _"Obfuscation is performed by SHA256 hashing the sender's address S times (where S is the sequence number) and taking the first 31 bytes of the resulting hash and XORing with the 31-byte Omni packet._
+> _Multiple SHA256 passes are performed against an uppercase hex representation of the previous hash."_
 
 ### Omni - Single Packet
 :::collapse{EXAMPLE: Omni - Single Packet}
@@ -782,12 +779,12 @@ Note that this is also documented in various places online, including some elega
 
 :::collapse{EXAMPLE: Generic Data Storage - The Bitcoin Whitepaper PDF}
 One of the most famous examples of data embedding in Bitcoin is the Bitcoin whitepaper PDF embedded in transaction [`54e48e5f...`](https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713).
-This transaction has 948 outputs, 946 of which are {{green:1-of-3}} P2MS outputs, with the remaining two outputs being standard P2PKH outputs. 
+This transaction has 948 outputs, 946 of which are {{green:1-of-3}} P2MS outputs, with the remaining two outputs being standard P2PKH outputs.
 All pubkeys involved are also 65-byte uncompressed pubkeys, presumably to maximise data carrying capacity.
 Unlike the protocol-based approaches we've examined (Bitcoin Stamps, Counterparty, Omni), this is a straightforward generic data storage example with no obfuscation or encryption.
 
 Examining the first output (`vout[0]`) as in {@fig:mempool-p2ms-whitepaper-1} we can see that the {{green:1-of-3}} P2MS output uses full 65-byte uncompressed pubkeys.
-With uncompressed pubkeys, typically starting with an `04` prefix, yet none of these keys starting with `04`, we know that none of these keys are valid pubkeys, and thus this P2MS output is unspendable. 
+With uncompressed pubkeys, typically starting with an `04` prefix, yet none of these keys starting with `04`, we know that none of these keys are valid pubkeys, and thus this P2MS output is unspendable.
 If we were to examine the remaining 945 P2MS outputs, we would see the same pattern: all 3 keys in each output are uncompressed pubkeys, and none of which are valid pubkeys.
 
 ![Figure: details of first P2MS output of the Bitcoin whitepaper PDF transaction  (`54e48e5f...`).](/assets/blog/p2ms-data-carry/mempool.space-p2ms-whitepaper-1.png) {#fig:mempool-p2ms-whitepaper-1}
@@ -846,7 +843,7 @@ Omni transactions are identified by the presence of the Exodus address as one of
 **Spendability vs. permanence**: Bitcoin Stamps deliberately creates unspendable outputs in using no real pubkeys, ensuring the data remains in the UTXO set forever.
 Counterparty and Omni, by contrast, include a valid pubkey that allows each output to be spent, theoretically enabling UTXO set cleanup (though, in practice, many remain unspent years after being created).
 
-**Data density & efficiency**: All three protocols achieve roughly similar density per pubkey (30-31 usable bytes), though older non-ARC4 obfuscated Counterparty transactions use all 33 bytes of a 33-byte compressed pubkey. 
+**Data density & efficiency**: All three protocols achieve roughly similar density per pubkey (30-31 usable bytes), though older non-ARC4 obfuscated Counterparty transactions use all 33 bytes of a 33-byte compressed pubkey.
 The efficiency of the Counterparty protocol is lower than the other two due to per-output headers (losing 9 bytes per output), Omni achieves decent efficiency by using 30 of 31 bytes of each stripped pubkey (losing 1 byte per pubkey), and Bitcoin Stamps achieves the highest efficiency by using all bytes in 2nd and subsequent P2MS outputs for data.
 
 | | Bitcoin Stamps | Counterparty | Omni |
