@@ -15,6 +15,7 @@ Files:
 | `README.md` | Search log, coverage limits, next chases |
 | `threads.md` | One section per thread: URL, date, claim, hashes, attachments |
 | `leads.jsonl` | One object per distinct header hash (or hash-less claim) |
+| `github-issue.md` | Paste-ready tracking issue for `bitcoin-data/invalid-blocks` (363731 + 450529; 474294 omitted) |
 
 Search date: **2026-09-10**. Cross-check against clones of `bitcoin-data/invalid-blocks` (46 records) and `bitcoin-data/stale-blocks` (`stale-blocks.csv` 3141 rows plus `blocks/*.bin`). `candidates.jsonl` from the mergedmonitor source audit was **not** present on this VM; `mergedmonitor_candidate` values below are labelled `file_absent_on_this_vm` and, where known from that earlier audit, noted as prior status.
 
