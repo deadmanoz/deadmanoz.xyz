@@ -46,10 +46,10 @@ describe("annotationToLabel", () => {
     expect(label.yanchor).toBe("bottom");
   });
 
-  it("pins to the bottom with top anchor when position is 'bottom'", () => {
+  it("sits just inside the plot area with bottom anchor when position is 'bottom'", () => {
     const label = annotationToLabel(ann({ position: "bottom" }), 0);
-    expect(label.y).toBe(0);
-    expect(label.yanchor).toBe("top");
+    expect(label.y).toBe(0.02);
+    expect(label.yanchor).toBe("bottom");
   });
 
   it("alternates auto positions by index parity (even=top, odd=slightly offset top)", () => {

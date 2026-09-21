@@ -76,8 +76,9 @@ export function annotationToLabel(
     yPosition = 1;
     yAnchor = "bottom";
   } else if (annotation.position === "bottom") {
-    yPosition = 0;
-    yAnchor = "top";
+    // Sit just inside the plot area so the label does not cover the x-axis ticks
+    yPosition = 0.02;
+    yAnchor = "bottom";
   } else {
     // Alternate between top and bottom for auto positioning
     if (index % 2 === 0) {

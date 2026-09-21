@@ -41,6 +41,59 @@ describe("estimateReadingMinutes", () => {
     expect(estimateReadingMinutes(words, 300)).toBe(2);
     expect(estimateReadingMinutes(words, 200)).toBe(3);
   });
+
+  it("strips a trailing References section before counting", () => {
+    const prose = Array.from({ length: 220 }, () => "word").join(" ");
+    const references =
+      "## References\n\n" +
+      Array.from({ length: 1000 }, () => "citation").join(" ");
+    expect(estimateReadingMinutes(`${prose}\n\n${references}`)).toBe(1);
+  });
+
+  it("strips Cite this post, Changelog, Resources, and similar headings", () => {
+    const prose = Array.from({ length: 220 }, () => "word").join(" ");
+    const tail = [
+      "## Cite this post",
+      "deadmanoz (2026). Example. https://example.com.",
+      "## Changelog",
+      "- 2026-09-17: Added a note.",
+      "## Resources",
+      "- [A link](https://example.com)",
+    ].join("\n");
+    expect(estimateReadingMinutes(`${prose}\n\n${tail}`)).toBe(1);
+  });
+
+  it("strips headings that end with 'and further reading'", () => {
+    const prose = Array.from({ length: 220 }, () => "word").join(" ");
+    const further =
+      "### Evidence and further reading\n\n" +
+      Array.from({ length: 500 }, () => "source").join(" ");
+    expect(estimateReadingMinutes(`${prose}\n\n${further}`)).toBe(1);
+  });
+
+  it("keeps later content after a skip section of the same heading level", () => {
+    const before = Array.from({ length: 110 }, () => "before").join(" ");
+    const references =
+      "## References\n\n" +
+      Array.from({ length: 1000 }, () => "citation").join(" ");
+    const after = Array.from({ length: 110 }, () => "after").join(" ");
+    expect(
+      estimateReadingMinutes(`${before}\n\n${references}\n\n## Next\n\n${after}`),
+    ).toBe(1);
+  });
+
+  it("does not strip an inline mention of References", () => {
+    const prose =
+      "See the References section for links. " +
+      Array.from({ length: 219 }, () => "word").join(" ");
+    expect(estimateReadingMinutes(prose)).toBe(1);
+  });
+
+  it("does not treat a content heading that merely contains 'sources' as skippable", () => {
+    const heading = "## Summary tables and sources";
+    const body = Array.from({ length: 220 }, () => "word").join(" ");
+    expect(estimateReadingMinutes(`${heading}\n\n${body}`)).toBe(1);
+  });
 });
 
 describe("formatReadingTime", () => {
