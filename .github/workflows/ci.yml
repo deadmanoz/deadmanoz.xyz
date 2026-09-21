@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, typecheck, unit tests, prose, lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: extractions/setup-just@v3
+      - run: npm ci
+      - run: just check
+
+  e2e:
+    name: Playwright canary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: extractions/setup-just@v3
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # The Playwright config starts its own dev server with git metadata disabled.
+      - run: just e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-results
+          path: test-results
+          retention-days: 7
+
+# Deploys are not done here: Cloudflare builds and deploys the site itself on
+# every push to GitHub. This workflow is the pre-merge gate only.
