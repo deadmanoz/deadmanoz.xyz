@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import "./image-modal.css";
 import Image from "next/image";
 
 interface ImageModalProps {
@@ -144,39 +145,6 @@ export function ImageModal({ isOpen, imageSrc, imageAlt, captionHtml, onClose }:
         )}
       </div>
 
-      <style jsx global>{`
-        .modal-figcaption strong {
-          color: var(--theme-neon-cyan);
-          font-weight: 600;
-          margin-right: 0.25rem;
-        }
-        .modal-figcaption a {
-          color: var(--theme-link);
-          text-decoration: none;
-        }
-        .modal-figcaption a[href^="http"] {
-          color: var(--theme-link-external);
-        }
-        .modal-figcaption a:hover,
-        .modal-figcaption a:focus-visible {
-          color: var(--theme-link-hover);
-        }
-        .modal-figcaption a:focus-visible {
-          outline: 2px solid var(--theme-link-hover);
-          outline-offset: 2px;
-          border-radius: 0.125rem;
-        }
-        .modal-figcaption code {
-          background: var(--theme-bg-secondary);
-          color: var(--theme-neon-cyan);
-          padding: 0 0.25rem;
-          border-radius: 0.25rem;
-          font-size: 0.875em;
-        }
-        .modal-figcaption a code {
-          color: inherit;
-        }
-      `}</style>
     </div>
   );
 }

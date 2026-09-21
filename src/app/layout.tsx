@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Audiowide, Inter } from "next/font/google";
 import Script from "next/script";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -21,9 +22,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://deadmanoz.xyz'),
-  title: "deadmanoz.xyz",
-  description: "deadmanoz's website",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
   icons: {
     icon: [
       {
@@ -80,12 +81,9 @@ export default function RootLayout({
                   fontCache: 'global'
                 },
                 startup: {
-                  ready: () => {
-                    MathJax.startup.defaultReady();
-                    MathJax.startup.promise.then(() => {
-                      console.log('MathJax ready for use');
-                    });
-                  }
+                  // Posts typeset after React hydrates (post-body/use-mathjax-typeset.ts).
+                  // Typesetting on load would rewrite the server HTML before hydration.
+                  typeset: false
                 }
               };
             `

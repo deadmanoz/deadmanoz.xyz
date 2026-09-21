@@ -218,16 +218,6 @@
   background: linear-gradient(90deg, transparent, var(--theme-neon-orange), transparent);
 }
 
-/* Math display styles */
-.markdown .math-display {
-  @apply my-6 text-center;
-  color: var(--theme-neon-cyan);
-}
-
-.markdown .math-inline {
-  color: var(--theme-text-accent);
-}
-
 /* MathJax font fix - let MathJax handle its own fonts */
 .markdown mjx-container,
 .markdown mjx-math,
@@ -237,8 +227,6 @@
 }
 
 /* Math content styling */
-.markdown .math-display,
-.markdown .math-inline,
 .markdown mjx-container,
 .markdown mjx-container mjx-math {
   color: var(--theme-neon-cyan) !important;
@@ -261,14 +249,6 @@
   text-decoration-thickness: 2px;
 }
 
-/* Collapsible sections styling */
-.markdown .collapsible-section {
-  @apply my-6 border-2 rounded-lg overflow-hidden;
-  border-color: var(--theme-border);
-  background: var(--theme-bg-secondary);
-  transition: all 0.3s ease;
-}
-
 /* Collapsible sections collapsed state */
 .markdown details {
   border: 1px solid rgba(255, 108, 17, 0.3) !important;
@@ -280,41 +260,3 @@
   box-shadow: 0 0 8px rgba(0, 217, 255, 0.1);
 }
 
-.markdown .collapsible-title {
-  @apply px-4 py-3 cursor-pointer select-none font-semibold;
-  color: var(--theme-neon-orange);
-  background: linear-gradient(90deg, rgba(255, 108, 17, 0.1) 0%, transparent 50%);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.markdown .collapsible-title:hover {
-  color: var(--theme-link-hover);
-  text-shadow: 0 0 10px currentColor;
-  background: linear-gradient(90deg, rgba(255, 108, 17, 0.2) 0%, transparent 50%);
-}
-
-.markdown .collapsible-title::before {
-  content: "▶";
-  display: inline-block;
-  transition: all 0.3s ease;
-  color: var(--theme-neon-cyan);
-  font-size: 1.3em;
-  font-weight: bold;
-  margin-right: 10px;
-  text-shadow: 0 0 8px var(--theme-neon-cyan);
-  transform-origin: center;
-  vertical-align: middle;
-}
-
-.markdown .collapsible-section[open] .collapsible-title::before {
-  content: "▼";
-  color: var(--theme-neon-green);
-  text-shadow: 0 0 12px var(--theme-neon-green);
-  transform: none;
-}
-
-.markdown .collapsible-content {
-  @apply px-4 py-3;
-  color: var(--theme-text-primary);
-}
