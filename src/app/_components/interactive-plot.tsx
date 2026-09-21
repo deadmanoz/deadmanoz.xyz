@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Data, Layout, Config } from "plotly.js-basic-dist";
+import { synthwaveColors } from "@/lib/colors";
 
 export interface InteractivePlotProps {
   data: Data[];
@@ -43,35 +44,35 @@ export function InteractivePlot({
           plot_bgcolor: "rgba(0, 2, 33, 0.5)", // --theme-bg-primary with transparency
           font: {
             family: "var(--font-inter), sans-serif",
-            color: "#FF8664", // --theme-peach
+            color: synthwaveColors.peach, // --theme-peach
             size: 12,
           },
           xaxis: {
             gridcolor: "rgba(255, 108, 17, 0.2)", // --theme-neon-orange with transparency
-            linecolor: "#00A0D0", // --theme-neon-cyan
+            linecolor: synthwaveColors.neonCyan, // --theme-neon-cyan
             tickfont: {
-              color: "#00A0D0",
+              color: synthwaveColors.neonCyan,
             },
             rangeslider: {
               visible: true,
               bgcolor: "rgba(0, 2, 33, 0.8)",
-              bordercolor: "#00A0D0",
+              bordercolor: synthwaveColors.neonCyan,
               borderwidth: 1,
             },
           },
           yaxis: {
             gridcolor: "rgba(255, 108, 17, 0.2)",
-            linecolor: "#00A0D0",
+            linecolor: synthwaveColors.neonCyan,
             tickfont: {
-              color: "#00A0D0",
+              color: synthwaveColors.neonCyan,
             },
           },
           hovermode: "x unified",
           hoverlabel: {
             bgcolor: "rgba(38, 20, 71, 0.95)",
-            bordercolor: "#00A0D0",
+            bordercolor: synthwaveColors.neonCyan,
             font: {
-              color: "#FF8664",
+              color: synthwaveColors.peach,
             },
           },
           margin: {

@@ -1,3 +1,4 @@
+import { themeColors } from "@/lib/colors";
 import { getAllPosts } from "@/lib/api";
 import { formatPostDate } from "@/lib/format-date";
 import { formatReadingTime } from "@/lib/reading-time";
@@ -12,17 +13,17 @@ const TAG_COLORS: Record<string, string> = {
   bip32: "#FDE047",
   bitcoin: "#F7931A",
   "data-carry": "#F472B6",
-  explainer: "#FF8664",
+  explainer: themeColors.peach,
   guide: "#84CC16",
   "merge-mining": "#FACC15",
   messages: "#38BDF8",
   "mining-pools": "#FB923C",
   monitoring: "#34D399",
   "network-properties": "#22C55E",
-  "network-topology": "#20E516",
+  "network-topology": themeColors.neonGreen,
   nixos: "#60A5FA",
   p2ms: "#C084FC",
-  p2p: "#00A0D0",
+  p2p: themeColors.neonCyan,
   "peer-observer": "#2DD4BF",
   research: "#D946EF",
   site: "#F43F5E",
@@ -33,9 +34,9 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 const FALLBACK_TAG_COLORS = [
-  "#00A0D0",
-  "#FF6C11",
-  "#20E516",
+  themeColors.neonCyan,
+  themeColors.neonOrange,
+  themeColors.neonGreen,
   "#F472B6",
   "#FACC15",
   "#A78BFA",

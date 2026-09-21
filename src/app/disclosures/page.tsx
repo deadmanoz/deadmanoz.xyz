@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Footer } from "@/app/_components/footer";
 import { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Disclosures - deadmanoz.xyz",
+  title: `Disclosures - ${SITE_NAME}`,
   description: "Disclosures and transparency information",
 };
 
