@@ -185,6 +185,17 @@ A plot annotated with timeline markers loaded from `annotations="..."`:
 }
 :::
 
+## Figure Inside a Collapsible
+
+A figure can live inside a collapse so it does not interrupt the prose.
+The reference {@fig:folded} still numbers it in document order and opens the block when clicked.
+
+:::collapse{{@fig:folded}: folded canary image}{#folded-figure-demo}
+
+![Canary image folded inside a collapsible section.](/assets/bitcoin_knight.png){#fig:folded}
+
+:::
+
 # This is
 
 ## A nested

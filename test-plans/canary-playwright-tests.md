@@ -32,7 +32,7 @@ We do not assert text content because MathJax replaces the original delimiter te
 **Assertions:**
 - `sup` element containing `2` exists (from H^2^O).
 - `del` element containing `deprecated wording` exists.
-- A span with inline style `color: #00D9FF` exists (cyan).
+- A span with inline style `color: #00A0D0` exists (cyan).
 - The literal text `{{neonpurple:this}}` appears verbatim in the article.
 
 ### 3. Image figure with rich caption
@@ -54,6 +54,11 @@ We do not assert text content because MathJax replaces the original delimiter te
 - `div.table-container#tab-frontmatter` exists.
 - The table caption contains the text `Table 1:`.
 - A `a.table-ref[href="#tab-frontmatter"]` with text `Table 1` exists elsewhere in the article.
+- After hydration, the first header contains a `button.table-sort`.
+- The Field column's source order is `title`, `date`, `status`.
+- Clicking that header sorts ascending (`date`, `status`, `title`) and sets `aria-sort="ascending"`.
+- A second click sorts descending (`title`, `status`, `date`) and sets `aria-sort="descending"`.
+- A third click restores source order and `aria-sort="none"`.
 
 ### 5. Annotations (tooltips)
 
@@ -75,6 +80,10 @@ We do not assert text content because MathJax replaces the original delimiter te
 **Assertions:**
 - `details.collapsible-section#collapse-1` exists with a `summary` containing `Historical Context`.
 - `details.collapsible-section#stable-anchor-demo` exists (custom anchor).
+- `details#folded-figure-demo` contains `figure#fig-folded` whose caption contains `Figure 4:` (figures inside a collapse keep document-order numbering).
+- Its `summary` reads exactly `Figure 4: folded canary image`: the `{@fig:folded}` reference in the collapse title renders as plain numbered text, not a link.
+- That collapse starts closed and the figure image is hidden.
+- Clicking `a.figure-ref[href="#fig-folded"]` opens the collapse (`open` becomes true) and the image becomes visible.
 
 ### 7. Code blocks
 

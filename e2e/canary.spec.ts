@@ -23,7 +23,7 @@ test.describe("canary — inline formatting", () => {
     await expect(
       page.locator("del", { hasText: "deprecated wording" }),
     ).toHaveCount(1);
-    const cyan = page.locator('span[style*="#00D9FF"]');
+    const cyan = page.locator('span[style*="#00A0D0"]');
     await expect(cyan.first()).toBeVisible();
   });
 
@@ -169,6 +169,28 @@ test.describe("canary — tables", () => {
       page.locator('a.table-ref[href="#tab-frontmatter"]', { hasText: "Table 1" }),
     ).toHaveCount(1);
   });
+
+  test("clicking a column header sorts, reverses, then restores source order", async ({ page }) => {
+    const table = page.locator("div.table-container#tab-frontmatter table");
+    const fieldHeader = table.locator("thead th").first();
+    const sortButton = fieldHeader.locator("button.table-sort");
+    const firstColumn = table.locator("tbody tr td:first-child");
+
+    await expect(sortButton).toBeVisible();
+    await expect(firstColumn).toHaveText(["title", "date", "status"]);
+
+    await sortButton.click();
+    await expect(fieldHeader).toHaveAttribute("aria-sort", "ascending");
+    await expect(firstColumn).toHaveText(["date", "status", "title"]);
+
+    await sortButton.click();
+    await expect(fieldHeader).toHaveAttribute("aria-sort", "descending");
+    await expect(firstColumn).toHaveText(["title", "status", "date"]);
+
+    await sortButton.click();
+    await expect(fieldHeader).toHaveAttribute("aria-sort", "none");
+    await expect(firstColumn).toHaveText(["title", "date", "status"]);
+  });
 });
 
 test.describe("canary — annotations", () => {
@@ -252,6 +274,24 @@ test.describe("canary — collapsibles", () => {
     await expect(
       page.locator("details.collapsible-section#stable-anchor-demo"),
     ).toBeVisible();
+  });
+
+  test("a figure inside a collapse is numbered in document order", async ({ page }) => {
+    const fig = page.locator("details#folded-figure-demo figure#fig-folded");
+    await expect(fig).toBeAttached();
+    await expect(fig.locator("figcaption")).toContainText("Figure 4:");
+    await expect(page.locator("details#folded-figure-demo summary")).toHaveText("Figure 4: folded canary image");
+  });
+
+  test("clicking a {@fig} reference into a closed collapse opens it and shows the figure", async ({ page }) => {
+    const details = page.locator("details#folded-figure-demo");
+    await expect(details).toHaveJSProperty("open", false);
+    await expect(page.locator("figure#fig-folded img")).toBeHidden();
+
+    await page.locator('a.figure-ref[href="#fig-folded"]').click();
+
+    await expect(details).toHaveJSProperty("open", true);
+    await expect(page.locator("figure#fig-folded img")).toBeVisible();
   });
 });
 
