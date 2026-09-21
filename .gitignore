@@ -60,3 +60,7 @@ playwright/.cache/
 
 # Draft sibling posts (kept locally, not published)
 *.draft.md
+
+# Generated before build and dev by scripts/generate-rss.ts (npm prebuild/predev)
+/public/feed.xml
+/public/atom.xml

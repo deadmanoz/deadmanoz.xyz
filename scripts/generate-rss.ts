@@ -4,39 +4,30 @@
  * This script generates both RSS 2.0 (feed.xml) and Atom (atom.xml) feeds
  * containing all published blog posts with full HTML content.
  *
- * Run this BEFORE committing when you add/update posts:
- *   just generate-rss
- *
- * The generated feeds are committed to the repo and deployed via CI/CD.
+ * Runs automatically before `npm run build` and `npm run dev` (the prebuild and
+ * predev scripts), or by hand with `just generate-rss`. The generated files in
+ * public/ are build artefacts and are not tracked in git.
  */
 
 import { Feed } from "feed";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypeSlug from "rehype-slug";
-import rehypeHighlight from "rehype-highlight";
-import rehypeStringify from "rehype-stringify";
 import { getAllPosts } from "../src/lib/api";
 import {
-  prependCoverImageForFeed,
-  stripAnnotationsForFeed,
-} from "../src/lib/rss-markdown";
+  AUTHOR_EMAIL,
+  AUTHOR_LINK,
+  AUTHOR_NAME,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "../src/lib/constants";
+import { markdownToFeedHtml, prependCoverImageForFeed } from "../src/lib/rss-markdown";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 
-// Site configuration
-const SITE_URL = "https://deadmanoz.xyz";
-const SITE_TITLE = "deadmanoz.xyz";
-const SITE_DESCRIPTION = "deadmanoz's website";
-const AUTHOR_NAME = "deadmanoz";
-const AUTHOR_EMAIL = ""; // Optional
-const AUTHOR_LINK = SITE_URL;
 const FEED_ITEM_LIMIT = 10;
 
 function normalizeTags(tags: unknown): string[] {
@@ -45,132 +36,6 @@ function normalizeTags(tags: unknown): string[] {
   }
 
   return tags.filter((tag): tag is string => typeof tag === "string" && tag.trim().length > 0);
-}
-
-/**
- * Convert markdown to HTML (simplified version for RSS).
- * Note: Interactive elements like Plotly plots won't render in feed readers.
- */
-async function markdownToHtml(markdown: string): Promise<string> {
-  // First pass: collect figure and table definitions to build numbering maps
-  const figureRefs = new Map<string, number>();
-  const tableRefs = new Map<string, number>();
-  let figureCounter = 0;
-  let tableCounter = 0;
-
-  // Find image figures: ![...]{#fig:id}
-  const imgFigPattern = /!\[[^\]]*\]\([^)]+\)\s*\{#fig:([^}]+)\}/g;
-  let match;
-  while ((match = imgFigPattern.exec(markdown)) !== null) {
-    const id = match[1];
-    if (!figureRefs.has(id)) {
-      figureRefs.set(id, ++figureCounter);
-    }
-  }
-
-  // Find plot figures: :::plot{...}...:::\nCaption {#fig:id}
-  const plotFigPattern = /:::plot\{[^}]+\}[\s\S]*?^:::$\s*\n[^\n]*\{#fig:([^}]+)\}/gm;
-  while ((match = plotFigPattern.exec(markdown)) !== null) {
-    const id = match[1];
-    if (!figureRefs.has(id)) {
-      figureRefs.set(id, ++figureCounter);
-    }
-  }
-
-  // Find tables: {#tab:id}
-  const tablePattern = /\{#tab:([^}]+)\}/g;
-  while ((match = tablePattern.exec(markdown)) !== null) {
-    const id = match[1];
-    if (!tableRefs.has(id)) {
-      tableRefs.set(id, ++tableCounter);
-    }
-  }
-
-  // Remove plot blocks (they won't work in RSS)
-  // Handle both inline JSON and external src= variants
-  // Use a text placeholder that will be converted to HTML after remark processing
-  let processed = markdown.replace(/:::plot\{[^}]+\}\s*\n[\s\S]*?^:::$/gm,
-    '\n\n**[Interactive plot - view on website]**\n\n');
-
-  // Convert alert boxes to blockquotes: :::alert{type} content ::: -> blockquote
-  processed = processed.replace(/:::alert\{[^}]+\}\s*([\s\S]*?)\s*:::/g, (_match, content) => {
-    return `> ${content.trim().replace(/\n/g, '\n> ')}`;
-  });
-
-  // Convert collapsible sections to regular content: :::collapse{Title} content ::: -> heading + content
-  processed = processed.replace(/:::collapse\{([^}]+)\}\s*([\s\S]*?)\s*:::/g, (_match, title, content) => {
-    return `**${title}**\n\n${content.trim()}`;
-  });
-
-  // Strip colored text syntax: {{color:text}} -> text
-  processed = processed.replace(/\{\{[^:]+:([^}]+)\}\}/g, '$1');
-
-  // Feed readers cannot reproduce hover tooltips, so retain their visible text.
-  processed = stripAnnotationsForFeed(processed);
-
-  // Convert image figures with captions: ![caption](src){#fig:id} -> ![Figure N: caption](src)
-  // Also strip existing "Figure:" prefix from caption to avoid duplication
-  processed = processed.replace(
-    /!\[([^\]]*)\]\(([^)]+)\)\s*\{#fig:([^}]+)\}/g,
-    (_match, caption, src, id) => {
-      const num = figureRefs.get(id);
-      const prefix = num ? `Figure ${num}: ` : '';
-      // Remove existing "Figure:" prefix if present
-      const cleanCaption = caption.replace(/^Figure:\s*/i, '');
-      return `![${prefix}${cleanCaption}](${src})`;
-    }
-  );
-
-  // Remove any remaining figure ID syntax: {#fig:id} -> nothing
-  processed = processed.replace(/\{#fig:[^}]+\}/g, '');
-
-  // Replace figure references with actual numbers: {@fig:id} -> "Figure N"
-  processed = processed.replace(/\{@fig:([^}]+)\}/g, (_match, id) => {
-    const num = figureRefs.get(id);
-    return num ? `Figure ${num}` : 'figure';
-  });
-
-  // Convert table captions: "Caption text {#tab:id}" -> "**Table N:** Caption text"
-  processed = processed.replace(
-    /^([^\n|{]+?)\s*\{#tab:([^}]+)\}$/gm,
-    (_match, caption, id) => {
-      const num = tableRefs.get(id);
-      const prefix = num ? `**Table ${num}:** ` : '';
-      return `${prefix}${caption.trim()}`;
-    }
-  );
-
-  // Remove any remaining table ID syntax: {#tab:id} -> nothing
-  processed = processed.replace(/\{#tab:[^}]+\}/g, '');
-
-  // Replace table references with actual numbers: {@tab:id} -> "Table N"
-  processed = processed.replace(/\{@tab:([^}]+)\}/g, (_match, id) => {
-    const num = tableRefs.get(id);
-    return num ? `Table ${num}` : 'table';
-  });
-
-  // Process with remark
-  const result = await remark()
-    .use(remarkGfm)
-    .use(remarkRehype)
-    .use(rehypeSlug)
-    .use(rehypeHighlight)
-    .use(rehypeStringify)
-    .process(processed);
-
-  let html = result.toString();
-
-  // Process superscript ^text^
-  html = html.replace(/\^([^\^]+)\^/g, '<sup>$1</sup>');
-
-  // Process strikethrough ~~text~~
-  html = html.replace(/~~([^~]+)~~/g, '<del>$1</del>');
-
-  // Make relative image URLs absolute
-  html = html.replace(/src="\/([^"]+)"/g, `src="${SITE_URL}/$1"`);
-  html = html.replace(/href="\/([^"]+)"/g, `href="${SITE_URL}/$1"`);
-
-  return html;
 }
 
 /**
@@ -195,7 +60,7 @@ async function generateFeeds(): Promise<void> {
   );
 
   const feed = new Feed({
-    title: SITE_TITLE,
+    title: SITE_NAME,
     description: SITE_DESCRIPTION,
     id: SITE_URL,
     link: SITE_URL,
@@ -222,7 +87,7 @@ async function generateFeeds(): Promise<void> {
     const tags = normalizeTags(post.tags);
 
     // Convert markdown content to HTML
-    const bodyHtml = await markdownToHtml(post.content || "");
+    const bodyHtml = await markdownToFeedHtml(post.content || "", SITE_URL);
     const htmlContent = prependCoverImageForFeed(
       bodyHtml,
       post.coverImage,

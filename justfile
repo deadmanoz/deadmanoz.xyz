@@ -18,9 +18,9 @@ dev:
 dev-fast:
     DISABLE_GIT_METADATA=true {{node-run}} npm run dev
 
-# Generate RSS and Atom feeds
+# Generate RSS and Atom feeds into public/ (also runs automatically before build and dev; the output is not tracked)
 generate-rss:
-    {{node-run}} npx tsx scripts/generate-rss.ts
+    {{node-run}} npm run generate-rss
 
 # Optimise PNGs in-place with optipng (lossless, strips metadata). Pass a file or directory path.
 optimize-pngs path:
@@ -116,7 +116,7 @@ restart: kill-port dev
 # Deploy to CloudFlare Workers (usually done via CI/CD)
 deploy:
     {{node-run}} npm run build
-    {{node-run}} npx wrangler pages deploy out
+    {{node-run}} npx wrangler deploy
 
 # Preview deployment locally
 preview:
