@@ -14,7 +14,7 @@ describe("markdownToHtml — inline extensions", () => {
 
   it("renders {{color:text}} with the mapped colour from the colour map", async () => {
     const html = await markdownToHtml("Highlight {{cyan:value}} here.");
-    expect(html).toContain('<span style="color: #00D9FF; font-weight: bold;">value</span>');
+    expect(html).toContain('<span style="color: #00A0D0; font-weight: bold;">value</span>');
   });
 
   it("leaves {{color:text}} untouched when the colour is unknown", async () => {
@@ -332,6 +332,31 @@ describe("markdownToHtml — :::collapse blocks", () => {
     expect(html).toContain('id="bg-section"');
     expect(html).not.toContain('id="collapse-1"');
   });
+
+  it("renders a figure inside a collapse with document-order numbering and a resolvable reference", async () => {
+    const md = [
+      "See {@fig:inner} for the detail.",
+      "",
+      ":::collapse{{@fig:inner}: the detail}",
+      "",
+      "![Inner caption.](/a/inner.png){#fig:inner}",
+      "",
+      ":::",
+      "",
+      "![Outer caption.](/a/outer.png){#fig:outer}",
+    ].join("\n");
+    const html = await markdownToHtml(md);
+    expect(html).toContain('<a href="#fig-inner" class="figure-ref">Figure 1</a>');
+    const details = html.indexOf("<details");
+    const inner = html.indexOf('<figure class="figure-container" id="fig-inner">');
+    const close = html.indexOf("</details>");
+    expect(details).toBeGreaterThan(-1);
+    expect(inner).toBeGreaterThan(details);
+    expect(close).toBeGreaterThan(inner);
+    expect(html).toContain('<summary class="collapsible-title">Figure 1: the detail</summary>');
+    expect(html).toContain("<strong>Figure 1:</strong> Inner caption.");
+    expect(html).toContain("<strong>Figure 2:</strong> Outer caption.");
+  });
 });
 
 describe("markdownToHtml — :::alert blocks", () => {
@@ -351,5 +376,39 @@ describe("markdownToHtml — :::alert blocks", () => {
     const md = [":::alert{nonsense}", "Body text.", ":::"].join("\n");
     const html = await markdownToHtml(md);
     expect(html).toContain('class="alert-box alert-info"');
+  });
+});
+
+describe("markdownToHtml — plot blocks", () => {
+  it("keeps the block that follows a caption-less plot intact", async () => {
+    const md = ':::plot{bare}\n{"data":[]}\n:::\n\n# Heading after plot\n';
+    const html = await markdownToHtml(md);
+    expect(html).toContain('data-plot-id="plot-bare"');
+    expect(html).toMatch(/<h1[^>]*>Heading after plot<\/h1>/);
+  });
+});
+
+describe("markdownToHtml — concurrent renders", () => {
+  it("keeps each render's annotations and plots separate when two posts render at once", async () => {
+    const post = (name: string) =>
+      [
+        `Intro [[${name} term||Tooltip for ${name}]] here.`,
+        "",
+        `:::plot{${name}-plot}`,
+        `{"data":[],"name":"${name}"}`,
+        ":::",
+        `Caption ${name}. {#fig:${name}}`,
+        "",
+      ].join("\n");
+
+    const [alpha, beta] = await Promise.all([markdownToHtml(post("alpha")), markdownToHtml(post("beta"))]);
+
+    expect(alpha).toContain('data-tooltip="Tooltip for alpha"');
+    expect(alpha).toContain('data-plot-id="plot-alpha-plot"');
+    expect(alpha).not.toContain("beta");
+    expect(beta).toContain('data-tooltip="Tooltip for beta"');
+    expect(beta).toContain('data-plot-id="plot-beta-plot"');
+    expect(beta).not.toContain("alpha");
+    expect(alpha + beta).not.toMatch(/PLACEHOLDER/);
   });
 });
