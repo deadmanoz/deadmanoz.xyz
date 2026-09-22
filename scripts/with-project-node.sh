@@ -15,7 +15,9 @@ nvm_script="${NVM_DIR:-$HOME/.nvm}/nvm.sh"
 if [[ -s "$nvm_script" ]]; then
     # shellcheck disable=SC1090
     source "$nvm_script"
-    nvm use --silent "$required_node" >/dev/null
+    # nvm may not hold the pinned version (CI runners ship nvm but install Node
+    # another way, e.g. actions/setup-node); the PATH check below still applies.
+    nvm use --silent "$required_node" >/dev/null 2>&1 || true
 fi
 
 if ! command -v node >/dev/null 2>&1; then
