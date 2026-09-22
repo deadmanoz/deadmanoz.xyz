@@ -83,7 +83,7 @@ That is, a descendant can have invalid ancestry without supplying another instan
 
 The scope also excludes unmined invalid Stratum jobs and invalid relay encodings of otherwise accepted blocks, such as [ViaBTC's witness-stripped messages](https://b10c.me/observations/10-viabtc-blocks-without-witness-data/).
 The [March 2013 database fork](https://bips.dev/50/) is outside the catalogue: the triggering block was well-formed, and whether a node could process it depended on that node's Berkeley DB lock state.
-Two catalogued headers at that height, 225,430, are separate merge-mined candidates that fail the coinbase-height rule, not the block that triggered the fork.
+Two catalogued headers at that height, [225,430](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=225414&tree_to=225446&tree_height=225430&selected=00000000000001468e0b21b62cd0b41ec317eeeaa5afc0a8df43c01180e57f7f), are separate merge-mined candidates that fail the coinbase-height rule, not the block that triggered the fork.
 
 ### Sources and commitments
 
@@ -242,7 +242,7 @@ The coinbase's txid is enough for that proof even though its bytes remain missin
 :::
 
 For four blocks, Namecoin's AuxPoW record supplied the missing coinbase bytes as well.
-Their other transactions later confirmed on the accepted chain, so with those canonical bytes, the Namecoin coinbase and the invalid spend, complete bodies exist for heights **173,928, 173,957, 173,998 and 174,605**.
+Their other transactions later confirmed on the accepted chain, so with those canonical bytes, the Namecoin coinbase and the invalid spend, complete bodies exist for heights [**173,928**](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=173912&tree_to=173944&tree_height=173928&selected=000000000000023df73ac98923e2de321db3e3396102ad5dcfe3b25f01a81f64), [**173,957**](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=173941&tree_to=173973&tree_height=173957&selected=00000000000001bd778cffee5b5bae4c7b8d56a9aca955a04c60856b31b11155), [**173,998**](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=173982&tree_to=174014&tree_height=173998&selected=00000000000003bf4a1e491c802eeec3f1fbf3c2c7299e7935c2b0f33b189651) and [**174,605**](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=174589&tree_to=174621&tree_height=174605&selected=000000000000068294db0526cb4a5520d21b9d4f271a34012e96784b3b3168c5).
 The four serialisations are among the [block files](https://github.com/bitcoin-data/invalid-blocks/tree/166ff94/blocks), the inclusion proofs for the other 85 headers are in [proofs/](https://github.com/bitcoin-data/invalid-blocks/tree/166ff94/proofs), and the dataset's [checks](https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/ci/block_evidence.py) evaluate the spend with and without P2SH against every one of them.
 
 The other 85 P2SH cases are in the catalogue without their coinbase bytes, since the inclusion proof is sufficient on its own.
@@ -281,7 +281,7 @@ The catalogue contains four recurring issues, with their required and recovered 
 :::
 
 **Difficulty in the height field: twelve blocks.**
-Across March 2013, heights 225,013 to 226,912, the first coinbase item contains the header's [[compact difficulty||The 4-byte `nBits` encoding of the proof-of-work target. The original Bitcoin client pushed it first in every coinbase, and pre-BIP34 merge-mining software kept that layout.]] instead of its height.
+Across March 2013, heights [225,013](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=224997&tree_to=225029&tree_height=225013&selected=000000000000037f2cc0769d4244cf50f1cace4ab76b0b4adb31010e10150708) to [226,912](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=226896&tree_to=226928&tree_height=226912&selected=00000000000000a34d399a3cb82e222fad8e73e465b905e333ada1662c61e0e0), the first coinbase item contains the header's [[compact difficulty||The 4-byte `nBits` encoding of the proof-of-work target. The original Bitcoin client pushed it first in every coinbase, and pre-BIP34 merge-mining software kept that layout.]] instead of its height.
 Eight encode `0x1a03d74b`; four later blocks encode the next epoch's `0x1a0375fa`.
 The wrong field tracks the difficulty transition, and the pattern persists from 9 to 20 March.
 
@@ -295,7 +295,7 @@ His report covers three of the twelve heights.
 The other nine share the same coinbase layout, the difficulty then an extranonce then the 44-byte merge-mining commitment, the same three auxiliary chains, and all fall between the pool [re-enabling merge mining on 9 March](https://bitcointalk.org/index.php?topic=57148.msg1602798#msg1602798) and disabling it on 20 March, which points to the same getwork server, though no report names them and the table leaves them unassigned.
 
 **An unchanged parent: six BTC Guild blocks.**
-On 3 April 2013, six headers tagged `BTC Guild 3` reference the same parent at height 229,387, requiring height 229,388.
+On 3 April 2013, six headers tagged `BTC Guild 3` reference the same parent at height 229,387, requiring height [229,388](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=229372&tree_to=229404&tree_height=229388&selected=00000000000000329b2b44eca61829f13c94bbafb35022f13e49ffff279e3f03).
 Their coinbases instead encode heights from 229,405 to 229,506, between 17 and 118 too high.
 The timestamps fit a template that kept writing the current height while remaining stuck on parent 229,387.
 {@fig:btc-guild-parent-hash} shows the mismatch.
@@ -310,8 +310,8 @@ The timestamps fit a template that kept writing the current height while remaini
 Six coinbases encode a height one too high; an Eligius block encodes one too low.
 Their similar errors do not establish a shared implementation or a single long-lived bug.
 Four build on stale or invalid parents.
-The 2016 blocks at 402,610 and 422,059 extend stale parents.
-The 2014 pair at heights 331,673 and 331,674 extends a stale block and then an invalid block, as shown in {@fig:invalid-fork-2014}.
+The 2016 blocks at [402,610](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=402594&tree_to=402626&tree_height=402610&selected=000000000000000003a1ce220ae97419cc4bdb5d70b90189b8f8a06b0b37e3a2) and [422,059](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=422043&tree_to=422075&tree_height=422059&selected=00000000000000000254ed1e8143f0bcd3c3564db07e7c35631e999d53e81fa7) extend stale parents.
+The 2014 pair at heights [331,673](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=331657&tree_to=331689&tree_height=331673&selected=000000000000000010bcbb75dc17fce43da835bd26ccec95ed0d39570a51112a) and [331,674](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=331658&tree_to=331690&tree_height=331674&selected=00000000000000000d610e393ffeed6b9494d54121f05f7a3905f940f0e0cf69) extends a stale block and then an invalid block, as shown in {@fig:invalid-fork-2014}.
 Both are counted because each coinbase encodes the wrong height on its own, and the second block's invalid parent is a separate defect.
 
 :::collapse{{@fig:invalid-fork-2014}: the 2014 off-by-one fork}
@@ -321,7 +321,7 @@ Both are counted because each coinbase encodes the wrong height on its own, and 
 :::
 
 **The right number, the wrong encoding: one Hathor recovery.**
-At height 649,674 in September 2020, the coinbase starts with `fe ca e9 09 00`, Bitcoin's [[CompactSize||A variable-length integer format used for counts and lengths in Bitcoin serialisation.]] encoding of 649,674.
+At height [649,674](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=649658&tree_to=649690&tree_height=649674&selected=00000000000000000008c80c1f8c101f8aa1fabd59d63ab1350bd1d5dba425e6) in September 2020, the coinbase starts with `fe ca e9 09 00`, Bitcoin's [[CompactSize||A variable-length integer format used for counts and lengths in Bitcoin serialisation.]] encoding of 649,674.
 BIP34 requires a script push, `03 ca e9 09`, as compared in {@fig:coinbase-height-encoding}.
 The `fe` marker does not perform that push, so the coinbase violates BIP34 (`bad-cb-height`).
 
@@ -367,12 +367,12 @@ The first block's header was discovered in [BTC Relay test fixtures](https://git
 :::
 
 Two further version-2 headers on 4 July, at 363,726 and 363,847, sit on canonical parents and did not open forks, and 363,726 was mined two minutes after enforcement began.
-Three more failures followed, at 363,967, 364,341 and 367,047.
+Three more failures followed, at [363,967](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=363951&tree_to=363983&tree_height=363967&selected=00000000000000000954ed93eda1e79e8261137548fa9ccf4d516bb384a3660b), [364,341](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=364325&tree_to=364357&tree_height=364341&selected=000000000000000012aac0664cd8b6cbc3ea485921a05f2c4340f928b0226d3c) and [367,047](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=367031&tree_to=367063&tree_height=367047&selected=00000000000000000f93ba8faf8bb018c7db642e30391748860cbfa5803a32a4).
 The last (367,047), tagged `mmpool`, was mined on 26 July, three weeks after the initial fork, by the same Bitparking pool that produced the March 2013 coinbase-height cluster.
 Further reported version-2 cases that have not yet been recovered are listed in {@tab:uncatalogued}.
 
 **Version below BIP65: five blocks.**
-Four days after BIP65 enforcement at height 388,381 on 14 December 2015, a version-3 header at 389,043 failed the new minimum of 4.
+Four days after BIP65 enforcement at height 388,381 on 14 December 2015, a version-3 header at [389,043](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=389027&tree_to=389059&tree_height=389043&selected=00000000000000000306ea979ad487157d2950081413eb9d2dca82060f1b89b2) failed the new minimum of 4.
 The other four are BTC.COM headers from 2018, and they fail that same minimum by a different mechanism.
 Their versions are `0xa0000000` and `0xe0000000`.
 As signed 32-bit integers, both are negative.
@@ -428,13 +428,13 @@ So a parent included too late or omitted entirely leaves the child's input unava
 :::
 
 **Parent included too late: two blocks.**
-At height 477,115 on 23 July 2017, three transactions in a 255-transaction block spend outputs from transactions that appear later in the body (this was attributed to 1Hash in a [BitcoinTalk thread](https://bitcointalk.org/index.php?topic=2041607.0)).
+At height [477,115](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=477099&tree_to=477131&tree_height=477115&selected=0000000000000000013ee4a86822d37a061732e04ee5f41fb77168f193363d1b) on 23 July 2017, three transactions in a 255-transaction block spend outputs from transactions that appear later in the body (this was attributed to 1Hash in a [BitcoinTalk thread](https://bitcointalk.org/index.php?topic=2041607.0)).
 Namecoin kept its header and chainquery.com kept its body, from which the ordering failure can be checked.
 Six years later, [MARA's block at 809,478](https://b10c.me/observations/07-invalid-block-809478/) failed after sorting transactions by fee rather than respecting dependencies.
 Its retained evidence comes from Bitcoin's compact-block relay window.
 
 **Parent omitted: one block.**
-At height 474,294 on 5 July 2017, another block attributed to 1Hash (the same [BitcoinTalk thread](https://bitcointalk.org/index.php?topic=2041607.0) as above) contains a transaction whose unconfirmed parent is absent.
+At height [474,294](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=474278&tree_to=474310&tree_height=474294&selected=00000000000000000182acdf5657c93a0769dc6f9004047496b2e15efc6a4232) on 5 July 2017, another block attributed to 1Hash (the same [BitcoinTalk thread](https://bitcointalk.org/index.php?topic=2041607.0) as above) contains a transaction whose unconfirmed parent is absent.
 The parent is neither elsewhere in the body nor anywhere in the canonical chain.
 The [[spending transaction||`a6655ca47c62ffcbf6d3dcba34bc1af24a1eb0bcea54d3099d36201a66aec2a0`]] and its [[parent||`b11a78c6c61af1cb37586f639050d74b95c2b0fd525623b6cb6a4bb4fba46a0e`, whose output 1 it spends.]] were later confirmed together in the [competing block](https://mempool.space/block/000000000000000000db2504327e272fe7658fac0dd0741f46b212256e500886) at that height.
 
@@ -445,7 +445,7 @@ A coinbase computed from another template can claim fees for transactions the mi
 For the two established cases below, the fees are known and the overpayment is exact.
 
 **Eligius: one established overpayment, three unresolved reports.**
-A [9 September 2012 developer report](https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html) identifies four Eligius blocks as coinbase overpayments: 197,438, 197,701, 197,705 and 197,883.
+A [9 September 2012 developer report](https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html) identifies four Eligius blocks as coinbase overpayments: [197,438](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=197422&tree_to=197454&tree_height=197438&selected=0000000000000307872ec2eb0eae2dca3ed9ce6af9e024412cb3ddfe8afd12a7), 197,701, 197,705 and 197,883.
 Only 197,438 has enough surviving evidence to establish the overpayment, and the other three remain outside the catalogue.
 
 At 197,438, an Ixcoin AuxPoW record preserves the coinbase and the hash of the other transaction.
@@ -468,7 +468,7 @@ The code shows a possible mechanism, but does not establish the missing transact
 
 For the remaining two Eligius reports, an [archived September block list](https://web.archive.org/web/20120918194744id_/http://eligius.st:80/~wizkid057/newstats/blocks.php) supplies full hashes for 197,701 and 197,705, but their headers and bodies remain missing and none of the auxiliary chains that preserved 197,438 or 197,883 holds them.
 
-**AntPool 584,802: no ordinary transactions.**
+**AntPool [584,802](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=584786&tree_to=584818&tree_height=584802&selected=0000000000000000000b47042b90c6a893e6e5cdef70c92beefb88f4c5fa5a69): no ordinary transactions.**
 In July 2019, AntPool's 334-byte block contained only a coinbase paying 13.26546691 BTC against a 12.5 BTC subsidy.
 With no ordinary transactions, there were no fees to justify the extra 0.76546691 BTC.
 The rejection was [widely reported](https://thenextweb.com/news/bitmain-bitcoin-invalid-block-150000-mining-reward-lost), including ForkMonitor's check across eight implementations.
@@ -479,13 +479,13 @@ Unlike the 2018 spent-input blocks, which kept parent transactions they should h
 
 ### Excessive signature operations (2 blocks, 2023)
 
-F2Pool blocks at heights 783,426 and 784,121 each reached a [[sigops cost||Bitcoin Core's per-block count of signature-checking operations, weighted as SegWit introduced (legacy and P2SH operations count four times, witness operations once). The consensus limit is 80,000.]] of 80,003 against the 80,000 limit.
+F2Pool blocks at heights [783,426](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=783410&tree_to=783442&tree_height=783426&selected=00000000000000000002ec935e245f8ae70fc68cc828f05bf4cfa002668599e4) and [784,121](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=784105&tree_to=784137&tree_height=784121&selected=000000000000000000046a2698233ed93bb5e74ba7d2146a68ddb0c2504c980d) each reached a [[sigops cost||Bitcoin Core's per-block count of signature-checking operations, weighted as SegWit introduced (legacy and P2SH operations count four times, witness operations once). The consensus limit is 80,000.]] of 80,003 against the 80,000 limit.
 b10c's [account](https://b10c.me/observations/11-invalid-blocks-783426-and-784121/) has both complete bodies and explains the off-by-three result.
 [[Five auxiliary chains||Elastos, Namecoin, Rootstock, Syscoin and Xaya.]] also retained the headers, which on their own cannot establish a sigops count.
 
 ### A coinbase greeting three bytes too long (1 block, 2013)
 
-On 31 December 2013, GHash.IO's [block at height 277,975](https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/data/invalid-blocks.jsonl#L110) included the greeting `Happy New Year! Yours GHash.IO.`.
+On 31 December 2013, GHash.IO's [block](https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/data/invalid-blocks.jsonl#L110) at height [277,975](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=277959&tree_to=277991&tree_height=277975&selected=0000000000000000de6f0b2978aa2b268cb9a54c5de6d21f97d17c6b0ff0ac3f) included the greeting `Happy New Year! Yours GHash.IO.`.
 The preceding fields already occupied 72 bytes, including a 45-byte push carrying the 44-byte merge-mining commitment, leaving only 28 bytes for the 31-byte greeting, as shown in {@fig:ghash-new-year-coinbase}.
 The coinbase scriptSig reached 103 bytes, exceeding the 100-byte consensus maximum and producing `bad-cb-length`.
 Unlike the other 2013 coinbase failures, its BIP34 height prefix was correct, and the length alone is the fault.
@@ -498,7 +498,7 @@ Unlike the other 2013 coinbase failures, its BIP34 height prefix was correct, an
 
 ### A missed difficulty retarget (1 block, 2022)
 
-Height 717,696 is a difficulty-retarget boundary.
+Height [717,696](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=717680&tree_to=717712&tree_height=717696&selected=0000000000000000000045c5040bf46b4cd6c6f8f4004c149cd602e4e356e71c) is a difficulty-retarget boundary.
 ViaBTC's header carries the previous epoch's `nBits`, `170b98ab`, instead of the required `170b8c8b`, producing `bad-diffbits`.
 The old target was easier, but the header's hash happens to clear the correct, harder target as well.
 That is why it meets this catalogue's full-PoW requirement despite encoding the wrong difficulty.
@@ -507,7 +507,7 @@ Emercoin, Syscoin and Namecoin preserved the header.
 ### Timestamps below median time past (3 blocks, 2015 to 2026)
 
 A block's timestamp must be strictly greater than its parent's [[median time past||The median timestamp of the previous eleven blocks. This lower bound is separate from the two-hour future-time check, which older releases measured against network-adjusted time and Bitcoin Core 27.0 onward measures against the node's own clock.]].
-The header at height 380,992 in 2015 falls about 4.6 hours below that bound.
+The header at height [380,992](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=380976&tree_to=381008&tree_height=380992&selected=0000000000000000084ee972bfe620224e6893448a9001d2b1f236ede0423779) in 2015 falls about 4.6 hours below that bound.
 Two F2Pool cases in 2026 miss it by days, as shown in {@fig:f2pool-timestamps}.
 
 On **22 April 2026**, auxiliary chains recorded a header at height [**946,213**](https://mmm.deadmanoz.xyz/?tree_window=generated&tree_from=946197&tree_to=946229&tree_height=946213&selected=00000000000000000000c3d95a4bdc068dfe0c6d1e7ad13045c6f570e58d9ed7) whose nTime was 15 April, **634,618 seconds (7.35 days) below the parent MTP**.
