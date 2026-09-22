@@ -12,7 +12,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/p2ms-data-carry/p2ms-data-carry-cover-1.png'
+  url: '/assets/blog/p2ms-data-carry/p2ms-data-carry-1-preview.jpg'
 status: published
 ---
 

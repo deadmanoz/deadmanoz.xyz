@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-node-roles-p2p-cover.png'
+  url: '/assets/blog/2026/bitcoin-node-roles-p2p/bitcoin-node-roles-p2p-preview.jpg'
 status: published
 ---
 

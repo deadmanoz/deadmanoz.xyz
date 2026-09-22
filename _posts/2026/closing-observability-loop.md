@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/closing-observability-loop/closing-observability-loop-cover.png'
+  url: '/assets/blog/2026/closing-observability-loop/closing-observability-loop-preview.jpg'
 status: published
 ---
 

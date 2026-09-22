@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/invalid-blocks/invalid-blocks-cover.png'
+  url: '/assets/blog/2026/invalid-blocks/invalid-blocks-preview.jpg'
 status: published
 ---
 

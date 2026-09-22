@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/nixos-peer-observer-vps/nixos-peer-observer-vps-cover.png'
+  url: '/assets/blog/2026/nixos-peer-observer-vps/nixos-peer-observer-vps-preview.jpg'
 status: published
 ---
 

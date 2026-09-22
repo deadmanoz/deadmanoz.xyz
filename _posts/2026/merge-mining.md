@@ -11,7 +11,7 @@ tags:
 author:
   name: deadmanoz
 ogImage:
-  url: '/assets/blog/2026/merge-mining/merge-mining-cover.png'
+  url: '/assets/blog/2026/merge-mining/merge-mining-preview.jpg'
 status: published
 ---
 
