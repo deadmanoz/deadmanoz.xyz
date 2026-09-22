@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "name": "Soft-fork enforcement dates on the invalid-block timelines",
+    "description": "BIP16 uses a header timestamp threshold; other dates are the UTC header dates at the listed enforcement heights. SegWit and Taproot are included as later activations; this catalogue has no matching clusters of new-rule failures around those dates.",
+    "version": "2.1.0",
+    "label_layout": "BIP16 and BIP65 occupy the lower auto-label row to separate neighbouring activation labels at narrow widths. SegWit is top-aligned and Taproot bottom-aligned so the later labels sit away from the 2015 pair; full descriptions remain on hover."
+  },
+  "annotations": [
+    {
+      "id": "bip34-v2-rule",
+      "date": "2013-03-05",
+      "label": "BIP34: v2 rule",
+      "color": "#00A0D0",
+      "description": "Height 224,413: version-2 blocks must encode their height in the coinbase (75% threshold).",
+      "position": "bottom"
+    },
+    {
+      "id": "bip16-activation",
+      "date": "2012-04-01",
+      "label": "BIP16",
+      "color": "#FF3CAC",
+      "description": "P2SH evaluation required for block timestamps >= 1333238400, 1 April 2012 UTC.",
+      "position": "auto"
+    },
+    {
+      "id": "bip34-enforced",
+      "date": "2013-03-25",
+      "label": "BIP34",
+      "color": "#00A0D0",
+      "description": "Height 227,931: BIP34 coinbase height mandatory for every block (95% threshold).",
+      "position": "top"
+    },
+    {
+      "id": "bip65-activation",
+      "date": "2015-12-14",
+      "label": "BIP65",
+      "color": "#FF6C11",
+      "description": "Height 388,381: OP_CHECKLOCKTIMEVERIFY; block version below 4 rejected.",
+      "position": "auto"
+    },
+    {
+      "id": "bip66-activation",
+      "date": "2015-07-04",
+      "label": "BIP66",
+      "color": "#FF6C11",
+      "description": "Height 363,725: strict DER signatures; block version below 3 rejected.",
+      "position": "top"
+    },
+    {
+      "id": "segwit-activation",
+      "date": "2017-08-24",
+      "label": "SegWit",
+      "color": "#20E516",
+      "description": "Height 481,824: Segregated Witness (BIP141); witness programs and block weight become consensus rules.",
+      "position": "top"
+    },
+    {
+      "id": "taproot-activation",
+      "date": "2021-11-14",
+      "label": "Taproot",
+      "color": "#20E516",
+      "description": "Height 709,632: Taproot (BIP340/341/342); Schnorr and Tapscript spending rules become active.",
+      "position": "bottom"
+    }
+  ]
+}

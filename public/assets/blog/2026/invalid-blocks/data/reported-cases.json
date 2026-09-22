@@ -1,0 +1,137 @@
+{
+  "as_of": "2026-09-22",
+  "upstream_commit": "166ff94",
+  "scope": "Reported cases with insufficient evidence to establish the claimed consensus failure. Source labels and identity associations are not inclusion proofs.",
+  "blocks": [
+    {
+      "height": 197701,
+      "hash": "00000000000003414be07bc5e700b1b2168ceb7259b4b9de4b583c435ebc03f2",
+      "date_utc": "2012-09-07",
+      "date_kind": "contemporary report date",
+      "family": "Coinbase overpayment",
+      "header_recovered": false,
+      "missing_evidence": "header and body or sufficient authenticated components",
+      "sources": [
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html",
+        "https://web.archive.org/web/20120918194744id_/http://eligius.st:80/~wizkid057/newstats/blocks.php"
+      ]
+    },
+    {
+      "height": 197705,
+      "hash": "0000000000000607179812c7bc8751fb834436bdb79f1ab6239d34b4f8cd2dda",
+      "date_utc": "2012-09-07",
+      "date_kind": "contemporary report date",
+      "family": "Coinbase overpayment",
+      "header_recovered": false,
+      "missing_evidence": "header and body or sufficient authenticated components",
+      "sources": [
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html",
+        "https://web.archive.org/web/20120918194744id_/http://eligius.st:80/~wizkid057/newstats/blocks.php"
+      ]
+    },
+    {
+      "height": 197883,
+      "hash": "000000000000011e6d02f6063d4a797ce42fe1f97ecf3dd640b8145f12c2304d",
+      "date_utc": "2012-09-08",
+      "date_kind": "header date",
+      "family": "Coinbase overpayment",
+      "header_recovered": true,
+      "missing_evidence": "other transaction and fee evidence",
+      "sources": [
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html",
+        "https://web.archive.org/web/20120918194744id_/http://eligius.st:80/~wizkid057/newstats/blocks.php"
+      ]
+    },
+    {
+      "height": 212048,
+      "hash": "0000000000000202a4ba1a09870c43b6c7f316a62b755cb82bffaea347c271b3",
+      "date_utc": "2012-12-13",
+      "date_kind": "contemporary report date; timezone unverified",
+      "family": "Unspecified failure",
+      "header_recovered": false,
+      "missing_evidence": "header, rejection reason and authenticated evidence of a consensus failure",
+      "sources": [
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-12-13.html#l-334",
+        "https://pastebin.com/raw/LZxst5vD",
+        "https://bitcointalk.org/index.php?topic=1403436.msg14244002#msg14244002",
+        "https://web.archive.org/web/20220518172624/https://pastebin.com/LZxst5vD"
+      ],
+      "ledger_entry": "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/data/reported-blocks.jsonl#L4"
+    },
+    {
+      "height": 363997,
+      "hash": "000000000000000003ae1223f4926ec86100885cfe1484dc52fd67e042a19b12",
+      "date_utc": "2015-07-05",
+      "date_kind": "contemporary report date",
+      "family": "Block version",
+      "header_recovered": false,
+      "missing_evidence": "80-byte header",
+      "sources": [
+        "https://gnusha.org/pi/bitcoindev/48d3940ab1a2bd53c6e056ce7fbcd361@cock.lu/"
+      ]
+    },
+    {
+      "height": 364261,
+      "hash": "00000000000000000b6adf92bc192b3c21210f456ab21b5e46951665c74cfab2",
+      "date_utc": "2015-07-07",
+      "date_kind": "contemporary report date",
+      "family": "Block version",
+      "header_recovered": false,
+      "missing_evidence": "80-byte header",
+      "sources": [
+        "https://gnusha.org/pi/bitcoindev/48d3940ab1a2bd53c6e056ce7fbcd361@cock.lu/"
+      ]
+    },
+    {
+      "height": 367195,
+      "hash": "0000000000000000116322b5f25826787b01f7a70fb322837b68dff8216cefc4",
+      "date_utc": "2015-07-27",
+      "date_kind": "contemporary report date",
+      "family": "Block version",
+      "header_recovered": false,
+      "missing_evidence": "80-byte header",
+      "sources": [
+        "https://gnusha.org/pi/bitcoindev/48d3940ab1a2bd53c6e056ce7fbcd361@cock.lu/"
+      ]
+    },
+    {
+      "height": 386682,
+      "hash": "0000000000000000083cbdbb25c1607527c8f3fdb16f0d048c4439a73b501cb6",
+      "date_utc": "2015-12-04",
+      "date_kind": "contemporary report date",
+      "family": "Block version",
+      "header_recovered": false,
+      "missing_evidence": "80-byte header",
+      "sources": [
+        "https://gnusha.org/pi/bitcoindev/48d3940ab1a2bd53c6e056ce7fbcd361@cock.lu/"
+      ]
+    },
+    {
+      "height": 387396,
+      "hash": "00000000000000000afc9fbe7cfe8a6b50502d509ba626beb2e2d6c15d1d3ee3",
+      "date_utc": "2015-12-08",
+      "date_kind": "contemporary report date",
+      "family": "Block version",
+      "header_recovered": false,
+      "missing_evidence": "80-byte header",
+      "sources": [
+        "https://gnusha.org/pi/bitcoindev/48d3940ab1a2bd53c6e056ce7fbcd361@cock.lu/"
+      ]
+    },
+    {
+      "height": 450529,
+      "hash": "000000000000000000cf208f521de0424677f7a87f2f278a1042f38d159565f5",
+      "date_utc": "2017-01-29",
+      "date_kind": "header date",
+      "family": "Oversized block",
+      "header_recovered": true,
+      "missing_evidence": "body bytes establishing size violation",
+      "sources": [
+        "https://bitco.in/forum/threads/buir-2017-01-29-statement-regarding-excessive-block-by-bitcoin-unlimited-software-29-jan-2017.1790/",
+        "https://web.archive.org/web/20170129223228id_/https://live.blockcypher.com/btc/block/000000000000000000cf208f521de0424677f7a87f2f278a1042f38d159565f5/",
+        "https://web.archive.org/web/20170713202211id_/https://live.blockcypher.com/btc/block/000000000000000000cf208f521de0424677f7a87f2f278a1042f38d159565f5/"
+      ],
+      "ledger_entry": "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/data/reported-blocks.jsonl#L10"
+    }
+  ]
+}

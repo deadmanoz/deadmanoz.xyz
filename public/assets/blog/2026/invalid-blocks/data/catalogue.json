@@ -1,0 +1,2651 @@
+{
+  "as_of": "2026-09-22",
+  "upstream_commit": "166ff94",
+  "scope": "One row per header with an independently established consensus failure. Ancestry-only descendants excluded. Complete-body availability is separate from invalidity proof.",
+  "blocks": [
+    {
+      "height": 74638,
+      "hash": "0000000000790ab3f22ec756ad43b6ab569abf0bddeb97c67a6f7b1470a7ec1c",
+      "date_utc": "2010-08-15",
+      "rule": "bad-txns-vout-toolarge",
+      "core_reject_reason": "bad-txns-vout-toolarge",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "p2p",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2010-08-15"
+    },
+    {
+      "height": 173886,
+      "hash": "000000000000053ff5459413d05dafa40f94d2462c1381dcf6e84f6a53920bc1",
+      "date_utc": "2012-04-01",
+      "plot_date": "2012-04-01",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062143id_/http://blockchain.info:80/block-index/202021",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-07.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173928,
+      "hash": "000000000000023df73ac98923e2de321db3e3396102ad5dcfe3b25f01a81f64",
+      "date_utc": "2012-04-01",
+      "plot_date": "2012-04-01",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "OzCoin",
+      "parent_kind": "canonical",
+      "channels": "scrape;merge_mining",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://web.archive.org/web/20120409062117id_/http://blockchain.info:80/block-index/202136",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-01.html",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-02.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173948,
+      "hash": "00000000000003094e310502dc4afac93b22b662ae6630bd21f558f231f583e1",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100442id_/http://blockchain.info:80/block-index/202193",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173957,
+      "hash": "00000000000001bd778cffee5b5bae4c7b8d56a9aca955a04c60856b31b11155",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "OzCoin",
+      "parent_kind": "canonical",
+      "channels": "scrape;merge_mining",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://web.archive.org/web/20120409062147id_/http://blockchain.info:80/block-index/202222",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-02.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173965,
+      "hash": "000000000000077863e406c2a90e5d9c23df911f7b0072e19aa6a1118e18423b",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409095955id_/http://blockchain.info:80/block-index/202253",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-02.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173970,
+      "hash": "000000000000025fc439603af84d4c403b1eed6f930710547738bd850d03c32f",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061809id_/http://blockchain.info:80/block-index/202271",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173980,
+      "hash": "00000000000002134eba74c5c44221dc342aecd06e7d66083b445b9a9a2842c0",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062131id_/http://blockchain.info:80/block-index/202299",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173986,
+      "hash": "00000000000004cbfa9f1f2ab919f08215d4d797a3b5fac14ee51abaf6792847",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062036id_/http://blockchain.info:80/block-index/202316",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173989,
+      "hash": "000000000000006b29f95cdd0f72da05a8483546d02d2b2e754d5634470c63a2",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100016id_/http://blockchain.info:80/block-index/202328",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173993,
+      "hash": "000000000000054015763bda6dfcec39d209d4a174225aee3428b7b5e073ba3f",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062126id_/http://blockchain.info:80/block-index/202343",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 173998,
+      "hash": "00000000000003bf4a1e491c802eeec3f1fbf3c2c7299e7935c2b0f33b189651",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "NMCbit",
+      "parent_kind": "canonical",
+      "channels": "scrape;merge_mining",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://web.archive.org/web/20120409062156id_/http://blockchain.info:80/block-index/202359",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174005,
+      "hash": "000000000000058e512463b24e1c3c68916cb0be4815108df4b888e45c3799de",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062041id_/http://blockchain.info:80/block-index/202379",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174012,
+      "hash": "00000000000007788f8b6caebdd9b87f39067701252e95fc7ef3fa678a6e6bc0",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062016id_/http://blockchain.info:80/block-index/202400",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174017,
+      "hash": "00000000000002036a06de86f385bed87da2f22c098d5784e851c726993e0dd9",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062121id_/http://blockchain.info:80/block-index/202413",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174051,
+      "hash": "00000000000000dcb553aead9acd0645e066b2b1522d1db719558f911945ec51",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062151id_/http://blockchain.info:80/block-index/202505",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-02.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174057,
+      "hash": "00000000000007f8d7a6048e2822020e64e4ec70894b535d37f2e7c2e9e25e5c",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061441id_/http://blockchain.info:80/block-index/202527",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-04.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174061,
+      "hash": "0000000000000445d1a976a36fed69aac336947efae1a3e6ad970aa2e6c85e21",
+      "date_utc": "2012-04-02",
+      "plot_date": "2012-04-02",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061754id_/http://blockchain.info:80/block-index/202543",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174065,
+      "hash": "00000000000003773528cf868653e2096195d8a6c4c6e4de96eb3581271cb371",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061759id_/http://blockchain.info:80/block-index/202557",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174067,
+      "hash": "00000000000008ee9d7a824330ef1863f72cf22674456b026c493850324175a3",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409045140id_/http://blockchain.info:80/block-index/202566",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174076,
+      "hash": "00000000000005fd190a02acf8d94954dcbaedf26cf8fb2e40ef8a7554eb066c",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061729id_/http://blockchain.info:80/block-index/202594",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174090,
+      "hash": "0000000000000438962c3baa5fc6323becdc6499503dda014e3955aed2242d6b",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409050526id_/http://blockchain.info:80/block-index/202634",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174094,
+      "hash": "00000000000001a2698f341f303bd0a0caecb70ffc03db3a71c720f5cd00d157",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062052id_/http://blockchain.info:80/block-index/202649",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174102,
+      "hash": "000000000000054ca41f088ca0d5eb4baa89c61a206b0e313ab374d1b5c030f0",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061436id_/http://blockchain.info:80/block-index/202676",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174121,
+      "hash": "00000000000003882d74ee498e986084451d044fa9aa3fa06ee24af3124170cb",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062020id_/http://blockchain.info:80/block-index/202733",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174162,
+      "hash": "000000000000061835d45bccc11cea5de7fbcb1f55103c06eea806c096cee331",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100426id_/http://blockchain.info:80/block-index/202851",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174174,
+      "hash": "0000000000000724a8c9a0d24fb1c771ae8450c144738735ae11ccf50ed76b6d",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062212id_/http://blockchain.info:80/block-index/202894",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174182,
+      "hash": "00000000000002afb206d0115fb643e6969ee1cb4986819ca2113950c4bdafa7",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062221id_/http://blockchain.info:80/block-index/202918",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174185,
+      "hash": "00000000000002034a86831c194f6695bd1dd8402e751eaf249f9876c2b488d1",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062206id_/http://blockchain.info:80/block-index/202928",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174187,
+      "hash": "00000000000006918316c997cc0ea9d43673bd29caa7c56af5a680b583a78114",
+      "date_utc": "2012-04-03",
+      "plot_date": "2012-04-03",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062202id_/http://blockchain.info:80/block-index/202935",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174232,
+      "hash": "000000000000061a02ca3d03369c5c3d1ddddf2231bbc4dac9b9a50ac94f6521",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061734id_/http://blockchain.info:80/block-index/203067",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-04.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174234,
+      "hash": "00000000000003230e299c8477e6fa13929091ab32c07952534322e472b90a19",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100431id_/http://blockchain.info:80/block-index/203075",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174242,
+      "hash": "0000000000000604b586bb2ca543ebee45e981cd978495c1fd22f733ee0d07fa",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062025id_/http://blockchain.info:80/block-index/203104",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174307,
+      "hash": "000000000000038181de05f704b28134161d5b28ca30bdfdc21aea36120ec3dd",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100437id_/http://blockchain.info:80/block-index/203862",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174313,
+      "hash": "000000000000015871c2db6ee091482a26532bf07deaad872dcaa320009af63e",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062056id_/http://blockchain.info:80/block-index/203886",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-04.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174330,
+      "hash": "00000000000002368c5c7b0ed210b4b3aa60f7eba3d3c7c62a96cc79933a5090",
+      "date_utc": "2012-04-04",
+      "plot_date": "2012-04-04",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062046id_/http://blockchain.info:80/block-index/203929",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174343,
+      "hash": "0000000000000129e536d25830531ce468e3fa5cb18f67f2b6ea8950ac1dd622",
+      "date_utc": "2012-04-05",
+      "plot_date": "2012-04-05",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061750id_/http://blockchain.info:80/block-index/203967",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174380,
+      "hash": "000000000000095431d96cd2fcc3a9103cc2df2371cc309416298d451134aa55",
+      "date_utc": "2012-04-05",
+      "plot_date": "2012-04-05",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409045153id_/http://blockchain.info:80/block-index/204071",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174388,
+      "hash": "00000000000005d9a8bb80d42dde2bb69cf2f1217de712ab8c5dd3b14e488019",
+      "date_utc": "2012-04-05",
+      "plot_date": "2012-04-05",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062101id_/http://blockchain.info:80/block-index/204094",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174414,
+      "hash": "00000000000005f538ab005b559e9ffc56b434a66d31206a541e53b3ea01f56c",
+      "date_utc": "2012-04-05",
+      "plot_date": "2012-04-05",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100005id_/http://blockchain.info:80/block-index/204163",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174452,
+      "hash": "00000000000006d621835890febf9fa9faf8414f44fe83575e50f9cf1003c0bc",
+      "date_utc": "2012-04-06",
+      "plot_date": "2012-04-06",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409095950id_/http://blockchain.info:80/block-index/204263",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174506,
+      "hash": "00000000000002b1897a2dc73576f278bee64f572af1f535eda18d016897c332",
+      "date_utc": "2012-04-06",
+      "plot_date": "2012-04-06",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062108id_/http://blockchain.info:80/block-index/204415",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174531,
+      "hash": "00000000000009f1461c27ab5d0268fd139b3d97d4e09c8256f3811f0512cd4a",
+      "date_utc": "2012-04-06",
+      "plot_date": "2012-04-06",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409100422id_/http://blockchain.info:80/block-index/204489",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174593,
+      "hash": "00000000000000b63a4fbda82459724acd5ce0d56d58e5bc6a5764b5fc22412f",
+      "date_utc": "2012-04-07",
+      "plot_date": "2012-04-07",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409062136id_/http://blockchain.info:80/block-index/204656",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174605,
+      "hash": "000000000000068294db0526cb4a5520d21b9d4f271a34012e96784b3b3168c5",
+      "date_utc": "2012-04-07",
+      "plot_date": "2012-04-07",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape;merge_mining",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://web.archive.org/web/20120409062031id_/http://blockchain.info:80/block-index/204692",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174702,
+      "hash": "0000000000000328459da4d5f8a66fdb7dd817f0b2efb147a2e468c8f135e54f",
+      "date_utc": "2012-04-07",
+      "plot_date": "2012-04-07",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20120409061739id_/http://blockchain.info:80/block-index/204936",
+        "https://web.archive.org/web/20120407224031id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174772,
+      "hash": "00000000000004f3cf5af3ded18a301faa24aabd48a5d274a5cee54d21dee7b8",
+      "date_utc": "2012-04-08",
+      "plot_date": "2012-04-08",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-11-28.html#l-1718",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174785,
+      "hash": "0000000000000498cd97e1615a217cf68283ba2be02fca9f94041171c8cd8032",
+      "date_utc": "2012-04-08",
+      "plot_date": "2012-04-08",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 174792,
+      "hash": "0000000000000156a2a61a841deeb79fc805b7155b8a351e68511f7087803898",
+      "date_utc": "2012-04-08",
+      "plot_date": "2012-04-08",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120409062111id_/http://blockchain.info:80/tx-index/3618498/?show_adv=true",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175140,
+      "hash": "00000000000009d2f2c1fd082d9ea253b55583f548b268943f502d3a2f01aa8c",
+      "date_utc": "2012-04-10",
+      "plot_date": "2012-04-10",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175227,
+      "hash": "00000000000000411ee0e63c35654ab807231dd9b863210f1805a45f7297e45d",
+      "date_utc": "2012-04-11",
+      "plot_date": "2012-04-11",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175240,
+      "hash": "00000000000000f32a4948b24975c273133aa01a1c399f60159a85a77db97c2d",
+      "date_utc": "2012-04-11",
+      "plot_date": "2012-04-11",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175245,
+      "hash": "000000000000044e8ebbec7f7b42d218d2815cbe795ef9a864b8feeb5434fb57",
+      "date_utc": "2012-04-11",
+      "plot_date": "2012-04-11",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175261,
+      "hash": "00000000000004b650084d0278934629ae018deb84b37746022dcfffec89309a",
+      "date_utc": "2012-04-11",
+      "plot_date": "2012-04-11",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175343,
+      "hash": "00000000000007cd089d77a5729da19cf0b1aa022b9f3cacbcfa6da4ef02b854",
+      "date_utc": "2012-04-12",
+      "plot_date": "2012-04-12",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175419,
+      "hash": "000000000000096f600726a615c5c61a86d1230351457c76e803f808084f44c3",
+      "date_utc": "2012-04-12",
+      "plot_date": "2012-04-12",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175423,
+      "hash": "00000000000006d8126aebad51b675df955b64fe3dc0fd80d9b2230aa4e281c0",
+      "date_utc": "2012-04-12",
+      "plot_date": "2012-04-12",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175451,
+      "hash": "00000000000001a2cd5c82cd57b14c37af7e38defe80285d861b9d7e0bdbf726",
+      "date_utc": "2012-04-13",
+      "plot_date": "2012-04-13",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175488,
+      "hash": "0000000000000769a89c285c8e546da7a87ea3e9ed6d520e7836ac2293a835ff",
+      "date_utc": "2012-04-13",
+      "plot_date": "2012-04-13",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175517,
+      "hash": "00000000000008812ad711ee20fc1c12283627ab248b8de38277641db259332a",
+      "date_utc": "2012-04-13",
+      "plot_date": "2012-04-13",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175613,
+      "hash": "00000000000001260be665a6f7d2298e161fcd441dbdfb52402aabd92d44ac91",
+      "date_utc": "2012-04-14",
+      "plot_date": "2012-04-14",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175840,
+      "hash": "000000000000068c860302c16faf82474d025bb7c439020f5c64883fc017dc91",
+      "date_utc": "2012-04-16",
+      "plot_date": "2012-04-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175848,
+      "hash": "00000000000001fc57f777551905e43c30f943ad9feffcfa6aa7693ccfad03d8",
+      "date_utc": "2012-04-16",
+      "plot_date": "2012-04-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175888,
+      "hash": "0000000000000a0e419bdf5416c43dd05751db810c0ce5c482848ac4ec3798b1",
+      "date_utc": "2012-04-16",
+      "plot_date": "2012-04-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175926,
+      "hash": "00000000000007fb3a5081625ff511b023fa887f990b419767d9c38d350a746c",
+      "date_utc": "2012-04-16",
+      "plot_date": "2012-04-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175968,
+      "hash": "00000000000001346b4847093c5f92cb1a0970494c052f4f15a1e0910bab0805",
+      "date_utc": "2012-04-17",
+      "plot_date": "2012-04-17",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 175998,
+      "hash": "00000000000006b4795106daca7dbc2ee0885ff7d7217ac1e0dab6c95012abbd",
+      "date_utc": "2012-04-17",
+      "plot_date": "2012-04-17",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-04-18.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 176210,
+      "hash": "000000000000053eec69da876268353f8c7424f0b2f6f8b30535006aeabb91e0",
+      "date_utc": "2012-04-19",
+      "plot_date": "2012-04-19",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 176897,
+      "hash": "00000000000005d3d4e5321fd6a4a8875d018c2ea7cc56666fe0b1fcf0de7a2d",
+      "date_utc": "2012-04-23",
+      "plot_date": "2012-04-23",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 176925,
+      "hash": "00000000000001a54ae5ef86b14302f0a42b69d9ebb3419943a8dc03ac13d76a",
+      "date_utc": "2012-04-23",
+      "plot_date": "2012-04-23",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 177050,
+      "hash": "00000000000001a58ac2a885705872881d6f2ff47cbd574c8233c1013bc6bea0",
+      "date_utc": "2012-04-24",
+      "plot_date": "2012-04-24",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 177470,
+      "hash": "00000000000001f6da83475351e8f2b599c91e903f75f48a42c9986abb94ab19",
+      "date_utc": "2012-04-27",
+      "plot_date": "2012-04-27",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 177525,
+      "hash": "000000000000010cf66b0d0561bf8581daba62631bce68a447b44bc884524fdf",
+      "date_utc": "2012-04-28",
+      "plot_date": "2012-04-28",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 177896,
+      "hash": "000000000000087bbf3d0955aad3fe71ed31db8451c259743d6fbe438db392f3",
+      "date_utc": "2012-04-30",
+      "plot_date": "2012-04-30",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 178119,
+      "hash": "0000000000000af8b07e2bfe093cdb0eef626fed5b4ad5f29710e81c4593ba40",
+      "date_utc": "2012-05-01",
+      "plot_date": "2012-05-01",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 179218,
+      "hash": "00000000000007cfe4331ec640e85971073e63b350ea64d5e234b1a7a1cbbcef",
+      "date_utc": "2012-05-08",
+      "plot_date": "2012-05-08",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 179235,
+      "hash": "00000000000007e371b57ea058e37ca1cf07ed75a1e6dbb261bd51cc80bc3fc1",
+      "date_utc": "2012-05-08",
+      "plot_date": "2012-05-08",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 179700,
+      "hash": "00000000000006f85c49a538256aa8de9d06f47ce8af87140b328e0bfaf758da",
+      "date_utc": "2012-05-11",
+      "plot_date": "2012-05-11",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 179781,
+      "hash": "000000000000070e0f754edc93c3279b1d95ec7be68fae28fcf3e6680971c578",
+      "date_utc": "2012-05-12",
+      "plot_date": "2012-05-12",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 179890,
+      "hash": "000000000000069e67c8f9bc4241a0259588b9661a86637a24e60ed289225cbe",
+      "date_utc": "2012-05-12",
+      "plot_date": "2012-05-12",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 180227,
+      "hash": "0000000000000409a38ea80041a004cbd1b2f74c0d212b2096f589fc4ee445d4",
+      "date_utc": "2012-05-15",
+      "plot_date": "2012-05-15",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 180376,
+      "hash": "0000000000000799224ee50619fba1e0216331448f78f0e8822393132d6d9812",
+      "date_utc": "2012-05-16",
+      "plot_date": "2012-05-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://web.archive.org/web/20121123093057id_/http://blockchain.info:80/block-index/228500",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 180402,
+      "hash": "000000000000038de981a2ace8aea556844d5a37e12d91769fa659d35da2022a",
+      "date_utc": "2012-05-16",
+      "plot_date": "2012-05-16",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 180736,
+      "hash": "000000000000068bd8176678df6bc4f7084536564caa8604c5a50b9f6242293b",
+      "date_utc": "2012-05-19",
+      "plot_date": "2012-05-19",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 182155,
+      "hash": "000000000000083301b2024a7a5821e35d48b592a52d42e66d0e5ea87e0a6b06",
+      "date_utc": "2012-05-29",
+      "plot_date": "2012-05-29",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 182159,
+      "hash": "000000000000013d10c06db769554efff379b9ad518c418a655fe25767fe026a",
+      "date_utc": "2012-05-29",
+      "plot_date": "2012-05-29",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 182195,
+      "hash": "000000000000017e8bbb4b725ce9e60c17dd2c5f371b437aaa1329582c5448f6",
+      "date_utc": "2012-05-30",
+      "plot_date": "2012-05-30",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 182532,
+      "hash": "000000000000038115264989eb90794477aa0376832410d1c3d854c3b2c16d2b",
+      "date_utc": "2012-06-01",
+      "plot_date": "2012-06-01",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 183255,
+      "hash": "000000000000069c27242a928e33e45ddd27d6fd014c77946ba4d3d2891f5398",
+      "date_utc": "2012-06-06",
+      "plot_date": "2012-06-06",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://web.archive.org/web/20120615080519id_/http://blockchain.info:80/tx-index/3618498/4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 189498,
+      "hash": "00000000000001d38cbefa7b86e03e8cd41f42654c39db44e254187f7aa750b5",
+      "date_utc": "2012-07-17",
+      "plot_date": "2012-07-17",
+      "rule": "p2sh_redeem_script_failure",
+      "core_reject_reason": "P2SH VerifySignature failed (historical)",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/decker-wattenhofer/orphans.tar.bz2",
+        "https://www.buildingbitcoin.org/bitcoin-dev/log-2012-07-17.html",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/docs/notes.md#173928-173957-173998-and-174605---p2sh-redeem-script-failure-2012"
+      ]
+    },
+    {
+      "height": 197438,
+      "hash": "0000000000000307872ec2eb0eae2dca3ed9ce6af9e024412cb3ddfe8afd12a7",
+      "date_utc": "2012-09-06",
+      "plot_date": "2012-09-06",
+      "rule": "bad-cb-amount",
+      "core_reject_reason": "bad-cb-amount",
+      "pool": "Eligius",
+      "parent_kind": "canonical",
+      "channels": "scrape;merge_mining",
+      "child_chains": "ixcoin",
+      "full_body": true,
+      "sources": [
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-09-09.html",
+        "https://buildingbitcoin.org/bitcoin-dev/log-2012-09-08.html"
+      ]
+    },
+    {
+      "height": 225013,
+      "hash": "000000000000037f2cc0769d4244cf50f1cace4ab76b0b4adb31010e10150708",
+      "date_utc": "2013-03-09",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-09"
+    },
+    {
+      "height": 225015,
+      "hash": "000000000000015437122b60d0a1d2ed7e1f98b5b292e886d6ca62042bba2035",
+      "date_utc": "2013-03-09",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-09"
+    },
+    {
+      "height": 225134,
+      "hash": "00000000000003abc9b545f105aec0a14cab2b65665f967b2527b61bb25e21bd",
+      "date_utc": "2013-03-10",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-10"
+    },
+    {
+      "height": 225145,
+      "hash": "00000000000001a3aa38003bb99c2bb16dc48dfcf5542ddf86139e639ff51433",
+      "date_utc": "2013-03-10",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-10"
+    },
+    {
+      "height": 225221,
+      "hash": "0000000000000386f943ff46dbf220fed2ef2ce55214d6fce868db21507ddc99",
+      "date_utc": "2013-03-10",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-10"
+    },
+    {
+      "height": 225430,
+      "hash": "00000000000001468e0b21b62cd0b41ec317eeeaa5afc0a8df43c01180e57f7f",
+      "date_utc": "2013-03-11",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-11"
+    },
+    {
+      "height": 225430,
+      "hash": "000000000000017c4a0a7be4244a3b2c0dd41f884586ad8de78356a0994e8960",
+      "date_utc": "2013-03-11",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-11"
+    },
+    {
+      "height": 225464,
+      "hash": "0000000000000085a485d05c96051ff43ea70b8868d7373df9de771ca65b52c9",
+      "date_utc": "2013-03-12",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-12"
+    },
+    {
+      "height": 226230,
+      "hash": "000000000000004cf2026785b16399bea2abab0f8b8a82d070ac0db40a06b3cb",
+      "date_utc": "2013-03-16",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-03-16"
+    },
+    {
+      "height": 226845,
+      "hash": "00000000000000c37c3327de7555db3e3dbe91cbe0294e532f8a32574d5b997d",
+      "date_utc": "2013-03-20",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "mmpool (reported)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://buildingbitcoin.org/bitcoin-dev/log-2013-03-20.html#l-1389",
+        "https://bitcointalk.org/index.php?topic=154521.msg1646902#msg1646902",
+        "https://bitcointalk.org/index.php?topic=57148.msg1646921#msg1646921"
+      ],
+      "plot_date": "2013-03-20"
+    },
+    {
+      "height": 226895,
+      "hash": "000000000000030a6d0a4a0c91af3610843d170594eac75cc8a0e16390ba9559",
+      "date_utc": "2013-03-20",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "mmpool (reported)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://buildingbitcoin.org/bitcoin-dev/log-2013-03-20.html#l-1389",
+        "https://bitcointalk.org/index.php?topic=154521.msg1646902#msg1646902",
+        "https://bitcointalk.org/index.php?topic=57148.msg1646921#msg1646921"
+      ],
+      "plot_date": "2013-03-20"
+    },
+    {
+      "height": 226912,
+      "hash": "00000000000000a34d399a3cb82e222fad8e73e465b905e333ada1662c61e0e0",
+      "date_utc": "2013-03-20",
+      "rule": "bip34_v2_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "mmpool (reported)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://buildingbitcoin.org/bitcoin-dev/log-2013-03-20.html#l-1389",
+        "https://bitcointalk.org/index.php?topic=154521.msg1646902#msg1646902",
+        "https://bitcointalk.org/index.php?topic=57148.msg1646921#msg1646921"
+      ],
+      "plot_date": "2013-03-20"
+    },
+    {
+      "height": 229388,
+      "hash": "00000000000000329b2b44eca61829f13c94bbafb35022f13e49ffff279e3f03",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 229388,
+      "hash": "000000000000008af04b94d8286fe0e8d0aea3b2f35e758ef1e73e153169fa58",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 229388,
+      "hash": "00000000000001365d20401c25e9c8c1bc1570f99a943bc1575b20e16d77a18c",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 229388,
+      "hash": "00000000000001fb5262fee5a4b0e93f1274226980cc0893dcaa9dd9e1187f95",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 229388,
+      "hash": "0000000000000239bfc9b6f400b5b02ab401077bdc470d082e3da34276925cc8",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 229388,
+      "hash": "000000000000024fc7ce00ec89295323699886784960f68a04f4a4871b61caa8",
+      "date_utc": "2013-04-03",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "BTC Guild",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-04-03"
+    },
+    {
+      "height": 277975,
+      "hash": "0000000000000000de6f0b2978aa2b268cb9a54c5de6d21f97d17c6b0ff0ac3f",
+      "date_utc": "2013-12-31",
+      "rule": "coinbase_scriptsig_length_above_100",
+      "core_reject_reason": "bad-cb-length",
+      "pool": "GHash.IO",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2013-12-31"
+    },
+    {
+      "height": 331673,
+      "hash": "000000000000000010bcbb75dc17fce43da835bd26ccec95ed0d39570a51112a",
+      "date_utc": "2014-11-26",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "yongchao34",
+      "parent_kind": "stale",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;i0coin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2014-11-26"
+    },
+    {
+      "height": 331674,
+      "hash": "00000000000000000d610e393ffeed6b9494d54121f05f7a3905f940f0e0cf69",
+      "date_utc": "2014-11-26",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "lengguangxian",
+      "parent_kind": "invalid",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;i0coin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2014-11-26"
+    },
+    {
+      "height": 331735,
+      "hash": "000000000000000010d43fb3f8d02cab156f333f2bfc172de9e6d87359118a1a",
+      "date_utc": "2014-11-26",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2014-11-26"
+    },
+    {
+      "height": 363726,
+      "hash": "0000000000000000032527aa796d3672e32e5f85a452d3a584a28fc7efbcd5d0",
+      "date_utc": "2015-07-04",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "p2p;scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-07-04"
+    },
+    {
+      "height": 363731,
+      "hash": "0000000000000000009cc829aa25b40b2cd4eb83dd498c12ad0d26d90c439d99",
+      "date_utc": "2015-07-04",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "BTC Nuggets (address)",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-07-04"
+    },
+    {
+      "height": 363847,
+      "hash": "00000000000000000c9bb4a508fff34f5450d9c62ef2cb833e53909a4c549de5",
+      "date_utc": "2015-07-04",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "p2p;scrape",
+      "child_chains": "",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-07-04"
+    },
+    {
+      "height": 363967,
+      "hash": "00000000000000000954ed93eda1e79e8261137548fa9ccf4d516bb384a3660b",
+      "date_utc": "2015-07-05",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "Bitsolo (address)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;p2p;scrape",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/proofs/363967-00000000000000000954ed93eda1e79e8261137548fa9ccf4d516bb384a3660b.json",
+        "https://raw.githubusercontent.com/bitcoin-data/mining-pools/master/pools/bitsolo.json"
+      ],
+      "plot_date": "2015-07-05"
+    },
+    {
+      "height": 364341,
+      "hash": "000000000000000012aac0664cd8b6cbc3ea485921a05f2c4340f928b0226d3c",
+      "date_utc": "2015-07-08",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;p2p",
+      "child_chains": "devcoin;ixcoin;namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-07-08"
+    },
+    {
+      "height": 367047,
+      "hash": "00000000000000000f93ba8faf8bb018c7db642e30391748860cbfa5803a32a4",
+      "date_utc": "2015-07-26",
+      "rule": "bip66_block_version_below_3",
+      "core_reject_reason": "bad-version",
+      "pool": "mmpool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "devcoin;groupcoin;i0coin;namecoin;unobtanium",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-07-26"
+    },
+    {
+      "height": 380992,
+      "hash": "0000000000000000084ee972bfe620224e6893448a9001d2b1f236ede0423779",
+      "date_utc": "2015-10-28",
+      "rule": "time_below_mtp",
+      "core_reject_reason": "time-too-old",
+      "pool": "yndl",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-10-28"
+    },
+    {
+      "height": 383540,
+      "hash": "000000000000000009c55c7e380b7600a2966de1b79230c74212d9c45a91a50b",
+      "date_utc": "2015-11-14",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "Eligius",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-11-14"
+    },
+    {
+      "height": 389043,
+      "hash": "00000000000000000306ea979ad487157d2950081413eb9d2dca82060f1b89b2",
+      "date_utc": "2015-12-18",
+      "rule": "bip65_block_version_below_4",
+      "core_reject_reason": "bad-version",
+      "pool": "nodeStratum",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;p2p",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2015-12-18"
+    },
+    {
+      "height": 402610,
+      "hash": "000000000000000003a1ce220ae97419cc4bdb5d70b90189b8f8a06b0b37e3a2",
+      "date_utc": "2016-03-14",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "c63346109",
+      "parent_kind": "stale",
+      "channels": "merge_mining",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2016-03-14"
+    },
+    {
+      "height": 422059,
+      "hash": "00000000000000000254ed1e8143f0bcd3c3564db07e7c35631e999d53e81fa7",
+      "date_utc": "2016-07-24",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "ViaBTC",
+      "parent_kind": "stale",
+      "channels": "merge_mining;p2p",
+      "child_chains": "namecoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2016-07-24"
+    },
+    {
+      "height": 474294,
+      "hash": "00000000000000000182acdf5657c93a0769dc6f9004047496b2e15efc6a4232",
+      "date_utc": "2017-07-05",
+      "rule": "missing_unconfirmed_parent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "1Hash (reported)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;scrape",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://bitcointalk.org/index.php?topic=2041607.0"
+      ],
+      "plot_date": "2017-07-05"
+    },
+    {
+      "height": 477115,
+      "hash": "0000000000000000013ee4a86822d37a061732e04ee5f41fb77168f193363d1b",
+      "date_utc": "2017-07-23",
+      "rule": "bad-txns-inputs-missingorspent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "1Hash (reported)",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;scrape",
+      "child_chains": "namecoin",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://bitcointalk.org/index.php?topic=2041607.0",
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/chainquery.com/orphans_chainquery.com.json"
+      ],
+      "plot_date": "2017-07-23"
+    },
+    {
+      "height": 507514,
+      "hash": "000000000000000000571c2b98a090c15774cb7400bd4a50b160d488d14055d0",
+      "date_utc": "2018-02-04",
+      "rule": "already_confirmed_in_parent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/chainquery.com/orphans_chainquery.com.json"
+      ],
+      "plot_date": "2018-02-04"
+    },
+    {
+      "height": 509557,
+      "hash": "00000000000000000027894f0969c2f79a6cdb1231750e048effbd17c88da431",
+      "date_utc": "2018-02-17",
+      "rule": "already_confirmed_in_parent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/chainquery.com/orphans_chainquery.com.json"
+      ],
+      "plot_date": "2018-02-17"
+    },
+    {
+      "height": 515319,
+      "hash": "00000000000000000014c1ee89b61a84e3e30dd9b2c78c9916d323a2775bc613",
+      "date_utc": "2018-03-27",
+      "rule": "already_confirmed_in_parent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/chainquery.com/orphans_chainquery.com.json"
+      ],
+      "plot_date": "2018-03-27"
+    },
+    {
+      "height": 534339,
+      "hash": "0000000000000000001a04286794b25ff10dfdb1bb601b17280dfc1ef933a0ba",
+      "date_utc": "2018-07-30",
+      "rule": "already_confirmed_in_parent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "scrape",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/NStifter/mergedmonitor/blob/54344d4e355f73eb94bef8d391e8fb6e4a9323a6/fork-analysis/chainquery.com/orphans_chainquery.com.json"
+      ],
+      "plot_date": "2018-07-30"
+    },
+    {
+      "height": 543804,
+      "hash": "0000000000000000000c958fe3563e7e3ecda8e35e6d6ecce4d5693cec1f1918",
+      "date_utc": "2018-09-30",
+      "rule": "bip65_block_version_below_4",
+      "core_reject_reason": "bad-version",
+      "pool": "BTC.COM",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin;rsk",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2018-09-30"
+    },
+    {
+      "height": 544024,
+      "hash": "0000000000000000001ac59b46b44a9e525bc03a5cd2e138a8ae684445fa6ed8",
+      "date_utc": "2018-10-02",
+      "rule": "bip65_block_version_below_4",
+      "core_reject_reason": "bad-version",
+      "pool": "BTC.COM",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin;rsk",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2018-10-02"
+    },
+    {
+      "height": 544024,
+      "hash": "0000000000000000001ffb5988298bfc9f528f9a47e6062ebe8a01177af25d21",
+      "date_utc": "2018-10-02",
+      "rule": "bip65_block_version_below_4",
+      "core_reject_reason": "bad-version",
+      "pool": "BTC.COM",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin;rsk",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2018-10-02"
+    },
+    {
+      "height": 544600,
+      "hash": "000000000000000000188a6aecb603cb6a068ad236f925255a491124b5c5dc8a",
+      "date_utc": "2018-10-06",
+      "rule": "bip65_block_version_below_4",
+      "core_reject_reason": "bad-version",
+      "pool": "BTC.COM",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin;rsk",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2018-10-06"
+    },
+    {
+      "height": 584802,
+      "hash": "0000000000000000000b47042b90c6a893e6e5cdef70c92beefb88f4c5fa5a69",
+      "date_utc": "2019-07-10",
+      "rule": "bad-cb-amount",
+      "core_reject_reason": "bad-cb-amount",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;scrape",
+      "child_chains": "elastos",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2019-07-10"
+    },
+    {
+      "height": 649674,
+      "hash": "00000000000000000008c80c1f8c101f8aa1fabd59d63ab1350bd1d5dba425e6",
+      "date_utc": "2020-09-23",
+      "rule": "bip34_coinbase_height_missing",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "hathor",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2020-09-23"
+    },
+    {
+      "height": 717696,
+      "hash": "0000000000000000000045c5040bf46b4cd6c6f8f4004c149cd602e4e356e71c",
+      "date_utc": "2022-01-08",
+      "rule": "nbits_retarget_not_applied",
+      "core_reject_reason": "bad-diffbits",
+      "pool": "ViaBTC",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "emercoin;namecoin;syscoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2022-01-08"
+    },
+    {
+      "height": 783426,
+      "hash": "00000000000000000002ec935e245f8ae70fc68cc828f05bf4cfa002668599e4",
+      "date_utc": "2023-04-01",
+      "rule": "bad-blk-sigops",
+      "core_reject_reason": "bad-blk-sigops",
+      "pool": "F2Pool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;p2p",
+      "child_chains": "elastos;namecoin;rsk;syscoin;xaya",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2023-04-01"
+    },
+    {
+      "height": 784121,
+      "hash": "000000000000000000046a2698233ed93bb5e74ba7d2146a68ddb0c2504c980d",
+      "date_utc": "2023-04-06",
+      "rule": "bad-blk-sigops",
+      "core_reject_reason": "bad-blk-sigops",
+      "pool": "F2Pool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining;p2p",
+      "child_chains": "elastos;namecoin;rsk;syscoin;xaya",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2023-04-06"
+    },
+    {
+      "height": 789038,
+      "hash": "0000000000000000000291349d44e756df07ce08d848df0ca0bbd9884af393ed",
+      "date_utc": "2023-05-10",
+      "rule": "bip34_coinbase_height_mismatch",
+      "core_reject_reason": "bad-cb-height",
+      "pool": "AntPool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "namecoin;rsk",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2023-05-10"
+    },
+    {
+      "height": 809478,
+      "hash": "000000000000000000006840568a01091022093a176d12a1e8e5e261e4f11853",
+      "date_utc": "2023-09-26",
+      "rule": "bad-txns-inputs-missingorspent",
+      "core_reject_reason": "bad-txns-inputs-missingorspent",
+      "pool": "MARA Pool",
+      "parent_kind": "canonical",
+      "channels": "p2p",
+      "child_chains": "",
+      "full_body": true,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research"
+      ],
+      "plot_date": "2023-09-26"
+    },
+    {
+      "height": 946213,
+      "hash": "00000000000000000000c3d95a4bdc068dfe0c6d1e7ad13045c6f570e58d9ed7",
+      "date_utc": "2026-04-15",
+      "rule": "time_below_mtp",
+      "core_reject_reason": "time-too-old",
+      "pool": "F2Pool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "elastos;namecoin;syscoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/proofs/946213-00000000000000000000c3d95a4bdc068dfe0c6d1e7ad13045c6f570e58d9ed7.json"
+      ],
+      "plot_date": "2026-04-22"
+    },
+    {
+      "height": 957780,
+      "hash": "0000000000000000000198e12592edbe83c84a78f75b3f8d67a3fe2075ef2ffb",
+      "date_utc": "2026-06-29",
+      "rule": "time_below_mtp",
+      "core_reject_reason": "time-too-old",
+      "pool": "F2Pool",
+      "parent_kind": "canonical",
+      "channels": "merge_mining",
+      "child_chains": "elastos;fractal;namecoin;syscoin",
+      "full_body": false,
+      "sources": [
+        "https://github.com/bitcoin-data/invalid-blocks",
+        "https://github.com/deadmanoz/merge-mining-research",
+        "https://github.com/bitcoin-data/invalid-blocks/blob/166ff94/proofs/957780-0000000000000000000198e12592edbe83c84a78f75b3f8d67a3fe2075ef2ffb.json"
+      ],
+      "plot_date": "2026-07-13"
+    }
+  ]
+}
