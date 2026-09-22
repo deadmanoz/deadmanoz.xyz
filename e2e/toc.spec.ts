@@ -241,6 +241,29 @@ test.describe("table of contents hierarchy", () => {
     await expectHeadingAtScrollMargin(page, "Methodology");
   });
 
+  for (const width of [1440, 375]) {
+    test(`TOC navigation reveals headings inside closed article sections at ${width}px`, async ({ page }) => {
+      const nav = await openToc(page, width, canaryPath);
+      const articleSection = page.locator("details#collapse-1");
+      const heading = articleSection.locator("h4").filter({ hasText: /^DigiCash \(1990s\)$/ });
+      await expect(articleSection).toHaveJSProperty("open", false);
+      await expect(heading).toBeHidden();
+      await setExpanded(nav, "Welcome to deadmanoz.xyz", true);
+      await setExpanded(nav, "Collapsible Sections", true);
+      await expect(articleSection).toHaveJSProperty("open", false);
+
+      await nav.getByRole("button", { name: "DigiCash (1990s)", exact: true }).click();
+
+      await expect(articleSection).toHaveJSProperty("open", true);
+      await expect(heading).toBeVisible();
+      await expectHeadingAtScrollMargin(page, "DigiCash (1990s)");
+      if (width < 1280) {
+        await expect(page.getByRole("button", { name: "Toggle table of contents" }))
+          .toHaveAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   for (const width of [1440, 320]) {
     test(`skipped heading levels and long leaf titles stay inside the TOC at ${width}px`, async ({ page }) => {
       const nav = await openToc(page, width, canaryPath);

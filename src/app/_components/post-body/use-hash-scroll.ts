@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { scrollToElement } from "@/lib/scroll-to-element";
 
 /**
  * Scroll to the element named by the URL hash, on mount and on hash changes.
@@ -16,12 +17,7 @@ export function useHashScroll(): void {
       pending = window.setTimeout(() => {
         const element = document.getElementById(id);
         if (!element) return;
-        let ancestor = element.parentElement;
-        while (ancestor) {
-          if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
-          ancestor = ancestor.parentElement;
-        }
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollToElement(element);
       }, 100);
     };
 

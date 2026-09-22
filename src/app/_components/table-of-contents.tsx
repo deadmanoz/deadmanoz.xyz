@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useId, type ReactElement, type RefObject } from "react";
+import { scrollToElement } from "@/lib/scroll-to-element";
 
 interface HeadingItem {
   id: string;
@@ -101,10 +102,7 @@ export function TableOfContents({ containerRef, content, ready }: TableOfContent
   const scrollToHeading = (id: string) => {
     const element = headings.find((heading) => heading.id === id)?.element;
     if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      scrollToElement(element);
 
       if (isMobile) {
         setIsOpen(false);
