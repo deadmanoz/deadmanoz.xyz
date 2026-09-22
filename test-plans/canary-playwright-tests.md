@@ -160,3 +160,11 @@ We do not assert text content because MathJax replaces the original delimiter te
 - An internal cross-ref link (`a.figure-ref[href="#fig-sample"]`) has `getComputedStyle(...).color === "rgb(0, 160, 208)"` (neon cyan `#00A0D0`).
 - An external link (`a[href^="https://example.com"]`) has `getComputedStyle(...).color === "rgb(32, 229, 22)"` (neon green `#20E516`).
 - A `code` inside an external link (`a[href="https://example.com/code-link"] code`) inherits the neon green hue (same RGB as the external case above).
+
+### 15. Table of contents
+
+**Objective:** verify TOC entries use the same colour as their heading level in the post body (`--theme-heading-N`).
+
+**Assertions:**
+- The entry for the h4 `Deeper still` is visible.
+- Computed colours: h2 `A nested` is neon orange `rgb(255, 108, 17)`, h3 `Table-of-contents` is neon cyan `rgb(0, 160, 208)`, h4 `Deeper still` is neon green `rgb(32, 229, 22)`.

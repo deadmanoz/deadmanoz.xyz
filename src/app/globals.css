@@ -31,6 +31,15 @@
   /* Alert colors */
   --theme-danger-red: #E6194B;  /* Used for danger alerts */
 
+  /* Heading colours by level, read by the post body (markdown-styles.module.css)
+     and the table of contents so the two can never disagree */
+  --theme-heading-1: var(--theme-neon-green);
+  --theme-heading-2: var(--theme-neon-orange);
+  --theme-heading-3: var(--theme-neon-cyan);
+  --theme-heading-4: var(--theme-neon-green);
+  --theme-heading-5: var(--theme-text-accent);
+  --theme-heading-6: var(--theme-text-secondary);
+
   /* Interactive Elements */
   --theme-link: #00A0D0;          /* Neon Cyan — internal links (cross-refs, in-site nav, heading anchors). Matches site nav and post-card links. */
   --theme-link-external: #20E516; /* Neon Green — external links (anything matching href^="http"). Different hue from internal for at-a-glance distinction. */

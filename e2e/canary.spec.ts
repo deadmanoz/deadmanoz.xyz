@@ -359,3 +359,15 @@ test.describe("canary — plots", () => {
     );
   });
 });
+
+test.describe("canary — table of contents", () => {
+  test("entries take the same colour as the heading has in the post body", async ({ page }) => {
+    const entry = (name: string) => page.getByRole("button", { name, exact: true }).first();
+    const colorOf = (name: string) => entry(name).evaluate((el) => getComputedStyle(el).color);
+
+    await expect(entry("Deeper still")).toBeVisible();
+    expect(await colorOf("A nested")).toBe("rgb(255, 108, 17)"); // h2: neon orange
+    expect(await colorOf("Table-of-contents")).toBe("rgb(0, 160, 208)"); // h3: neon cyan
+    expect(await colorOf("Deeper still")).toBe("rgb(32, 229, 22)"); // h4: neon green
+  });
+});

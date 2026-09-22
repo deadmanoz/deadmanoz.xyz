@@ -221,13 +221,8 @@ export function TableOfContents({ containerSelector = '[class*="markdown"]', inl
                       style={{
                         marginLeft: `${Math.max(0, (heading.level - 1) * 8)}px`,
                         fontSize: heading.level === 1 ? '0.9rem' : heading.level === 2 ? '0.8rem' : heading.level === 3 ? '0.75rem' : '0.7rem',
-                        color: activeId === heading.id 
-                          ? 'var(--theme-neon-cyan)'
-                          : heading.level === 1
-                            ? 'var(--theme-neon-green)'
-                            : heading.level === 2 
-                              ? 'var(--theme-neon-orange)' 
-                              : 'var(--theme-neon-cyan)'
+                        // Same colour as the heading has in the post body (see --theme-heading-N in globals.css).
+                        color: activeId === heading.id ? 'var(--theme-neon-cyan)' : `var(--theme-heading-${heading.level})`
                       }}
                     >
                       {heading.text}
@@ -331,13 +326,8 @@ export function TableOfContents({ containerSelector = '[class*="markdown"]', inl
                         style={{
                           marginLeft: `${Math.max(0, (heading.level - 1) * 12)}px`,
                           fontSize: heading.level === 1 ? '1rem' : heading.level === 2 ? '0.9rem' : heading.level === 3 ? '0.85rem' : '0.8rem',
-                          color: activeId === heading.id 
-                            ? 'var(--theme-neon-cyan)'
-                            : heading.level === 1
-                              ? 'var(--theme-neon-green)'
-                              : heading.level === 2 
-                                ? 'var(--theme-neon-orange)' 
-                                : 'var(--theme-neon-cyan)'
+                          // Same colour as the heading has in the post body (see --theme-heading-N in globals.css).
+                          color: activeId === heading.id ? 'var(--theme-neon-cyan)' : `var(--theme-heading-${heading.level})`
                         }}
                       >
                         {heading.text}
