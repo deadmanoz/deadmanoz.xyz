@@ -205,3 +205,11 @@ The reference {@fig:folded} still numbers it in document order and opens the blo
 #### Deeper still
 
 Fourth-level headings appear in the table of contents in the same colour as in the text.
+
+## Skipped heading levels
+
+#### A fourth-level branch
+
+###### A long leaf heading unbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbrokenunbroken
+
+## Sibling after skipped levels

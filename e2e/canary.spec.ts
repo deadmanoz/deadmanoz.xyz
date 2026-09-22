@@ -362,6 +362,10 @@ test.describe("canary — plots", () => {
 
 test.describe("canary — table of contents", () => {
   test("entries take the same colour as the heading has in the post body", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    for (const heading of ["This is", "A nested", "Table-of-contents"]) {
+      await page.getByRole("button", { name: `Expand ${heading}`, exact: true }).click();
+    }
     const entry = (name: string) => page.getByRole("button", { name, exact: true }).first();
     const colorOf = (name: string) => entry(name).evaluate((el) => getComputedStyle(el).color);
 

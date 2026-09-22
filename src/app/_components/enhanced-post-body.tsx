@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import markdownStyles from "./markdown-styles.module.css";
 import "./post-body.css";
 import { ImageModal } from "./image-modal";
+import { TableOfContents } from "./table-of-contents";
 import { useAnnotationTooltips } from "./post-body/use-annotation-tooltips";
 import { useHashScroll } from "./post-body/use-hash-scroll";
 import { useHeadingAnchors } from "./post-body/use-heading-anchors";
@@ -19,9 +20,8 @@ type Props = {
 /**
  * Renders a post's pre-rendered HTML and layers the client-side behaviour on
  * top: hash scrolling into collapses, MathJax typesetting, the image modal,
- * heading anchors, hover tooltips, sortable tables and interactive plots.
- * Each behaviour is its own hook under ./post-body; this component only
- * composes them.
+ * heading anchors, hover tooltips, sortable tables, the TOC and interactive plots.
+ * DOM enhancements are composed from hooks under ./post-body.
  */
 export function EnhancedPostBody({ content }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +56,7 @@ export function EnhancedPostBody({ content }: Props) {
         className={markdownStyles.markdown}
         dangerouslySetInnerHTML={html}
       />
+      <TableOfContents containerRef={containerRef} content={content} ready={ready} />
       <ImageModal
         isOpen={modalOpen}
         imageSrc={modalImage.src}

@@ -11,7 +11,6 @@ import { CitationBlock } from "@/app/_components/citation-block";
 import { ComingSoonContent } from "@/app/_components/coming-soon-content";
 import { EnhancedPostBody } from "@/app/_components/enhanced-post-body";
 import { Footer } from "@/app/_components/footer";
-import { TableOfContents } from "@/app/_components/table-of-contents";
 
 export const dynamicParams = false;
 
@@ -91,9 +90,7 @@ export default async function Post({
           {/* Title area with same layout as content */}
           <div className="max-w-6xl w-full flex gap-12 items-start mb-12">
             {/* TOC space - Desktop only, to match content layout */}
-            <div className="hidden xl:block">
-              <TableOfContents inline={true} />
-            </div>
+            <div className="hidden xl:block w-64 shrink-0" />
 
             {/* Title content - aligned with body text */}
             <div className="flex-1 min-w-0 text-center">
@@ -167,10 +164,7 @@ export default async function Post({
 
           {/* Content with TOC Layout */}
           <div className="max-w-6xl w-full flex gap-12 items-start mb-32">
-            {/* TOC - Desktop only, inline */}
-            <div className="hidden xl:block">
-              <TableOfContents inline={true} />
-            </div>
+            <div className="hidden xl:block w-64 shrink-0" />
 
             {/* Main Content */}
             <div className="flex-1 prose-synthwave min-w-0">
@@ -179,11 +173,6 @@ export default async function Post({
             </div>
           </div>
         </main>
-      </div>
-
-      {/* Table of Contents - Mobile only, floating */}
-      <div className="xl:hidden">
-        <TableOfContents />
       </div>
 
       <Footer />
