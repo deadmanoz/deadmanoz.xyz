@@ -94,6 +94,117 @@ describe("estimateReadingMinutes", () => {
     const body = Array.from({ length: 220 }, () => "word").join(" ");
     expect(estimateReadingMinutes(`${heading}\n\n${body}`)).toBe(1);
   });
+
+  it("counts table cell text without pipes, alignment markers or empty cells", () => {
+    const table = [
+      "| Rule | Block count |",
+      "| :--- | ---: |",
+      "| Invalid signature | 26 |",
+      "| Missing witness | |",
+    ].join("\n");
+    expect(estimateReadingMinutes(table, 1)).toBe(8);
+  });
+
+  it("counts link labels and inline code without splitting formatted words", () => {
+    const markdown = [
+      "A pre**fix** and [linked label](https://example.com \"Hidden title words\").",
+      "Use `aux_target` with [this reference][ref].",
+      "",
+      "[ref]: https://example.com \"Another hidden title\"",
+    ].join("\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(10);
+  });
+
+  it("counts annotation labels but excludes tooltip prose and links", () => {
+    const markdown = "Check [[**BIP 22**||See the [full specification](https://example.com) for details.]] first.";
+    expect(estimateReadingMinutes(markdown, 1)).toBe(4);
+  });
+
+  it("includes collapsed prose, table cells and figure captions", () => {
+    const markdown = [
+      ":::collapse{Full catalogue}{#catalogue}",
+      "",
+      "Additional context.",
+      "",
+      "| Rule | Count |",
+      "| --- | --- |",
+      "| Overflow | 1 |",
+      "",
+      "![A [linked caption](https://example.com).](/figure.png){#fig:diagram}",
+      "",
+      ":::",
+    ].join("\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(11);
+  });
+
+  it("retains plot captions and alert content without directive metadata", () => {
+    const markdown = [
+      ':::plot{sample title="Hidden plot title"}',
+      '{"data": [{"x": [1, 2, 3], "y": [4, 5, 6]}]}',
+      ":::",
+      "A visible caption. {#fig:sample}",
+      "",
+      ":::alert{warning}",
+      "{{cyan:Read this}} carefully.",
+      ":::",
+    ].join("\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(6);
+  });
+
+  it("excludes image alt text, HTML comments and footnotes", () => {
+    const markdown = [
+      "Visible prose.[^note]",
+      "",
+      "![An image description](/image.png)",
+      "",
+      "<!-- Hidden editorial comment -->",
+      "",
+      "[^note]: Supplemental footnote text.",
+    ].join("\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(2);
+  });
+
+  it("ignores punctuation-only tokens and keeps hard line breaks between words", () => {
+    expect(estimateReadingMinutes("One * two + three  \nfour", 1)).toBe(4);
+  });
+
+  it("excludes all Markdown code blocks before processing custom syntax", () => {
+    const markdown = [
+      "Before.",
+      "",
+      "~~~~markdown",
+      ":::plot{example}",
+      "````",
+      "## References",
+      "~~~~",
+      "",
+      "    indented code example",
+      "",
+      "After.",
+      "",
+      ":::",
+    ].join("\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(2);
+  });
+
+  it("recognises formatted and setext bibliography headings", () => {
+    const markdown = "Before.\n\n**References**\n---\n\nCitation text.\n\n## After\n\nMore prose.";
+    expect(estimateReadingMinutes(markdown, 1)).toBe(4);
+  });
+
+  it("does not resume inside a skipped section after a nested bibliography heading", () => {
+    const markdown = [
+      "Before.",
+      "## References",
+      "### Further reading",
+      "Source text.",
+      "### Papers",
+      "More source text.",
+      "## Conclusion",
+      "After.",
+    ].join("\n\n");
+    expect(estimateReadingMinutes(markdown, 1)).toBe(3);
+  });
 });
 
 describe("formatReadingTime", () => {
