@@ -36,6 +36,6 @@ export function processCaptionLinks(caption: string): string {
 export function processColoredText(htmlString: string): string {
   return htmlString.replace(COLOR_PATTERN, (match, colorName, text) => {
     const color = colorFor(colorName);
-    return color ? `<span style="color: ${color}; font-weight: bold;">${text}</span>` : match;
+    return color ? `<span class="ink-${colorName.toLowerCase()}">${text}</span>` : match;
   });
 }

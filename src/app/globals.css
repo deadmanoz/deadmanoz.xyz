@@ -22,6 +22,7 @@
   --theme-neon-cyan: #00A0D0;  /* Cyan */
   --theme-neon-blue: #006DD0;  /* Bright Blue */
   --theme-neon-purple: #261447;  /* Purple */
+  --theme-neon-pink: #FF006E;
 
   /* Additional accent colors */
   --theme-peach: #FF8664;
@@ -276,6 +277,35 @@ a:hover {
   color: rgba(255, 134, 100, 0.58);
 }
 
+html[data-theme="paper"] .project-bar,
+html[data-theme="paper"] .project-card,
+html[data-theme="paper"] .project-card:hover {
+  background: #efeadd;
+  border-color: #11100b;
+  color: #11100b;
+}
+
+html[data-theme="paper"] .project-card-rail-green,
+html[data-theme="paper"] .project-card-rail-purple,
+html[data-theme="paper"] .project-card-rail-cyan {
+  border-left-color: #11100b;
+}
+
+html[data-theme="paper"] .project-bar-heading,
+html[data-theme="paper"] .project-card-kind,
+html[data-theme="paper"] .project-card-name,
+html[data-theme="paper"] .project-card:hover .project-card-name,
+html[data-theme="paper"] .project-card-description {
+  color: #11100b;
+}
+
+html[data-theme="paper"] .post-tag {
+  color: #11100b !important;
+  border-color: #11100b !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 @media (max-width: 720px) {
   .project-bar-cards {
     grid-template-columns: 1fr;
@@ -337,4 +367,128 @@ h1[id]:target, h2[id]:target, h3[id]:target, h4[id]:target, h5[id]:target, h6[id
     box-shadow: 0 0 0 0 transparent;
     background: transparent;
   }
+}
+
+.plot-frame {
+  box-shadow: 0 0 20px rgba(0, 160, 208, 0.2);
+}
+
+/* Prose emphasis. Synthwave keeps the palette hue; Paper uses ink and weight. */
+.ink-orange { color: #FF6C11; font-weight: 700; }
+.ink-green { color: #20E516; font-weight: 700; }
+.ink-cyan { color: #00A0D0; font-weight: 700; }
+.ink-blue { color: #006DD0; font-weight: 700; }
+.ink-red { color: #E6194B; font-weight: 700; }
+.ink-peach { color: #FF8664; font-weight: 700; }
+.ink-pink { color: #FF006E; font-weight: 700; }
+.ink-magenta { color: #FF00FF; font-weight: 700; }
+.ink-grey, .ink-gray { color: #888899; font-weight: 700; }
+.ink-gold { color: #F0C040; font-weight: 700; }
+.ink-yellow { color: #EAB308; font-weight: 700; }
+.ink-lightblue { color: #42D4F4; font-weight: 700; }
+.ink-purple { color: #8B5CF6; font-weight: 700; }
+.ink-teal { color: #14B8A6; font-weight: 700; }
+.ink-lime { color: #84CC16; font-weight: 700; }
+.ink-indigo { color: #6366F1; font-weight: 700; }
+
+html[data-theme="paper"] {
+  font-size: 112.5%;
+  --theme-bg-primary: #f3efe4;
+  --theme-bg-secondary: #e7e1d2;
+  --theme-bg-accent: #d9d2c0;
+  --theme-bg-card: #efeadd;
+  --theme-bg-overlay: rgba(243, 239, 228, 0.96);
+  --theme-text-primary: #11100b;
+  --theme-text-secondary: #11100b;
+  --theme-text-accent: #11100b;
+  --theme-neon-orange: #11100b;
+  --theme-neon-green: #11100b;
+  --theme-neon-cyan: #11100b;
+  --theme-neon-blue: #11100b;
+  --theme-neon-purple: #11100b;
+  --theme-neon-pink: #11100b;
+  --theme-peach: #11100b;
+  --theme-teal: #11100b;
+  --theme-blue: #11100b;
+  --theme-danger-red: #11100b;
+  --theme-link: #11100b;
+  --theme-link-external: #11100b;
+  --theme-link-hover: #11100b;
+  --theme-button-primary: #11100b;
+  --theme-button-secondary: #11100b;
+  --theme-border: #11100b;
+  --theme-border-accent: #11100b;
+  --theme-gradient-main: #f3efe4;
+  --theme-gradient-neon: none;
+}
+
+html[data-theme="paper"] body {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  background: #f3efe4;
+  color: #11100b;
+}
+
+html[data-theme="paper"] body::before,
+html[data-theme="paper"] .blur-3xl {
+  display: none;
+}
+
+html[data-theme="paper"] *,
+html[data-theme="paper"] *::before,
+html[data-theme="paper"] *::after {
+  text-shadow: none !important;
+}
+
+html[data-theme="paper"] a:hover,
+html[data-theme="paper"] button:hover,
+html[data-theme="paper"] summary:hover,
+html[data-theme="paper"] .hover\:scale-110:hover {
+  transform: none;
+}
+
+html[data-theme="paper"] .border,
+html[data-theme="paper"] .border-2,
+html[data-theme="paper"] .border-t,
+html[data-theme="paper"] .border-b {
+  border-color: #11100b;
+}
+
+html[data-theme="paper"] .plot-frame,
+html[data-theme="paper"] .theme-toggle {
+  box-shadow: none;
+}
+
+html[data-theme="paper"] [class^="ink-"],
+html[data-theme="paper"] [class*=" ink-"] {
+  color: #11100b;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+/* Monochrome code. Hue from atom-one-light would wash out on the DC-1. */
+html[data-theme="paper"] .hljs,
+html[data-theme="paper"] .hljs span {
+  color: #11100b;
+}
+html[data-theme="paper"] .hljs {
+  background: #efeadd;
+}
+html[data-theme="paper"] .hljs-comment,
+html[data-theme="paper"] .hljs-quote,
+html[data-theme="paper"] .hljs-emphasis {
+  font-style: italic;
+}
+html[data-theme="paper"] .hljs-keyword,
+html[data-theme="paper"] .hljs-title,
+html[data-theme="paper"] .hljs-built_in,
+html[data-theme="paper"] .hljs-section,
+html[data-theme="paper"] .hljs-strong {
+  font-weight: 700;
+}
+html[data-theme="paper"] .hljs-string,
+html[data-theme="paper"] .hljs-regexp,
+html[data-theme="paper"] .hljs-link {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
 }

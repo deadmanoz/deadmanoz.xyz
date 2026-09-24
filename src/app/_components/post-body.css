@@ -486,3 +486,64 @@ th[aria-sort="descending"] .table-sort-indicator::after {
 .math-inline {
   color: var(--theme-text-accent);
 }
+
+html[data-theme="paper"] .annotation,
+html[data-theme="paper"] .annotation:hover,
+html[data-theme="paper"] .annotation:focus,
+html[data-theme="paper"] .annotation:focus-within {
+  color: #11100b;
+  background: transparent;
+  border-bottom-color: #11100b;
+}
+
+html[data-theme="paper"] .annotation-tooltip {
+  box-shadow: none;
+}
+
+html[data-theme="paper"] .alert-info,
+html[data-theme="paper"] .alert-warning,
+html[data-theme="paper"] .alert-success,
+html[data-theme="paper"] .alert-danger,
+html[data-theme="paper"] .alert-info:hover,
+html[data-theme="paper"] .alert-warning:hover,
+html[data-theme="paper"] .alert-success:hover,
+html[data-theme="paper"] .alert-danger:hover {
+  background: #efeadd;
+  border-color: #11100b;
+  box-shadow: none;
+}
+
+html[data-theme="paper"] .alert-icon {
+  filter: grayscale(1) contrast(1.4);
+  text-shadow: none;
+  color: #11100b;
+}
+
+html[data-theme="paper"] .table-ref,
+html[data-theme="paper"] a.table-ref {
+  color: #11100b;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+html[data-theme="paper"] details.collapsible-section,
+html[data-theme="paper"] details.collapsible-section[open] {
+  border: 1px solid #11100b !important;
+  box-shadow: none !important;
+  background: #efeadd;
+}
+
+html[data-theme="paper"] .collapsible-title,
+html[data-theme="paper"] .collapsible-title:hover {
+  color: #11100b;
+  background: #efeadd;
+  text-shadow: none;
+}
+
+html[data-theme="paper"] .collapsible-title::before,
+html[data-theme="paper"] .collapsible-section[open] .collapsible-title::before {
+  color: #11100b;
+  text-shadow: none;
+}

@@ -2,7 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Data, Layout, Config } from "plotly.js-basic-dist";
-import { synthwaveColors } from "@/lib/colors";
+import {
+  applyPlotChrome,
+  encodingRestyle,
+  layoutMarkRelayout,
+  paperEncodings,
+  plotChromeRelayout,
+  snapshotEncodings,
+  type PlotTrace,
+} from "@/lib/plot-theme";
+import { currentTheme, THEME_EVENT } from "@/lib/theme-boot";
 
 export interface InteractivePlotProps {
   data: Data[];
@@ -32,56 +41,32 @@ export function InteractivePlot({
 
     const plotElement = plotRef.current; // Capture ref value for cleanup
     let Plotly: typeof import("plotly.js-basic-dist");
+    let onTheme: (() => void) | undefined;
 
     const loadPlotly = async () => {
       try {
         Plotly = await import("plotly.js-basic-dist");
         setPlotlyLoaded(true);
 
-        // Synthwave theme defaults
         const defaultLayout: Partial<Layout> = {
-          paper_bgcolor: "rgba(38, 20, 71, 0.7)", // --theme-bg-card
-          plot_bgcolor: "rgba(0, 2, 33, 0.5)", // --theme-bg-primary with transparency
           font: {
             family: "var(--font-inter), sans-serif",
-            color: synthwaveColors.peach, // --theme-peach
             size: 12,
           },
           xaxis: {
-            gridcolor: "rgba(255, 108, 17, 0.2)", // --theme-neon-orange with transparency
-            linecolor: synthwaveColors.neonCyan, // --theme-neon-cyan
-            tickfont: {
-              color: synthwaveColors.neonCyan,
-            },
             rangeslider: {
               visible: true,
-              bgcolor: "rgba(0, 2, 33, 0.8)",
-              bordercolor: synthwaveColors.neonCyan,
               borderwidth: 1,
             },
           },
-          yaxis: {
-            gridcolor: "rgba(255, 108, 17, 0.2)",
-            linecolor: synthwaveColors.neonCyan,
-            tickfont: {
-              color: synthwaveColors.neonCyan,
-            },
-          },
           hovermode: "x unified",
-          hoverlabel: {
-            bgcolor: "rgba(38, 20, 71, 0.95)",
-            bordercolor: synthwaveColors.neonCyan,
-            font: {
-              color: synthwaveColors.peach,
-            },
-          },
           margin: {
             l: 60,
             r: 40,
             t: 40,
             b: 80,
           },
-          height: 600, // Default height in pixels
+          height: 600,
         };
 
         const defaultConfig: Partial<Config> = {
@@ -117,9 +102,12 @@ export function InteractivePlot({
           }
         }
 
-        // Merge user layout/config with defaults
-        const mergedLayout = { ...defaultLayout, ...layout };
+        const theme = currentTheme();
+        const traces = data as PlotTrace[];
+        const mergedLayout = applyPlotChrome({ ...defaultLayout, ...layout }, theme);
         const mergedConfig = { ...defaultConfig, ...config };
+        const originalEncodings = snapshotEncodings(traces);
+        const paper = paperEncodings(traces);
 
         if (plotElement) {
           await Plotly.newPlot(
@@ -128,6 +116,25 @@ export function InteractivePlot({
             mergedLayout,
             mergedConfig
           );
+          if (theme === "paper") {
+            await Plotly.update(
+              plotElement,
+              encodingRestyle(paper) as never,
+              layoutMarkRelayout(mergedLayout, "paper"),
+            );
+          }
+          onTheme = () => {
+            const next = currentTheme();
+            void Plotly.update(
+              plotElement,
+              encodingRestyle(next === "paper" ? paper : originalEncodings) as never,
+              {
+                ...plotChromeRelayout(next),
+                ...layoutMarkRelayout(mergedLayout, next),
+              },
+            );
+          };
+          window.addEventListener(THEME_EVENT, onTheme);
 
           // Add event listener to constrain panning to data range
           if (minX !== undefined && maxX !== undefined) {
@@ -173,6 +180,7 @@ export function InteractivePlot({
 
     // Cleanup
     return () => {
+      if (onTheme) window.removeEventListener(THEME_EVENT, onTheme);
       if (plotElement && plotlyLoaded) {
         import("plotly.js-basic-dist").then((Plotly) => {
           Plotly.purge(plotElement);
@@ -193,10 +201,7 @@ export function InteractivePlot({
     <div
       ref={plotRef}
       id={id}
-      className={`w-full min-h-[600px] rounded-lg border-2 border-synthwave-neon-cyan/30 overflow-hidden ${className}`}
-      style={{
-        boxShadow: "0 0 20px rgba(0, 160, 208, 0.2)",
-      }}
+      className={`plot-frame w-full min-h-[600px] rounded-lg border-2 border-synthwave-neon-cyan/30 overflow-hidden ${className}`}
     />
   );
 }

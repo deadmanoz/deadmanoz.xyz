@@ -164,7 +164,7 @@ export default function Home() {
                         {tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded border"
+                            className="post-tag text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded border"
                             style={getTagStyle(tag)}
                           >
                             #{tag}

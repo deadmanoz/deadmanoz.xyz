@@ -14,7 +14,7 @@ describe("markdownToHtml — inline extensions", () => {
 
   it("renders {{color:text}} with the mapped colour from the colour map", async () => {
     const html = await markdownToHtml("Highlight {{cyan:value}} here.");
-    expect(html).toContain('<span style="color: #00A0D0; font-weight: bold;">value</span>');
+    expect(html).toContain('<span class="ink-cyan">value</span>');
   });
 
   it("leaves {{color:text}} untouched when the colour is unknown", async () => {

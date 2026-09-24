@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Orbitron, Audiowide, Inter } from "next/font/google";
 import Script from "next/script";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { ThemeToggle } from "@/app/_components/theme-toggle";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme-boot";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -60,10 +62,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script id="theme-boot" dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body
         className={`${orbitron.variable} ${audiowide.variable} ${inter.variable} antialiased`}
       >
+        <ThemeToggle />
         <Script
           id="MathJax-config"
           strategy="beforeInteractive"

@@ -23,7 +23,7 @@ test.describe("canary — inline formatting", () => {
     await expect(
       page.locator("del", { hasText: "deprecated wording" }),
     ).toHaveCount(1);
-    const cyan = page.locator('span[style*="#00A0D0"]');
+    const cyan = page.locator("span.ink-cyan");
     await expect(cyan.first()).toBeVisible();
   });
 
@@ -373,5 +373,78 @@ test.describe("canary — table of contents", () => {
     expect(await colorOf("A nested")).toBe("rgb(255, 108, 17)"); // h2: neon orange
     expect(await colorOf("Table-of-contents")).toBe("rgb(0, 160, 208)"); // h3: neon cyan
     expect(await colorOf("Deeper still")).toBe("rgb(32, 229, 22)"); // h4: neon green
+  });
+});
+
+function isPaperBackground(color: string) {
+  const normalized = color.replace(/\s/g, "").toLowerCase();
+  return normalized === "#f3efe4" || normalized === "rgb(243,239,228)";
+}
+
+test.describe("canary — paper theme", () => {
+  test("?theme=paper sets the attribute and a paper background", async ({ page }) => {
+    await page.goto("/posts/hello-world?theme=paper");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "paper");
+    const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    expect(isPaperBackground(background)).toBe(true);
+  });
+
+  test("a query-free toggle selects paper, restyles a mounted plot, and survives reload", async ({ page }) => {
+    await page.goto("/posts/hello-world");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme", "paper");
+    await page.getByRole("button", { name: "Paper theme" }).click();
+    await expect(page.getByRole("button", { name: "Paper theme" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "paper");
+    expect(page.url()).not.toContain("theme=");
+    await page.waitForFunction(() => {
+      const plot = document.getElementById("plot-hashrate") as HTMLElement & {
+        _fullLayout?: { paper_bgcolor?: string };
+      };
+      const color = (plot?._fullLayout?.paper_bgcolor ?? "").replace(/\s/g, "").toLowerCase();
+      return color === "#f3efe4" || color === "rgb(243,239,228)";
+    });
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "paper");
+  });
+
+  test("toggling back to synthwave restores plot chrome", async ({ page }) => {
+    await page.goto("/posts/hello-world");
+    await page.getByRole("button", { name: "Paper theme" }).click();
+    await page.getByRole("button", { name: "Paper theme" }).click();
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme", "paper");
+    await page.waitForFunction(() => {
+      const plot = document.getElementById("plot-hashrate") as HTMLElement & {
+        _fullLayout?: { paper_bgcolor?: string };
+      };
+      const color = plot?._fullLayout?.paper_bgcolor ?? "";
+      return color.includes("38, 20, 71") || color.includes("38,20,71");
+    });
+  });
+
+  test("?theme=synthwave clears a stored paper theme", async ({ page }) => {
+    await page.goto("/posts/hello-world?theme=paper");
+    await page.goto("/posts/hello-world?theme=synthwave");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme", "paper");
+    expect(await page.evaluate(() => localStorage.getItem("deadmanoz-theme"))).toBeNull();
+  });
+
+  test("paper adds bar patterns and synthwave removes them", async ({ page }) => {
+    await page.goto("/posts/p2ms-data-carry-2");
+    await page.getByRole("button", { name: "Paper theme" }).click();
+    await page.waitForFunction(() => {
+      const plot = document.getElementById("plot-protocol-distribution") as HTMLElement & {
+        data?: Array<{ type?: string; marker?: { pattern?: { shape?: string } } }>;
+      };
+      const bars = (plot?.data ?? []).filter((trace) => trace.type === "bar");
+      return bars.length > 1 && bars.every((trace) => Boolean(trace.marker?.pattern?.shape));
+    });
+    await page.getByRole("button", { name: "Paper theme" }).click();
+    await page.waitForFunction(() => {
+      const plot = document.getElementById("plot-protocol-distribution") as HTMLElement & {
+        data?: Array<{ type?: string; marker?: { pattern?: { shape?: string | null } } }>;
+      };
+      const bars = (plot?.data ?? []).filter((trace) => trace.type === "bar");
+      return bars.length > 1 && bars.every((trace) => !trace.marker?.pattern?.shape);
+    });
   });
 });

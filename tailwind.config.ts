@@ -11,25 +11,19 @@ const config: Config = {
     extend: {
       colors: {
         synthwave: {
-          // Dark backgrounds (from image)
-          'dark-blue': '#000221',
-          'dark-purple': '#261447',
-          'deep-blue': '#023788',
-          'blue': '#02578B',
-          'teal-blue': '#025F88',
-
-          // Primary neon colors (from image)
-          'neon-orange': '#FF6C11',
-          'neon-green': '#20E516',
-          'neon-cyan': '#00A0D0',
-          'bright-blue': '#006DD0',
-
-          // Accent colors
-          'peach': '#FF8664',
-
-          // UI colors
-          'card-bg': 'rgba(38, 20, 71, 0.7)',
-          'overlay': 'rgba(0, 2, 33, 0.9)',
+          // Dark values live on :root. These utilities read the tokens so Paper can restyle them.
+          'dark-blue': 'var(--theme-bg-primary)',
+          'dark-purple': 'var(--theme-bg-secondary)',
+          'deep-blue': 'var(--theme-bg-accent)',
+          'blue': 'var(--theme-blue)',
+          'teal-blue': 'var(--theme-teal)',
+          'neon-orange': 'var(--theme-neon-orange)',
+          'neon-green': 'var(--theme-neon-green)',
+          'neon-cyan': 'var(--theme-neon-cyan)',
+          'bright-blue': 'var(--theme-neon-blue)',
+          'peach': 'var(--theme-peach)',
+          'card-bg': 'var(--theme-bg-card)',
+          'overlay': 'var(--theme-bg-overlay)',
         },
 
         // Semantic color mappings (easy to swap themes)
