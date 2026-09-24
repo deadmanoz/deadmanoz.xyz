@@ -76,6 +76,18 @@
   color: inherit;
 }
 
+:global(html[data-theme="paper"]) .markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #11100b;
+  background: #e7e1d2;
+  border: 1px solid #11100b;
+}
+
+:global(html[data-theme="paper"]) .markdown pre code {
+  border: none;
+  background: transparent;
+}
+
 .markdown h1 code,
 .markdown h2 code,
 .markdown h3 code,
@@ -178,6 +190,17 @@
 
 .markdown a:hover::after {
   width: 100%;
+}
+
+:global(html[data-theme="paper"]) .markdown a {
+  color: #11100b;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+:global(html[data-theme="paper"]) .markdown a::after {
+  content: none;
 }
 
 .markdown table {

@@ -6,11 +6,13 @@ export const PAPER_BG = "#f3efe4";
 export const PAPER_INK = "#11100b";
 
 const DASHES = ["solid", "dash", "dot", "dashdot", "longdash", "longdashdot"];
+const SYMBOLS = ["circle", "square", "triangle-up", "cross", "x", "hexagon", "pentagon", "star", "triangle-down"];
 const PATTERNS = ["/", "\\", "x", "-", "|", "+", "."];
 const FILLS = ["rgba(17, 16, 11, 0.18)", "rgba(17, 16, 11, 0.55)"];
 
 export type PlotTrace = {
   type?: string;
+  mode?: string;
   fill?: string;
   fillcolor?: string;
   fillpattern?: { shape?: string };
@@ -24,8 +26,9 @@ export type PlotTrace = {
 
 export type TraceEncoding = {
   dash: string | null;
-  symbol: string | null;
+  symbol: string | string[] | null;
   pattern: string | null;
+  patternSize: number | null;
   lineColor: string | null;
   markerColor: string | string[] | null;
   fillColor: string | null;
@@ -36,11 +39,32 @@ function stringValue(value: string | string[] | undefined): string | null {
   return typeof value === "string" ? value : null;
 }
 
+function symbolValue(value: string | string[] | undefined): string | string[] | null {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return [...value];
+  return null;
+}
+
+function majoritySymbol(symbols: string[]): string {
+  const counts = new Map<string, number>();
+  for (const symbol of symbols) counts.set(symbol, (counts.get(symbol) ?? 0) + 1);
+  let best = symbols[0];
+  let count = 0;
+  for (const [symbol, seen] of counts) {
+    if (seen > count) {
+      best = symbol;
+      count = seen;
+    }
+  }
+  return best;
+}
+
 export function snapshotEncodings(data: PlotTrace[]): TraceEncoding[] {
   return data.map((trace) => ({
     dash: stringValue(trace.line?.dash),
-    symbol: stringValue(trace.marker?.symbol),
+    symbol: symbolValue(trace.marker?.symbol),
     pattern: stringValue(trace.marker?.pattern?.shape),
+    patternSize: null,
     lineColor: typeof trace.line?.color === "string" ? trace.line.color : null,
     markerColor: trace.marker?.color ?? null,
     fillColor: typeof trace.fillcolor === "string" ? trace.fillcolor : null,
@@ -56,23 +80,70 @@ function isScatter(trace: PlotTrace) {
   return trace.type === undefined || trace.type === "scatter" || trace.type === "scattergl";
 }
 
+function isMarkerOnly(trace: PlotTrace) {
+  const mode = trace.mode ?? "";
+  return isScatter(trace) && mode.includes("markers") && !mode.includes("lines");
+}
+
 export function paperEncodings(data: PlotTrace[]): TraceEncoding[] {
   const next = snapshotEncodings(data);
   const scatter = data.flatMap((trace, index) => (isScatter(trace) ? [index] : []));
   if (scatter.length > 1) {
     let dash = 0;
     for (const index of scatter) {
+      if (isMarkerOnly(data[index])) continue;
       if (next[index].dash == null && next[index].symbol == null) {
         next[index] = { ...next[index], dash: DASHES[dash % DASHES.length] };
         dash += 1;
       }
     }
   }
+  const markers = data.flatMap((trace, index) => (isMarkerOnly(trace) ? [index] : []));
+  if (markers.length > 1) {
+    const reserved = new Set<string>();
+    const groups = new Map<string, number[]>();
+    for (const index of markers) {
+      const symbols = next[index].symbol;
+      const list = Array.isArray(symbols) ? symbols : null;
+      const main = list?.length ? majoritySymbol(list) : typeof symbols === "string" ? symbols : "circle";
+      if (list) {
+        for (const symbol of list) {
+          if (symbol !== main) reserved.add(symbol);
+        }
+      }
+      const group = groups.get(main) ?? [];
+      group.push(index);
+      groups.set(main, group);
+    }
+    const palette = SYMBOLS.filter((symbol) => !reserved.has(symbol));
+    for (const indices of groups.values()) {
+      if (indices.length < 2) continue;
+      indices.forEach((index, nth) => {
+        const symbol = palette[nth % palette.length];
+        const current = next[index].symbol;
+        if (!Array.isArray(current)) {
+          next[index] = { ...next[index], symbol };
+          return;
+        }
+        const main = majoritySymbol(current);
+        const mapped = current.map((item) => (item === main ? symbol : item));
+        next[index] = {
+          ...next[index],
+          symbol: new Set(mapped).size === 1 ? symbol : mapped,
+        };
+      });
+    }
+  }
   const bars = data.flatMap((trace, index) => (isBar(trace) ? [index] : []));
   const colours = new Set(bars.map((index) => JSON.stringify(data[index].marker?.color ?? null)));
   if (bars.length > 1 && colours.size > 1 && bars.every((index) => next[index].pattern == null)) {
     bars.forEach((index, nth) => {
-      next[index] = { ...next[index], pattern: PATTERNS[nth % PATTERNS.length] };
+      const cycle = Math.floor(nth / PATTERNS.length);
+      next[index] = {
+        ...next[index],
+        pattern: PATTERNS[nth % PATTERNS.length],
+        patternSize: cycle === 0 ? 8 : 16,
+      };
     });
   }
   data.forEach((trace, index) => {
@@ -104,6 +175,7 @@ export function encodingRestyle(encodings: TraceEncoding[]) {
     "marker.symbol": encodings.map((encoding) => encoding.symbol),
     "marker.color": encodings.map((encoding) => encoding.markerColor),
     "marker.pattern.shape": encodings.map((encoding) => encoding.pattern),
+    "marker.pattern.size": encodings.map((encoding) => encoding.patternSize),
     fillcolor: encodings.map((encoding) => encoding.fillColor),
     "fillpattern.shape": encodings.map((encoding) => encoding.fillPattern),
   };

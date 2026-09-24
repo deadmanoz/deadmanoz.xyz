@@ -498,8 +498,10 @@ html[data-theme="paper"] .annotation:hover,
 html[data-theme="paper"] .annotation:focus,
 html[data-theme="paper"] .annotation:focus-within {
   color: #11100b;
-  background: transparent;
-  border-bottom-color: #11100b;
+  background: #d9d3c4;
+  border-bottom: none;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 html[data-theme="paper"] .annotation-tooltip {

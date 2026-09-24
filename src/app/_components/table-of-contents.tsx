@@ -204,7 +204,7 @@ export function TableOfContents({ containerRef, content, ready }: TableOfContent
   if (!isMobile) {
     return (
       <div
-        className="bg-[var(--theme-bg-secondary)]/95 backdrop-blur-lg border border-[var(--theme-border)] rounded-lg overflow-hidden shadow-[0_0_30px_rgba(255,108,17,0.2)]"
+        className="toc-chrome bg-[var(--theme-bg-secondary)]/95 backdrop-blur-lg border border-[var(--theme-border)] rounded-lg overflow-hidden shadow-[0_0_30px_rgba(255,108,17,0.2)]"
         style={{
           position: 'fixed',
           top: '2rem',
@@ -230,7 +230,7 @@ export function TableOfContents({ containerRef, content, ready }: TableOfContent
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[var(--theme-bg-secondary)] border-2 border-[var(--theme-neon-cyan)] rounded-full flex items-center justify-center hover:border-[var(--theme-neon-orange)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)]"
+        className="toc-chrome toc-mobile-toggle fixed bottom-6 right-6 z-50 w-14 h-14 bg-[var(--theme-bg-secondary)] border-2 rounded-full flex items-center justify-center transition-colors duration-300"
         aria-label="Toggle table of contents"
         aria-expanded={isOpen}
         aria-controls={`${tocId}-panel`}
@@ -268,7 +268,7 @@ export function TableOfContents({ containerRef, content, ready }: TableOfContent
             bg-[var(--theme-bg-secondary)]/95 backdrop-blur-lg
             border border-[var(--theme-border)]
             rounded-t-2xl
-            overflow-hidden shadow-[0_0_30px_rgba(255,108,17,0.2)]
+            overflow-hidden shadow-[0_0_30px_rgba(255,108,17,0.2)] toc-chrome
           `}
         >
           <div className="p-4 border-b border-[var(--theme-border)]">

@@ -448,10 +448,23 @@ html[data-theme="paper"] .hover\:scale-110:hover {
   transform: none;
 }
 
+.toc-mobile-toggle {
+  border-color: var(--theme-neon-cyan);
+}
+
+.toc-mobile-toggle:hover {
+  border-color: var(--theme-neon-orange);
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
 html[data-theme="paper"] img:hover,
-html[data-theme="paper"] .card:hover {
-  border-color: #11100b;
-  box-shadow: none;
+html[data-theme="paper"] .card:hover,
+html[data-theme="paper"] .toc-chrome,
+html[data-theme="paper"] .toc-chrome:hover,
+html[data-theme="paper"] .toc-mobile-toggle,
+html[data-theme="paper"] .toc-mobile-toggle:hover {
+  border-color: #11100b !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="paper"] .border,
@@ -469,8 +482,7 @@ html[data-theme="paper"] .theme-toggle {
 html[data-theme="paper"] [class^="ink-"],
 html[data-theme="paper"] [class*=" ink-"] {
   color: #11100b;
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
+  text-decoration: none;
 }
 
 /* Monochrome code. Hue from atom-one-light would wash out on the DC-1. */

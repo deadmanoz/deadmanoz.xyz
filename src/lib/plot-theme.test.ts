@@ -10,6 +10,19 @@ describe("paper plot encodings", () => {
     ];
     expect(snapshotEncodings(bars).map((item) => item.pattern)).toEqual([null, null]);
     expect(paperEncodings(bars).map((item) => item.pattern)).toEqual(["/", "\\"]);
+    expect(paperEncodings(bars).map((item) => item.patternSize)).toEqual([8, 8]);
+  });
+
+  it("repeats a bar hatch at a coarser size once the seven shapes are used", () => {
+    const bars: PlotTrace[] = Array.from({ length: 8 }, (_, index) => ({
+      type: "bar" as const,
+      marker: { color: `#${index}${index}${index}${index}${index}${index}` },
+    }));
+    const paper = paperEncodings(bars);
+    expect(paper[0].pattern).toBe("/");
+    expect(paper[0].patternSize).toBe(8);
+    expect(paper[7].pattern).toBe("/");
+    expect(paper[7].patternSize).toBe(16);
   });
 
   it("dashes multi-series scatter traces that have no dash or symbol", () => {
