@@ -487,6 +487,12 @@ th[aria-sort="descending"] .table-sort-indicator::after {
   color: var(--theme-text-accent);
 }
 
+html[data-theme="paper"] blockquote {
+  border-color: #11100b;
+  background: transparent;
+  color: #11100b;
+}
+
 html[data-theme="paper"] .annotation,
 html[data-theme="paper"] .annotation:hover,
 html[data-theme="paper"] .annotation:focus,
