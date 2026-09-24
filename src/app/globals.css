@@ -443,8 +443,15 @@ html[data-theme="paper"] *::after {
 html[data-theme="paper"] a:hover,
 html[data-theme="paper"] button:hover,
 html[data-theme="paper"] summary:hover,
+html[data-theme="paper"] img:hover,
 html[data-theme="paper"] .hover\:scale-110:hover {
   transform: none;
+}
+
+html[data-theme="paper"] img:hover,
+html[data-theme="paper"] .card:hover {
+  border-color: #11100b;
+  box-shadow: none;
 }
 
 html[data-theme="paper"] .border,
