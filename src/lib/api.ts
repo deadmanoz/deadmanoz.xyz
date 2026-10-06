@@ -66,8 +66,23 @@ export function getPostBySlug(
   fields: string[] = [],
   postsDir: string = defaultPostsDirectory,
 ) {
-  const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = join(postsDir, `${realSlug}.md`);
+  let realSlug = slug.replace(/\.md$/, "");
+  let fullPath = join(postsDir, `${realSlug}.md`);
+
+  if (!fs.existsSync(fullPath)) {
+    // Check if the slug was requested without its parent directory prefix (e.g. "merge-mining" for "2026/merge-mining")
+    const allSlugs = getPostSlugs(postsDir);
+    const match = allSlugs.find(
+      (s) => s.replace(/\.md$/, "") === realSlug || s.replace(/\.md$/, "").endsWith(`/${realSlug}`),
+    );
+    if (match) {
+      realSlug = match.replace(/\.md$/, "");
+      fullPath = join(postsDir, `${realSlug}.md`);
+    } else {
+      return {};
+    }
+  }
+
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 

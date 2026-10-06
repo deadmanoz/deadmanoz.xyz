@@ -211,8 +211,30 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return getPostSlugs()
+  const routablePosts = getPostSlugs()
     .map((slug) => getPostBySlug(slug, ["slug", "title", "status", "hidden", "coming_soon"]))
-    .filter(isRoutablePost)
-    .map((post) => ({ slug: post.slug.split("/") }));
+    .filter(isRoutablePost);
+
+  const params: { slug: string[] }[] = [];
+  const seen = new Set<string>();
+
+  for (const post of routablePosts) {
+    const fullParts = post.slug.split("/");
+    const fullKey = fullParts.join("/");
+    if (!seen.has(fullKey)) {
+      seen.add(fullKey);
+      params.push({ slug: fullParts });
+    }
+
+    if (fullParts.length > 1) {
+      const flatSlug = fullParts[fullParts.length - 1];
+      if (!seen.has(flatSlug)) {
+        seen.add(flatSlug);
+        params.push({ slug: [flatSlug] });
+      }
+    }
+  }
+
+  return params;
 }
+
