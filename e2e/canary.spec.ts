@@ -261,9 +261,25 @@ test.describe("canary — annotations", () => {
       page.locator("span.annotation > strong", { hasText: "critical" }),
     ).toHaveCount(1);
   });
+
+  test("tooltip content wraps inline code and unbroken text without horizontal overflow", async ({ page }) => {
+    const annotation = page.locator("span.annotation", { hasText: "BIP 22" });
+    await annotation.hover();
+    const tooltip = annotation.locator(".annotation-tooltip");
+    await expect(tooltip).toBeVisible();
+
+    const scrollWidth = await tooltip.evaluate((el) => el.scrollWidth);
+    const clientWidth = await tooltip.evaluate((el) => el.clientWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1);
+  });
 });
 
 test.describe("canary — collapsibles", () => {
+  test("collapsible section uses overflow: visible so descendants like tooltips are not clipped", async ({ page }) => {
+    const auto = page.locator("details.collapsible-section#collapse-1");
+    await expect(auto).toHaveCSS("overflow", "visible");
+  });
+
   test("the auto-id collapse renders as <details id='collapse-1'>", async ({ page }) => {
     const auto = page.locator("details.collapsible-section#collapse-1");
     await expect(auto).toBeVisible();

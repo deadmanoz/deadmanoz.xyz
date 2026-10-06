@@ -307,6 +307,13 @@ describe("markdownToHtml — annotations", () => {
     const html = await markdownToHtml(md);
     expect(html).toMatch(/data-tooltip="[^"]*<span class=&quot;math-inline&quot;>\\\(2\^\{224\}\/D\\\)<\/span>/);
   });
+
+  it("renders inline code backticks and txid hashes inside an annotation tooltip", async () => {
+    const md = "See [[tx||His node logged `bad-cb-height` on `4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2`]].";
+    const html = await markdownToHtml(md);
+    expect(html).toContain("<code>bad-cb-height</code>");
+    expect(html).toContain("<code>4005d6bea3a93fb72f006d23e2685b85069d270cb57d15f0c057ef2d5e3f78d2</code>");
+  });
 });
 
 describe("markdownToHtml — :::collapse blocks", () => {

@@ -30,6 +30,7 @@ describe("getGitMetadataFromLocalHistory", () => {
   beforeAll(() => {
     repo = mkdtempSync(path.join(tmpdir(), "git-metadata-"));
     git(["init", "-q"]);
+    git(["config", "commit.gpgsign", "false"]);
     writeFileSync(path.join(repo, "post.md"), "one\n");
     git(["add", "post.md"]);
     git(["commit", "-q", "-m", "feat: add post"], { GIT_AUTHOR_DATE: "2026-01-01T09:00:00+00:00", GIT_COMMITTER_DATE: "2026-01-01T09:00:00+00:00" });

@@ -163,6 +163,8 @@ th[aria-sort="descending"] .table-sort-indicator::after {
   font-size: 0.875rem;
   line-height: 1.4;
   white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   width: max-content;
   max-width: 320px;
   text-align: left;
@@ -172,9 +174,16 @@ th[aria-sort="descending"] .table-sort-indicator::after {
   z-index: 999999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
   pointer-events: auto;
   margin-bottom: 12px;
+}
+
+.annotation .annotation-tooltip code,
+.annotation-tooltip code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .annotation-arrow {
@@ -204,6 +213,46 @@ th[aria-sort="descending"] .table-sort-indicator::after {
 .annotation:focus-within .annotation-arrow {
   opacity: 1;
   visibility: visible;
+}
+
+@media (min-width: 769px) {
+  .annotation-tooltip {
+    transform: translateX(calc(-50% + var(--tooltip-shift-x, 0px))) translateY(-5px);
+  }
+
+  .annotation:hover .annotation-tooltip,
+  .annotation:focus .annotation-tooltip,
+  .annotation:focus-within .annotation-tooltip {
+    transform: translateX(calc(-50% + var(--tooltip-shift-x, 0px))) translateY(0);
+  }
+
+  .annotation[data-placement="bottom"] .annotation-tooltip {
+    bottom: auto;
+    top: 100%;
+    margin-top: 12px;
+    margin-bottom: 0;
+    transform: translateX(calc(-50% + var(--tooltip-shift-x, 0px))) translateY(5px);
+  }
+
+  .annotation[data-placement="bottom"]:hover .annotation-tooltip,
+  .annotation[data-placement="bottom"]:focus .annotation-tooltip,
+  .annotation[data-placement="bottom"]:focus-within .annotation-tooltip {
+    transform: translateX(calc(-50% + var(--tooltip-shift-x, 0px))) translateY(0);
+  }
+
+  .annotation[data-placement="bottom"] .annotation-arrow {
+    bottom: auto;
+    top: 100%;
+    margin-top: 6px;
+    margin-bottom: 0;
+    border-top-color: transparent;
+    border-bottom-color: var(--theme-neon-cyan);
+  }
+
+  html[data-theme="paper"] .annotation[data-placement="bottom"] .annotation-arrow {
+    border-top-color: transparent;
+    border-bottom-color: #11100b;
+  }
 }
 
 @media (max-width: 768px) {
@@ -418,7 +467,7 @@ th[aria-sort="descending"] .table-sort-indicator::after {
 .collapsible-section {
   margin: 1.5rem 0;
   border-radius: 0.5rem;
-  overflow: hidden;
+  overflow: visible;
   border-color: var(--theme-border);
   background: var(--theme-bg-secondary);
   transition: all 0.3s ease;
@@ -434,6 +483,11 @@ th[aria-sort="descending"] .table-sort-indicator::after {
   background: linear-gradient(90deg, rgba(255, 108, 17, 0.1) 0%, transparent 50%);
   transition: all 0.3s ease;
   position: relative;
+  border-radius: calc(0.5rem - 1px);
+}
+
+.collapsible-section[open] .collapsible-title {
+  border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
 }
 
 .collapsible-title::-webkit-details-marker {
@@ -505,7 +559,8 @@ html[data-theme="paper"] .annotation:focus-within {
 }
 
 html[data-theme="paper"] .annotation-tooltip {
-  box-shadow: none;
+  background: #f3efe4;
+  box-shadow: 2px 2px 0 #11100b;
 }
 
 html[data-theme="paper"] .alert-info,
