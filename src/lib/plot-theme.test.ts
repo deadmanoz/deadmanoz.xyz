@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applyPlotChrome, paperEncodings, snapshotEncodings, type PlotTrace } from "./plot-theme";
+import { applyPlotChrome, encodingRestyle, paperEncodings, snapshotEncodings, type PlotTrace } from "./plot-theme";
 
 describe("paper plot encodings", () => {
   it("gives colour-only bar series a pattern and restores the absent original", () => {
@@ -65,5 +65,15 @@ describe("paper plot encodings", () => {
     expect(layout.xaxis?.title).toEqual({ text: "height" });
     expect(layout.xaxis?.linecolor).toBe("#11100b");
     expect(layout.title && typeof layout.title === "object" ? layout.title.font?.color : null).toBe("#11100b");
+  });
+
+  it("uses empty strings in encodingRestyle when pattern or fillPattern is null so Plotly clears them", () => {
+    const bars: PlotTrace[] = [
+      { type: "bar", marker: { color: "#00A0D0" } },
+    ];
+    const original = snapshotEncodings(bars);
+    const restyle = encodingRestyle(original);
+    expect(restyle["marker.pattern.shape"]).toEqual([""]);
+    expect(restyle["fillpattern.shape"]).toEqual([""]);
   });
 });

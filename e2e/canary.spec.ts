@@ -446,6 +446,12 @@ test.describe("canary — paper theme", () => {
 
   test("paper adds bar patterns and synthwave removes them", async ({ page }) => {
     await page.goto("/posts/p2ms-data-carry-2");
+    await page.waitForFunction(() => {
+      const plot = document.getElementById("plot-protocol-distribution") as HTMLElement & {
+        data?: unknown[];
+      };
+      return Boolean(plot?.data?.length);
+    });
     await page.getByRole("button", { name: "Paper theme" }).click();
     await page.waitForFunction(() => {
       const plot = document.getElementById("plot-protocol-distribution") as HTMLElement & {

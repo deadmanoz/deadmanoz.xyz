@@ -174,10 +174,10 @@ export function encodingRestyle(encodings: TraceEncoding[]) {
     "line.color": encodings.map((encoding) => encoding.lineColor),
     "marker.symbol": encodings.map((encoding) => encoding.symbol),
     "marker.color": encodings.map((encoding) => encoding.markerColor),
-    "marker.pattern.shape": encodings.map((encoding) => encoding.pattern),
+    "marker.pattern.shape": encodings.map((encoding) => encoding.pattern ?? ""),
     "marker.pattern.size": encodings.map((encoding) => encoding.patternSize),
     fillcolor: encodings.map((encoding) => encoding.fillColor),
-    "fillpattern.shape": encodings.map((encoding) => encoding.fillPattern),
+    "fillpattern.shape": encodings.map((encoding) => encoding.fillPattern ?? ""),
   };
 }
 
