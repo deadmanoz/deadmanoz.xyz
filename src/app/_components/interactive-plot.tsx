@@ -103,16 +103,19 @@ export function InteractivePlot({
         }
 
         const theme = currentTheme();
-        const traces = data as PlotTrace[];
+        // Plotly.update mutates the trace objects it was given, so plot a copy and
+        // keep `data` pristine; otherwise a re-run of this effect would snapshot
+        // the paper encoding as the "original" and synthwave could never restore it.
+        const traces = structuredClone(data) as PlotTrace[];
         const mergedLayout = applyPlotChrome({ ...defaultLayout, ...layout }, theme);
         const mergedConfig = { ...defaultConfig, ...config };
-        const originalEncodings = snapshotEncodings(traces);
-        const paper = paperEncodings(traces);
+        const originalEncodings = snapshotEncodings(data as PlotTrace[]);
+        const paper = paperEncodings(data as PlotTrace[]);
 
         if (plotElement) {
           await Plotly.newPlot(
             plotElement,
-            data,
+            traces as Data[],
             mergedLayout,
             mergedConfig
           );
