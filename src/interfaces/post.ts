@@ -1,7 +1,7 @@
 import { type Author } from "./author";
 
 export type PostType = "research" | "blog";
-export type PostStatus = "published" | "draft" | "placeholder" | "canary";
+export type PostStatus = "published" | "draft" | "placeholder";
 
 export type Post = {
   slug: string;
@@ -17,6 +17,4 @@ export type Post = {
     url: string;
   };
   content: string;
-  hidden?: boolean;
-  coming_soon?: boolean;
 };

@@ -5,5 +5,8 @@ import { format } from "date-fns";
  * Day-first, full month name, no comma — unambiguous and non-American.
  */
 export function formatPostDate(date: string | Date): string {
-  return format(new Date(date), "d MMMM yyyy");
+  // Format the UTC calendar day, so every build machine prints the same date
+  // as production (Cloudflare builds in UTC), the feeds and the revision cutoff.
+  const d = new Date(date);
+  return format(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()), "d MMMM yyyy");
 }

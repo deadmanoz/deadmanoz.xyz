@@ -30,34 +30,32 @@ export default async function Post({
     "ogImage",
     "coverImage",
     "status",
-    "hidden",
-    "coming_soon",
   ]);
 
   if (!post.slug || !isRoutablePost(post)) {
     return notFound();
   }
 
-  if (getPostStatus(post) === "placeholder") {
+  const status = getPostStatus(post);
+
+  if (status === "placeholder") {
     return <ComingSoonContent title={post.title} />;
   }
 
-  if (!post.date) {
-    return notFound();
-  }
-
+  const isPublished = status === "published";
+  // A draft's date is optional and may be unfinished; show it only when it parses.
+  const date = typeof post.date === "string" && !Number.isNaN(Date.parse(post.date)) ? post.date : undefined;
+  const lastUpdate = isPublished ? (post.gitMetadata?.lastUpdate ?? null) : null;
   const content = await markdownToHtml(post.content || "");
 
   const citationProps = (() => {
-    if (getPostStatus(post) !== "published") return null;
-    const publishedSource = post.gitMetadata?.publishedAt ?? post.date;
-    const year = new Date(publishedSource).getUTCFullYear().toString();
+    if (!isPublished || !date) return null;
+    const year = new Date(date).getUTCFullYear().toString();
     const authorName =
       (post.author as { name?: string } | undefined)?.name ?? "deadmanoz";
-    const lastUpdated =
-      post.gitMetadata && post.gitMetadata.updateCount > 0
-        ? new Date(post.gitMetadata.updatedAt).toISOString().slice(0, 10)
-        : undefined;
+    const lastUpdated = lastUpdate
+      ? new Date(lastUpdate.date).toISOString().slice(0, 10)
+      : undefined;
     return {
       author: authorName,
       title: post.title as string,
@@ -94,49 +92,44 @@ export default async function Post({
 
             {/* Title content - aligned with body text */}
             <div className="flex-1 min-w-0 text-center">
+              {!isPublished && (
+                <p
+                  role="note"
+                  className="draft-banner inline-block mb-8 px-4 py-2 rounded border border-synthwave-neon-orange/60 bg-synthwave-neon-orange/10 text-synthwave-neon-orange text-base"
+                >
+                  <strong>Draft:</strong> this post isn&apos;t published yet and may change.
+                </p>
+              )}
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-8 neon-text" style={{fontFamily: 'var(--font-inter)'}}>
                 {post.title}
               </h1>
 
               <div className="text-center space-y-2">
-                {/* Git metadata if available, otherwise fallback to frontmatter date */}
-                {post.gitMetadata ? (
-                  <div className="space-y-1">
-                    <div className="text-lg text-synthwave-peach">
-                      <time dateTime={post.gitMetadata.publishedAt}>
-                        Published: {formatPostDate(post.gitMetadata.publishedAt)}
-                      </time>
-                      {typeof post.content === "string" && (
-                        <span className="text-synthwave-peach/70">
-                          {" · "}{formatReadingTime(post.content)}
-                        </span>
-                      )}
-                    </div>
-                    {post.gitMetadata.updateCount > 0 && (
-                      <div className="text-sm text-synthwave-neon-cyan space-y-1">
-                        <div>
-                          <time dateTime={post.gitMetadata.updatedAt}>
-                            Last updated: {formatPostDate(post.gitMetadata.updatedAt)}
-                          </time>
-                        </div>
-                        <div className="text-xs text-synthwave-peach/70">
-                          {post.gitMetadata.updateCount} revision{post.gitMetadata.updateCount !== 1 ? 's' : ''}
-                          {' • '}
-                          <span className="font-mono">{post.gitMetadata.lastCommitSha}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
+                {/* Drafts show their working date without a Published label or git history. */}
+                {date && (
                   <div className="text-lg text-synthwave-peach">
-                    <time dateTime={post.date}>
-                      {formatPostDate(post.date)}
+                    <time dateTime={date}>
+                      {isPublished ? "Published: " : ""}{formatPostDate(date)}
                     </time>
                     {typeof post.content === "string" && (
                       <span className="text-synthwave-peach/70">
                         {" · "}{formatReadingTime(post.content)}
                       </span>
                     )}
+                  </div>
+                )}
+                {lastUpdate && post.gitMetadata && (
+                  <div className="text-sm text-synthwave-neon-cyan space-y-1">
+                    <div>
+                      <time dateTime={lastUpdate.date}>
+                        Last updated: {formatPostDate(lastUpdate.date)}
+                      </time>
+                    </div>
+                    <div className="text-xs text-synthwave-peach/70">
+                      {post.gitMetadata.updateCount} revision{post.gitMetadata.updateCount !== 1 ? 's' : ''}
+                      {' • '}
+                      <span className="font-mono">{lastUpdate.sha}</span>
+                    </div>
                   </div>
                 )}
               </div>
@@ -193,7 +186,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const slugPath = slug.join("/");
-  const post = getPostBySlug(slugPath, ["title", "excerpt", "ogImage", "slug", "status", "hidden", "coming_soon"]);
+  const post = getPostBySlug(slugPath, ["title", "date", "excerpt", "ogImage", "slug", "status"]);
 
   if (!post.slug || !isRoutablePost(post)) {
     return notFound();
@@ -203,6 +196,9 @@ export async function generateMetadata({
 
   return {
     title,
+    // Only published posts are indexable; drafts and placeholders are reachable
+    // by URL but should not surface in search results.
+    ...(getPostStatus(post) !== "published" && { robots: { index: false, follow: false } }),
     openGraph: {
       title,
       images: post.ogImage ? [post.ogImage] : [],
@@ -212,7 +208,7 @@ export async function generateMetadata({
 
 export async function generateStaticParams() {
   const routablePosts = getPostSlugs()
-    .map((slug) => getPostBySlug(slug, ["slug", "title", "status", "hidden", "coming_soon"]))
+    .map((slug) => getPostBySlug(slug, ["slug", "title", "date", "status"]))
     .filter(isRoutablePost);
 
   const params: { slug: string[] }[] = [];

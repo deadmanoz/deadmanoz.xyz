@@ -38,4 +38,9 @@ describe("formatPostDate", () => {
   it("accepts a full ISO datetime with timezone", () => {
     expect(formatPostDate("2025-08-11T00:00:00.000Z")).toBe("11 August 2025");
   });
+
+  it("prints the UTC calendar day, whatever the build machine's timezone", () => {
+    expect(formatPostDate("2025-12-04T23:30:00Z")).toBe("4 December 2025");
+    expect(formatPostDate("2025-12-04T00:30:00+08:00")).toBe("3 December 2025");
+  });
 });

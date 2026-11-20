@@ -1,11 +1,14 @@
 import { execFileSync } from "node:child_process";
 
+/**
+ * Update history for a published post. The frontmatter `date` is the
+ * publication date; git only says what changed after it.
+ */
 export interface GitMetadata {
-  publishedAt: string;
-  updatedAt: string;
+  /** Commits after the publication day, not counting the commit that added the file. */
   updateCount: number;
-  lastCommitMessage: string;
-  lastCommitSha: string;
+  /** The newest of those commits, or null when there are none. */
+  lastUpdate: { date: string; sha: string } | null;
 }
 
 interface GitHubCommit {
@@ -14,28 +17,28 @@ interface GitHubCommit {
     author: {
       date: string;
     };
-    message: string;
   };
 }
 
-interface CommitRecord {
+export interface CommitRecord {
   sha: string;
   date: string;
-  subject: string;
 }
 
-/** Fold a newest-first list of commits into the metadata the site shows. */
-function summariseCommits(commits: CommitRecord[]): GitMetadata | null {
-  if (commits.length === 0) return null;
-  const first = commits[commits.length - 1];
-  const last = commits[0];
+/**
+ * Fold a newest-first list of commits into update history relative to the
+ * publication date. The oldest commit added the file, so it is never an
+ * update; commits made on the publication day (UTC) are part of publishing,
+ * not revisions, so only commits from the start of the next UTC day count.
+ */
+export function summariseCommits(commits: CommitRecord[], publishedOn: string): GitMetadata {
+  const published = new Date(publishedOn);
+  const cutoff = Date.UTC(published.getUTCFullYear(), published.getUTCMonth(), published.getUTCDate() + 1);
+  const updates = commits.slice(0, -1).filter((commit) => Date.parse(commit.date) >= cutoff);
+  const newest = updates[0];
   return {
-    publishedAt: first.date,
-    updatedAt: last.date,
-    // The commit that added the post is not an update.
-    updateCount: commits.length - 1,
-    lastCommitMessage: last.subject,
-    lastCommitSha: last.sha.slice(0, 7),
+    updateCount: updates.length,
+    lastUpdate: newest ? { date: newest.date, sha: newest.sha.slice(0, 7) } : null,
   };
 }
 
@@ -44,45 +47,44 @@ function runGit(args: string[], cwd: string): string {
 }
 
 /**
- * Parse `git log` output produced with the format used by
- * getGitMetadataFromLocalHistory: one commit per line, fields separated by
- * the unit separator character.
+ * Parse `git log` output produced with the format used by readLocalHistory:
+ * one commit per line, fields separated by the unit separator character.
  */
 export function parseGitLog(output: string): CommitRecord[] {
   return output
     .split("\n")
     .filter((line) => line.length > 0)
     .map((line) => {
-      const [sha, date, subject = ""] = line.split("\x1f");
-      return { sha, date, subject };
+      const [sha, date] = line.split("\x1f");
+      return { sha, date };
     });
 }
 
 /**
- * Read a file's history from the local repository. Renames are followed, so a
- * post keeps its original publication date when it moves. Returns null when
- * the file has no committed history, when git is unavailable, or when the
- * checkout is shallow (its history would be truncated and the dates wrong).
+ * Read a file's commits, newest first, from the local repository. Renames are
+ * followed, so a moved post keeps its history. Returns null when the file has
+ * no committed history, when git is unavailable, or when the checkout is
+ * shallow (its history would be truncated).
  */
-export function getGitMetadataFromLocalHistory(filePath: string, cwd: string = process.cwd()): GitMetadata | null {
+export function readLocalHistory(filePath: string, cwd: string = process.cwd()): CommitRecord[] | null {
   try {
     if (runGit(["rev-parse", "--is-shallow-repository"], cwd).trim() === "true") return null;
-    const output = runGit(["log", "--follow", "--format=%H%x1f%aI%x1f%s", "--", filePath], cwd);
-    return summariseCommits(parseGitLog(output));
+    const commits = parseGitLog(runGit(["log", "--follow", "--format=%H%x1f%aI", "--", filePath], cwd));
+    return commits.length > 0 ? commits : null;
   } catch {
     return null;
   }
 }
 
 /**
- * Fetch a file's history from the GitHub API.
+ * Fetch a file's commits, newest first, from the GitHub API.
  *
  * Environment variables:
  * - GITHUB_OWNER: GitHub username/org (defaults to 'deadmanoz')
  * - GITHUB_REPO: Repository name (defaults to 'deadmanoz.xyz')
  * - GITHUB_TOKEN: Optional token for higher rate limits (5000/hour vs 60/hour)
  */
-export async function getGitMetadataFromGitHub(filePath: string): Promise<GitMetadata | null> {
+export async function readGitHubHistory(filePath: string): Promise<CommitRecord[] | null> {
   const owner = process.env.GITHUB_OWNER || "deadmanoz";
   const repo = process.env.GITHUB_REPO || "deadmanoz.xyz";
 
@@ -109,9 +111,7 @@ export async function getGitMetadataFromGitHub(filePath: string): Promise<GitMet
     }
 
     // Newest first, as the API returns them.
-    return summariseCommits(
-      commits.map((c) => ({ sha: c.sha, date: c.commit.author.date, subject: c.commit.message.split("\n")[0] })),
-    );
+    return commits.map((c) => ({ sha: c.sha, date: c.commit.author.date }));
   } catch (error) {
     console.error(`Error fetching git metadata for ${filePath}:`, error);
     return null;
@@ -119,12 +119,20 @@ export async function getGitMetadataFromGitHub(filePath: string): Promise<GitMet
 }
 
 /**
- * Publication history for a post file: the local repository first (no
- * network, no rate limit), the GitHub API when the local history is missing
- * or truncated. Set DISABLE_GIT_METADATA=true to skip both.
+ * Update history for a published post file since `publishedOn`. History comes
+ * from the local repository first (no network, no rate limit) and from the
+ * GitHub API only when the local history is missing or truncated; the
+ * publication filter runs after the source is chosen, so a complete local
+ * history with no updates never reaches the network. Set
+ * DISABLE_GIT_METADATA=true to skip both.
  */
-export async function getGitMetadata(filePath: string): Promise<GitMetadata | null> {
-  return getGitMetadataFromLocalHistory(filePath) ?? (await getGitMetadataFromGitHub(filePath));
+export async function getGitMetadata(
+  filePath: string,
+  publishedOn: string,
+  cwd: string = process.cwd(),
+): Promise<GitMetadata | null> {
+  const commits = readLocalHistory(filePath, cwd) ?? (await readGitHubHistory(filePath));
+  return commits ? summariseCommits(commits, publishedOn) : null;
 }
 
 export function shouldFetchGitMetadata(): boolean {

@@ -16,40 +16,22 @@ describe("getPostStatus", () => {
     expect(getPostStatus({ status: "published" })).toBe("published");
     expect(getPostStatus({ status: "draft" })).toBe("draft");
     expect(getPostStatus({ status: "placeholder" })).toBe("placeholder");
-    expect(getPostStatus({ status: "canary" })).toBe("canary");
   });
 
-  it("falls back to draft when the explicit status string is not in the allowed set", () => {
+  it("treats retired and unknown status strings as draft", () => {
+    expect(getPostStatus({ status: "canary" })).toBe("draft");
     expect(getPostStatus({ status: "wip" })).toBe("draft");
     expect(getPostStatus({ status: "" })).toBe("draft");
   });
 
-  it("classifies the hello-world slug as canary when no status is set", () => {
-    expect(getPostStatus({ slug: "hello-world" })).toBe("canary");
+  it("treats a missing status as draft, whatever the slug", () => {
+    expect(getPostStatus({})).toBe("draft");
+    expect(getPostStatus({ slug: "hello-world" })).toBe("draft");
   });
 
-  it("does not classify hello-world as canary when an explicit status is set", () => {
-    expect(getPostStatus({ slug: "hello-world", status: "published" })).toBe(
-      "published",
-    );
-  });
-
-  it("classifies coming_soon: true as placeholder when no explicit status is set", () => {
-    expect(getPostStatus({ coming_soon: true })).toBe("placeholder");
-  });
-
-  it("classifies hidden: true as draft when no explicit status is set", () => {
-    expect(getPostStatus({ hidden: true })).toBe("draft");
-  });
-
-  it("prefers the placeholder branch over the hidden branch when both flags are set", () => {
-    expect(getPostStatus({ coming_soon: true, hidden: true })).toBe(
-      "placeholder",
-    );
-  });
-
-  it("defaults to published when no status hints are present", () => {
-    expect(getPostStatus({})).toBe("published");
+  it("ignores the retired hidden and coming_soon flags", () => {
+    expect(getPostStatus({ coming_soon: true })).toBe("draft");
+    expect(getPostStatus({ status: "published", hidden: true })).toBe("published");
   });
 });
 
@@ -98,69 +80,33 @@ describe("isPublishedPost", () => {
       isPublishedPost({
         title: "Hello",
         date: "2026-01-15",
-        coming_soon: true,
+        status: "placeholder",
       }),
     ).toBe(false);
+    expect(isPublishedPost({ title: "Hello", date: "2026-01-15" })).toBe(false);
   });
 });
 
 describe("isRoutablePost", () => {
-  it("returns true for a published post with slug + title", () => {
-    expect(
-      isRoutablePost({
-        slug: "hello",
-        title: "Hello",
-        status: "published",
-      }),
-    ).toBe(true);
+  it("routes drafts and placeholders with only a slug and title", () => {
+    for (const status of ["draft", "placeholder"] as const) {
+      expect(isRoutablePost({ slug: "post", title: "Post", status })).toBe(true);
+    }
+    expect(isRoutablePost({ slug: "post", title: "Post" })).toBe(true);
   });
 
-  it("returns true for a placeholder (coming_soon) post with slug + title", () => {
-    expect(
-      isRoutablePost({
-        slug: "soon",
-        title: "Soon",
-        coming_soon: true,
-      }),
-    ).toBe(true);
-  });
-
-  it("returns true for the hello-world canary post with slug + title", () => {
-    expect(
-      isRoutablePost({
-        slug: "hello-world",
-        title: "Canary",
-      }),
-    ).toBe(true);
-  });
-
-  it("returns false for a draft post even with slug + title", () => {
-    expect(
-      isRoutablePost({
-        slug: "draft-post",
-        title: "Draft",
-        status: "draft",
-      }),
-    ).toBe(false);
-    expect(
-      isRoutablePost({
-        slug: "hidden-post",
-        title: "Hidden",
-        hidden: true,
-      }),
-    ).toBe(false);
+  it("routes a published post only when it has a valid date, like the listings", () => {
+    expect(isRoutablePost({ slug: "post", title: "Post", status: "published", date: "2026-01-15" })).toBe(true);
+    expect(isRoutablePost({ slug: "post", title: "Post", status: "published" })).toBe(false);
+    expect(isRoutablePost({ slug: "post", title: "Post", status: "published", date: "not-a-date" })).toBe(false);
   });
 
   it("returns false when the slug is missing", () => {
-    expect(
-      isRoutablePost({ title: "No slug", status: "published" }),
-    ).toBe(false);
+    expect(isRoutablePost({ title: "No slug", status: "draft" })).toBe(false);
   });
 
   it("returns false when the title is missing", () => {
-    expect(
-      isRoutablePost({ slug: "no-title", status: "published" }),
-    ).toBe(false);
+    expect(isRoutablePost({ slug: "no-title", status: "draft" })).toBe(false);
   });
 });
 
@@ -182,8 +128,8 @@ describe("getPostSlugs / getPostBySlug / getAllPosts against a fixture directory
 
   beforeAll(() => {
     fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), "api-test-"));
-    writePost("hello.md", { title: "Hello", date: "2026-03-01" });
-    writePost("2026/nested-post.md", { title: "Nested", date: "2026-04-15" });
+    writePost("hello.md", { title: "Hello", date: "2026-03-01", status: "published" });
+    writePost("2026/nested-post.md", { title: "Nested", date: "2026-04-15", status: "published" });
     writePost("draft.md", {
       title: "Draft",
       date: "2026-02-01",
@@ -192,14 +138,10 @@ describe("getPostSlugs / getPostBySlug / getAllPosts against a fixture directory
     writePost("placeholder.md", {
       title: "Soon",
       date: "2026-05-01",
-      coming_soon: true,
+      status: "placeholder",
     });
-    writePost("hidden.md", {
-      title: "Hidden",
-      date: "2026-01-10",
-      hidden: true,
-    });
-    writePost("older.md", { title: "Older", date: "2025-12-01" });
+    writePost("no-status.md", { title: "No status", date: "2026-01-10" });
+    writePost("older.md", { title: "Older", date: "2025-12-01", status: "published" });
     fs.writeFileSync(path.join(fixtureDir, "README.txt"), "ignore me");
   });
 
@@ -214,7 +156,7 @@ describe("getPostSlugs / getPostBySlug / getAllPosts against a fixture directory
         "2026/nested-post.md",
         "draft.md",
         "hello.md",
-        "hidden.md",
+        "no-status.md",
         "older.md",
         "placeholder.md",
       ].sort(),
@@ -258,7 +200,7 @@ describe("getPostSlugs / getPostBySlug / getAllPosts against a fixture directory
     expect(post).toEqual({ title: "Hello" });
   });
 
-  it("getAllPosts filters out drafts/placeholders/hidden and returns only published posts", () => {
+  it("getAllPosts lists only published posts, leaving out drafts, placeholders and posts without a status", () => {
     const posts = getAllPosts(["title"], fixtureDir);
     const titles = posts.map((p) => p.title);
     expect(titles).toContain("Hello");
@@ -266,7 +208,7 @@ describe("getPostSlugs / getPostBySlug / getAllPosts against a fixture directory
     expect(titles).toContain("Older");
     expect(titles).not.toContain("Draft");
     expect(titles).not.toContain("Soon");
-    expect(titles).not.toContain("Hidden");
+    expect(titles).not.toContain("No status");
   });
 
   it("getAllPosts returns published posts sorted by date descending", () => {

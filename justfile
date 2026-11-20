@@ -113,8 +113,11 @@ kill-port:
 # Restart dev server (kill port + start dev)
 restart: kill-port dev
 
-# Deploy to CloudFlare Workers (usually done via CI/CD)
+# Deploy to CloudFlare Workers (usually done via CI/CD). Refuses while any post
+# file the build would read is untracked, ignored or uncommitted: drafts get a
+# route, so a local build would put them online at their URLs.
 deploy:
+    {{node-run}} npx tsx scripts/check-deploy-ready.ts
     {{node-run}} npm run build
     {{node-run}} npx wrangler deploy
 

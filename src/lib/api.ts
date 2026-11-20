@@ -18,8 +18,6 @@ export type PostItems = Record<string, PostFieldValue> & {
   type?: PostType;
   status?: PostStatus;
   tags?: string[];
-  hidden?: boolean;
-  coming_soon?: boolean;
   ogImage?: {
     url: string;
   };
@@ -104,27 +102,17 @@ export function getPostBySlug(
   return items;
 }
 
-const VALID_POST_STATUSES: PostStatus[] = ["published", "draft", "placeholder", "canary"];
-
+/**
+ * A post's status decides where it appears. Every status gets a route, so a
+ * deployed draft is readable by anyone with its URL (`noindex` only keeps it
+ * out of search results); only `published` posts are listed on the homepage
+ * and in the feeds. A missing or unrecognised status is treated as `draft`, so
+ * a post is never listed by accident. Local `*.draft.md` scratch copies are
+ * never loaded (see findMarkdownFiles).
+ */
 export function getPostStatus(post: Record<string, unknown>): PostStatus {
   const status = post.status;
-  if (typeof status === "string") {
-    return VALID_POST_STATUSES.includes(status as PostStatus) ? (status as PostStatus) : "draft";
-  }
-
-  if (post.slug === "hello-world") {
-    return "canary";
-  }
-
-  if (post.coming_soon === true) {
-    return "placeholder";
-  }
-
-  if (post.hidden === true) {
-    return "draft";
-  }
-
-  return "published";
+  return status === "published" || status === "placeholder" ? status : "draft";
 }
 
 export function isPublishedPost(post: PostItems): post is PublishedPostItems {
@@ -136,31 +124,34 @@ export function isPublishedPost(post: PostItems): post is PublishedPostItems {
   );
 }
 
+/**
+ * Whether a post gets a page. Drafts and placeholders need only a slug and a
+ * title. A published post also needs a valid date, the rule that lists it, so
+ * an indexable page never exists without appearing on the homepage and feeds.
+ */
 export function isRoutablePost(post: PostItems): post is RoutablePostItems {
-  const status = getPostStatus(post);
-  return Boolean(
-    typeof post.slug === "string" &&
-      typeof post.title === "string" &&
-      (status === "published" || status === "placeholder" || status === "canary")
-  );
+  if (typeof post.slug !== "string" || typeof post.title !== "string") return false;
+  return getPostStatus(post) !== "published" || isPublishedPost(post);
 }
 
 function withListFilterFields(fields: string[]) {
-  return Array.from(new Set([...fields, "title", "date", "status", "hidden", "coming_soon"]));
+  return Array.from(new Set([...fields, "title", "date", "status"]));
 }
 
+/**
+ * Load a post and, for published posts, its update history since the
+ * publication `date`. Drafts and placeholders never carry git history.
+ */
 export async function getPostBySlugWithGitData(
   slug: string,
   fields: string[] = [],
   postsDir: string = defaultPostsDirectory,
 ) {
-  const post = getPostBySlug(slug, fields, postsDir);
+  const post = getPostBySlug(slug, Array.from(new Set([...fields, "slug", "title", "date", "status"])), postsDir);
 
-  // Fetch git metadata if we're in production or explicitly enabled
-  if (shouldFetchGitMetadata()) {
-    const realSlug = slug.replace(/\.md$/, "");
-    const filePath = `_posts/${realSlug}.md`;
-    const gitMetadata = await getGitMetadata(filePath);
+  if (shouldFetchGitMetadata() && post.slug && isPublishedPost(post)) {
+    // post.slug is the resolved path, so a flat alias still finds the file.
+    const gitMetadata = await getGitMetadata(`_posts/${post.slug}.md`, post.date);
     if (gitMetadata) {
       post.gitMetadata = gitMetadata;
     }
@@ -180,22 +171,4 @@ export function getAllPosts(
     .filter(isPublishedPost)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
   return posts;
-}
-
-export async function getAllPostsWithGitData(
-  fields: string[] = [],
-  postsDir: string = defaultPostsDirectory,
-) {
-  const slugs = getPostSlugs(postsDir);
-  const postFields = withListFilterFields(fields);
-  const posts = await Promise.all(
-    slugs.map(async (slug) => {
-      const post = await getPostBySlugWithGitData(slug, postFields, postsDir);
-      return post;
-    })
-  );
-
-  return posts
-    .filter(isPublishedPost)
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 }
