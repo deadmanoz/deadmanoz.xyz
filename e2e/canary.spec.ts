@@ -470,3 +470,45 @@ test.describe("canary — paper theme", () => {
     });
   });
 });
+
+test.describe("canary — draft visibility", () => {
+  // hello-world is a draft: it has a route but must stay out of every listing.
+  test("shows the draft banner and no Published label", async ({ page }) => {
+    await expect(page.locator("p.draft-banner")).toHaveText("Draft: this post isn't published yet and may change.");
+    await expect(page.getByText(/^Published:/)).toHaveCount(0);
+  });
+
+  test("asks search engines not to index the page", async ({ page }) => {
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  });
+
+  test("is not linked from the homepage", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('a[href^="/posts/"]').first()).toBeVisible();
+    await expect(page.locator('a[href*="/posts/hello-world"]')).toHaveCount(0);
+  });
+
+  test("is not in the RSS or Atom feed", async ({ request }) => {
+    // Compare item links and entry ids, not the whole document: published
+    // articles may legitimately mention the draft in their bodies.
+    const feeds = [
+      { path: "/feed.xml", pattern: /<item>[\s\S]*?<link>([^<]+)<\/link>/g },
+      { path: "/atom.xml", pattern: /<entry>[\s\S]*?<id>([^<]+)<\/id>/g },
+    ];
+    for (const { path, pattern } of feeds) {
+      const response = await request.get(path);
+      expect(response.ok()).toBe(true);
+      const urls = Array.from((await response.text()).matchAll(pattern), (match) => match[1]);
+      expect(urls.length).toBeGreaterThan(0);
+      expect(urls.every((url) => url.includes("/posts/"))).toBe(true);
+      expect(urls.filter((url) => url.includes("/posts/hello-world"))).toEqual([]);
+    }
+  });
+
+  test("a published post has no banner and no robots restriction", async ({ page }) => {
+    await page.goto("/posts/p2ms-data-carry-2");
+    await expect(page.getByText(/^Published:/)).toBeVisible();
+    await expect(page.locator("p.draft-banner")).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  });
+});

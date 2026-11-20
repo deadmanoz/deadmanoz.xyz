@@ -10,7 +10,7 @@ author:
   name: deadmanoz
 ogImage:
   url: '/assets/melb-graffiti.png'
-status: canary
+status: draft
 ---
 
 # Welcome to deadmanoz.xyz
@@ -51,7 +51,7 @@ Images are automatically numbered and can be referenced as {@fig:sample}.
 | ---------- | ------ | ------------------------------------------ |
 | `title`    | string | Frontmatter title for the post.            |
 | `date`     | string | ISO 8601 publication date.                 |
-| `status`   | enum   | One of `published`, `draft`, `placeholder`, `canary`. |
+| `status`   | enum   | One of `published`, `draft`, `placeholder`. |
 
 Frontmatter fields used by `getPostStatus` {#tab:frontmatter}
 
